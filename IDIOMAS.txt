@@ -1,0 +1,27 @@
+inglês - en
+francês - fr
+itália - it
+árabe - ar
+russo - ruarz - árabe egípcio 
+azerbaijano - az
+bielo-russo - be
+búlgaro - bg
+catalão - ca
+tcheco - cs
+alemão - de
+esperanto - eo
+espanhol - es
+persa - fa
+finlandês - fi
+galego - gl
+hebraico - he
+hindi - hi
+croata - hr
+indonésio - id
+holandês - nl
+polonês - pl
+pashto - ps
+português - pt
+romeno - ro
+tâmil - ta
+turco - tr
