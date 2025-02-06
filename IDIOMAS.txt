@@ -2,7 +2,8 @@ inglês - en
 francês - fr
 itália - it
 árabe - ar
-russo - ruarz - árabe egípcio 
+russo - ru
+árabe_egípcio - arz 
 azerbaijano - az
 bielo-russo - be
 búlgaro - bg
@@ -25,3 +26,4 @@ português - pt
 romeno - ro
 tâmil - ta
 turco - tr
+sorani_central_kurdish - ckb
