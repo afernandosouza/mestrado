@@ -43,12 +43,12 @@ series_scaled = scaler.fit_transform(series_data)
 # 🔹 Aplicando K-Means para agrupar os textos
 print('Aplicando o k-means')
 num_clusters = 3  # Número de clusters desejado
-kmeans = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
+kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 clusters = kmeans.fit_predict(series_scaled)
 
 # 🔹 Exibir agrupamentos
-for i, text in enumerate(texts):
-    print(f"Texto: {text} → Cluster: {clusters[i]}")
+#for i, text in enumerate(texts):
+#    print(f"Texto: {text[:30]} → Cluster: {clusters[i]}")
 
 # 🔹 Visualização dos clusters (usando PCA para reduzir a dimensionalidade)
 from sklearn.decomposition import PCA

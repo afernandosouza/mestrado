@@ -39,7 +39,7 @@ IDIOMAS_DICT = {
 	'ckb':29
 }
 
-def text_to_time_series(text, start_date="2025-01-01", freq="H"):
+def text_to_time_series(text, start_date="2025-01-01", freq="h"):
     """
     Converte um texto em uma série temporal com base nos valores UTF-8 dos caracteres.
 

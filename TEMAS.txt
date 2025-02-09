@@ -1,5 +1,0 @@
-Tecnologia - Tec
-Inteligência Artificial - IA
-Redes Neurais - RN
-Aprendizado Profundo - AP
-Processamento de linguagem natural - PLN
