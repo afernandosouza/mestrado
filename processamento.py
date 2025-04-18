@@ -9,10 +9,11 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
-N_CLUSTERS = 3  # Número de clusters desejado
+N_CLUSTERS = 6  # Número de clusters desejado
 
 # Função qe retorna a lista de diretório dos arquivos
 def carregar_diretorios():
+    print('Carregando diretórios...')
     diretorios = []
     try:
         diretorio_raiz = os.getcwd()
@@ -28,21 +29,22 @@ def carregar_diretorios():
 
 # Função que carrega os textos para conversão
 def carregar_textos():
-    #textos = []
-    textos = [
-        "Hello world!",
-        "Bonjour le monde!",
-        "Hola mundo!",
-        "Hallo Welt!",
-        "Ciao mondo!"
-    ]
+    print('Carregando textos...')
+    textos = []
+    #textos = [
+    #    "Hello world!",
+    #    "Bonjour le monde!",
+    #    "Hola mundo!",
+    #    "Hallo Welt!",
+    #    "Ciao mondo!"
+    #]
     try:
-        pass
-        #for path_arq in carregar_diretorios()[:5]:
-        #    arq = open(path_arq, 'r', encoding='UTF-8')
-        #    nome_arquivo = arq.name.replace('.json','')
-        #    for arquivo_json in json.load(arq):
-        #        textos.append(arquivo_json['content'])
+        #pass
+        for path_arq in carregar_diretorios():
+            arq = open(path_arq, 'r', encoding='UTF-8')
+            nome_arquivo = arq.name.replace('.json','')
+            for arquivo_json in json.load(arq)[:10]:
+                textos.append(arquivo_json['content'])
     except Exception as e:
         print(e)
         raise
@@ -51,6 +53,7 @@ def carregar_textos():
 
 # Função para transformar texto em série temporal baseada em UTF-8
 def converter_textos_serie_temporal(textos):
+    print('Convertendo textos em séries temporais...')
     df = None
     try:
         # Converter cada texto em uma série temporal baseada nos códigos UTF-8
@@ -74,6 +77,7 @@ def converter_textos_serie_temporal(textos):
     return df
 
 def aplicar_kmeans(df):
+    print('Aplicando kmeans...')
     kmeans = None
     try:
         # Calcular a média dos códigos UTF-8 por texto
@@ -83,13 +87,13 @@ def aplicar_kmeans(df):
         scaler = StandardScaler()
         medias_utf8_scaled = scaler.fit_transform(medias_utf8)
 
-        # Aplicar K-Means com k=3 (ajustável)
+        # Aplicar K-Means com k=n
         kmeans = KMeans(n_clusters=N_CLUSTERS, random_state=0, n_init=10)
         labels = kmeans.fit_predict(medias_utf8_scaled)
 
         # Adicionar os rótulos ao DataFrame
         df['Cluster'] = labels
-        print(df[['Cluster']])  # Verificar a qual cluster cada texto pertence
+        print("KMeans - ", df[['Cluster']])  # Verificar a qual cluster cada texto pertence
 
         #plotar_resultado(medias_utf8_scaled, labels)
     except Exception as e:
@@ -100,6 +104,7 @@ def aplicar_kmeans(df):
 
 # Função para calcular energia das subbandas de uma série temporal
 def calcular_energia_wavelet(serie, wavelet='db4', nivel=5):
+    print('Aplicando kmeans...')
     energias = []
     try:
         """Realiza a decomposição Wavelet de Pacotes e calcula as energias das subbandas"""
@@ -118,6 +123,7 @@ def calcular_energia_wavelet(serie, wavelet='db4', nivel=5):
 
 # Função para aplicar Wavelet e calcular energias para cada cluster
 def aplicar_wavelets(series_temporais, labels):
+    print('Aplicando wavelets...')
     try:
         cluster_energias = {}
         num_clusters = N_CLUSTERS  # Número de clusters do K-Means
@@ -155,12 +161,19 @@ def aplicar_wavelets(series_temporais, labels):
         raise
 
 def plotar_resultado(medias_utf8, labels):
+    print('Plotando o resultado...')
     try:
         plt.figure(figsize=(8, 5))
-        plt.scatter(medias_utf8, np.zeros_like(medias_utf8), c=labels, cmap='viridis', s=100, alpha=0.7)
-        plt.xlabel("Média dos códigos UTF-8")
-        plt.ylabel("Posição (Apenas para visualização)")
-        plt.title("Agrupamento de textos baseado na média dos códigos UTF-8")
+        #plt.scatter(np.zeros_like(medias_utf8), medias_utf8, c=labels, cmap='viridis', s=100, alpha=0.7)
+        #plt.xlabel("Posição (Apenas para visualização)")
+        #plt.ylabel("Média dos códigos UTF-8")
+        #plt.title("Agrupamento de textos baseado na média dos códigos UTF-8")
+        
+
+        plt.scatter(labels, medias_utf8, c=labels)
+        plt.title("Clusterização com KMeans")
+        plt.xlabel("Cluster")
+        plt.ylabel("Mean")
         plt.colorbar(label="Cluster")
         plt.show()
     except Exception as e:
@@ -168,6 +181,7 @@ def plotar_resultado(medias_utf8, labels):
         raise
 
 def processar():
+    print('Processando...')
     try:
         series_temporais, labels = aplicar_kmeans(converter_textos_serie_temporal(carregar_textos()))
         aplicar_wavelets(series_temporais, labels)
@@ -177,7 +191,9 @@ def processar():
 
 def main():
     try:
-        processar()
+        medias, labels = aplicar_kmeans(converter_textos_serie_temporal(carregar_textos()))
+        plotar_resultado(medias, labels)
+        #processar()
     except Exception as e:
         print(e)
         raise
