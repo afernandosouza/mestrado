@@ -27,7 +27,7 @@ def desconectar(conn):
 def criar_tabela(conn):
     try:
         cursor = conn.cursor()
-        # Cria a tabela se não existir
+        # Cria as tabelas se não existirem
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS textos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,6 +36,15 @@ def criar_tabela(conn):
             conteudo TEXT NOT NULL,
             tamanho INTEGER NOT NULL,
             media_utf8 REAL NULL
+        )
+        """)
+        conn.commit()
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS idioma (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigo VARCHAR(10) NOT NULL,
+            nome VARCHAR(255) NOT NULL
         )
         """)
         conn.commit()
