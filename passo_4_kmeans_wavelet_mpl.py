@@ -14,6 +14,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import converte_textos_series_temporais as ctst
 
 # Caminho do banco SQLite
 CAMINHO_DB = Path("banco_texto.db")
@@ -40,6 +41,9 @@ def desconectar(conn):
         print(e)
         raise
 
+# =========================
+# Métodos Auxiliares
+# =========================
 def carrega_nome_idioma(codigo_idioma):
     conn = conectar()
     cursor = conn.cursor()
@@ -51,11 +55,38 @@ def carrega_nome_idioma(codigo_idioma):
 
     return nome_idioma[0]
 
+def calculo_k(data):
+    resultados = []
+    try:
+        for k in range(1, NUMERO_CLUSTERS+1):
+            km = KMeans(n_clusters=k, random_state=42, n_init=10).fit(data)
+            print(km.inertia_)
+            resultados.append(km.inertia_)
+
+        plt.plot(range(1, NUMERO_CLUSTERS+1), resultados)
+        plt.title("Médoto do cotovelo")
+        plt.xlabel("Número de clusters")
+        plt.ylabel("Inércia")
+        plt.show()
+    except Exception as e:
+        print(e)
+        raise
 
 # =========================
 # Etapa 1: PRÉ-PROCESSAMENTO
 # =========================
 def carregar_dados():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # Lê os dados
+    query = "SELECT idioma, media_utf8 FROM textos"
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+
+    return df
+
+def carregar_dados_media():
     conn = conectar()
     cursor = conn.cursor()
 
@@ -71,6 +102,7 @@ def carregar_dados():
 # =========================
 def aplicar_kmeans(df):
     kmeans = KMeans(n_clusters=NUMERO_CLUSTERS, random_state=42, n_init=10)
+
     df['cluster'] = kmeans.fit_predict(df[['media_utf8']])
     df['centro_cluster'] = df['cluster'].map(dict(enumerate(kmeans.cluster_centers_.flatten())))
 
@@ -97,8 +129,8 @@ def extrair_wavelet_packet_features(df, wavelet='db1', nivel=5):
     if 'media_utf8' not in df.columns:
         raise ValueError("DataFrame deve conter coluna 'media_utf8'.")
     dados = np.array(df['media_utf8'], dtype=float)
-    #if len(dados) < 2 ** nivel:
-    #    raise ValueError(f"Dados insuficientes para {2 ** nivel} sub-bandas (nível={nivel}).")
+    if len(dados) < 2 ** nivel:
+        raise ValueError(f"Dados insuficientes para {2 ** nivel} sub-bandas (nível={nivel}).")
     wp = pywt.WaveletPacket(data=dados, wavelet=wavelet, mode='symmetric', maxlevel=nivel)
     energias = [np.sum(np.square(wp[node.path].data)) for node in wp.get_level(nivel, 'freq')]
     medianas = np.median(np.reshape(energias, (-1, 1)), axis=1)
@@ -143,36 +175,58 @@ def treinar_mlp_por_cluster(df_wavelet):
 # Etapa 5: IDENTIFICAÇÃO
 # =========================
 def identificar_idioma(texto, resultados_mlp, kmeans_model):
+    # 1. Limpeza
     texto_limpo = re.sub(r'[@\-+=#]', '', texto)
-    utf8_bytes = [ord(c) for c in texto_limpo]
-    if len(utf8_bytes) == 0:
+    utf8_values = [ord(c) for c in texto_limpo]
+    
+    if len(utf8_values) == 0:
         raise ValueError("Texto vazio após limpeza.")
-    media_utf8 = np.mean(utf8_bytes)
+
+    # 2. Cálculo da média UTF-8
+    media_utf8 = sum(utf8_values) / len(utf8_values)
+
+    # 3. Predição do cluster com base na média
     cluster_id = int(kmeans_model.predict([[media_utf8]])[0])
+
     if cluster_id not in resultados_mlp:
         raise ValueError(f"Cluster {cluster_id} sem MLP treinada.")
-    df_media = pd.DataFrame({'media_utf8': [media_utf8]})
-    X_input = extrair_wavelet_packet_features(df_media).reshape(1, -1)
+
+    # 4. Criar DataFrame com série temporal (UTF-8) — necessário ao wavelet
+    df_temporal = pd.DataFrame({'media_utf8': utf8_values})
+
+    # 5. Extração de características via wavelet
+    if len(utf8_values) < 32:
+        # Padding com a média se o texto for curto
+        pad_len = 32 - len(utf8_values)
+        utf8_values += [int(media_utf8)] * pad_len
+        df_temporal = pd.DataFrame({'media_utf8': utf8_values})
+
+    X_input = extrair_wavelet_packet_features(df_temporal).reshape(1, -1)
+
+    # 6. Predição com o modelo do cluster
     modelo = resultados_mlp[cluster_id]['modelo']
     encoder = resultados_mlp[cluster_id]['label_encoder']
     report = resultados_mlp[cluster_id]['classification_report']
     y_pred = modelo.predict(X_input)[0]
     proba = modelo.predict_proba(X_input)[0]
     idioma_predito = encoder.inverse_transform([y_pred])[0]
+
     probs = {idioma: float(p) for idioma, p in zip(encoder.classes_, proba)}
+
     return cluster_id, idioma_predito, probs[idioma_predito], round(report['accuracy'] * 100, 2), probs
 
 def main():
     try:
-        df = carregar_dados()
+        df_dados = carregar_dados()
         
         print("Aplicando KMeans...")
-        df, kmeans_model = aplicar_kmeans(df)
-
+        df_kmeans, kmeans_model = aplicar_kmeans(df_dados)
+        #calculo_k(df_kmeans[['media_utf8']])
+        
         print("Extraindo características Wavelet...")
         features = []
-        for cluster_id in df['cluster'].unique():
-            df_cluster = df[df['cluster'] == cluster_id]
+        for cluster_id in df_kmeans['cluster'].unique():
+            df_cluster = df_kmeans[df_kmeans['cluster'] == cluster_id]
             try:
                 wavelet_features = extrair_wavelet_packet_features(df_cluster)
                 for idx, row in enumerate(df_cluster.itertuples(index=False)):
@@ -191,15 +245,18 @@ def main():
 
         print("Pipeline completo. Pronto para identificar idiomas!")
 
-        # Exemplo de identificação:
-        texto_exemplo = input('Digite um texto para identificar o idioma: ')
-        cluster_id, idioma, prob, precisao, probs = identificar_idioma(texto_exemplo, resultados_mlp, kmeans_model)
-        nome_idioma = carrega_nome_idioma(idioma)
-        print(f"\nTexto : {texto_exemplo}")
-        print(f"Cluster: {cluster_id}")
-        print(f"Idioma previsto: {nome_idioma}")
-        print(f"Probabilidade: {prob:.2%}")
-        print(f"Precisão da MLP: {precisao:.2f}%")
+        texto_exemplo = ''
+        while texto_exemplo != '/q':
+            # Exemplo de identificação:
+            texto_exemplo = input('Digite um texto para identificar o idioma (/q para sair): ')
+            if texto_exemplo != '/q':
+                cluster_id, idioma, prob, precisao, probs = identificar_idioma(texto_exemplo, resultados_mlp, kmeans_model)
+                nome_idioma = carrega_nome_idioma(idioma)
+                print(f"\nTexto : {texto_exemplo}")
+                print(f"Cluster: {cluster_id}")
+                print(f"Idioma previsto: {nome_idioma}")
+                print(f"Probabilidade: {prob:.2%}")
+                print(f"Precisão da MLP: {precisao:.2f}%\n\n")
     except Exception as e:
         print(e)
         raise

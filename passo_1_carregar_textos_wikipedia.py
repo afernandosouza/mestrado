@@ -103,7 +103,7 @@ def obter_conteudo_pagina(page_id, base_url):
 
 def carrega_idiomas():
     try:
-        with open('IDIOMAS.txt', 'r', encoding="utf-8") as idiomas:
+        with open('IDIOMA.txt', 'r', encoding="utf-8") as idiomas:
             return [i.split(' - ')[1].strip() for i in idiomas.readlines()]
     except Exception as e:
         print(e)
