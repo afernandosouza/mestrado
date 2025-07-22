@@ -6,12 +6,12 @@ Russo - ru
 Árabe egípcio - arz 
 Azerbaijano - az
 Bielo-russo - be
-Búlgaro - bg
+Búlgaro - bg - ok
 Catalão - ca
 Tcheco - cs
-Alemão - de
+Alemão - de - ok
 Esperanto - eo
-Espanhol - es
+Espanhol - es - ok
 Persa - fa
 Finlandês - fi
 Galego - gl

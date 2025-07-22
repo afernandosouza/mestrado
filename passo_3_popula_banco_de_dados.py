@@ -3,6 +3,7 @@ import json
 import os
 import re
 import pandas as pd
+import converte_textos_series_temporais as ctst
 from pathlib import Path
 
 # Caminho do banco SQLite
@@ -28,22 +29,6 @@ def desconectar(conn):
         print(e)
         raise
 
-def text_to_time_series(text, start_date="2025-01-01", freq="h"):
-    """
-    Converte um texto em uma série temporal com base nos valores UTF-8 dos caracteres.
-
-    :param text: String de entrada
-    :param start_date: Data inicial da série temporal (YYYY-MM-DD)
-    :param freq: Frequência da série temporal (ex: 'D' para diário, 'H' para horário)
-    :return: Série temporal Pandas
-    """
-    utf8_values = [ord(c) for c in text]
-    dates = pd.date_range(start=start_date, periods=len(utf8_values), freq=freq)
-    
-    series = pd.Series(utf8_values, index=dates)
-    
-    return series
-
 def popular_tabela(conn):
     try:
         cursor = conn.cursor()
@@ -62,14 +47,9 @@ def popular_tabela(conn):
                         if not all([idioma, titulo, conteudo]):
                             raise ValueError(f"Arquivo {arquivo_json} possui dados incompletos.")
 
-                        # Remove os caracteres especiais: @, -, +, =, #
-                        conteudo_limpo = re.sub(r'[@\-+=#]', '', conteudo)
-
-                        # Converte para bytes UTF-8
-                        series_utf8 = text_to_time_series(conteudo_limpo)
-            
-                        # Calcula a média dos valores dos bytes
-                        media_utf8 = series_utf8.mean()
+                        conteudo_limpo = ctst.remover_caracteres_especiais(conteudo)
+                        series_utf8 = ctst.converter_texto_serie_temporal(conteudo_limpo)
+                        media_utf8 = ctst.extrair_media_utf8_texto(conteudo_limpo)
 
                         # Verifica se já existe um registro com esse título
                         cursor.execute("SELECT 1 FROM textos WHERE titulo = ?", (titulo,))

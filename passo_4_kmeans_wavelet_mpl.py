@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 import converte_textos_series_temporais as ctst
@@ -80,7 +80,7 @@ def carregar_dados():
     cursor = conn.cursor()
 
     # Lê os dados
-    query = "SELECT idioma, media_utf8 FROM textos"
+    query = "SELECT idioma, cast(media_utf8 as integer) media_utf8 FROM textos"
     df = pd.read_sql_query(query, conn)
     conn.close()
 
@@ -91,7 +91,7 @@ def carregar_dados_media():
     cursor = conn.cursor()
 
     # Lê os dados
-    query = "SELECT idioma, avg(media_utf8) media_utf8 FROM textos GROUP BY idioma"
+    query = "SELECT idioma, conteudo, avg(media_utf8) media_utf8 FROM textos GROUP BY idioma, conteudo"
     df = pd.read_sql_query(query, conn)
     conn.close()
 
@@ -215,6 +215,35 @@ def identificar_idioma(texto, resultados_mlp, kmeans_model):
 
     return cluster_id, idioma_predito, probs[idioma_predito], round(report['accuracy'] * 100, 2), probs
 
+def avaliar_acuracia_modelo(df_original, resultados_mlp, kmeans_model):
+    """
+    Avalia a acurácia geral do pipeline de identificação de idioma.
+
+    Parâmetros:
+    - df_original: DataFrame com colunas ['idioma', 'conteudo']
+    - resultados_mlp: modelos treinados por cluster
+    - kmeans_model: modelo de clusterização KMeans
+
+    Retorna:
+    - Acurácia geral (float)
+    """
+    verdadeiros = []
+    preditos = []
+
+    for row in df_original.itertuples(index=False):
+        try:
+            cluster_id, idioma_predito, prob, _, _ = identificar_idioma(
+                row[1], resultados_mlp, kmeans_model
+            )
+            verdadeiros.append(row[0])
+            preditos.append(idioma_predito)
+        except Exception as e:
+            print(f"Erro ao avaliar texto '{row[0]}': {e}")
+
+    acuracia = accuracy_score(verdadeiros, preditos)
+    print(f"Acurácia total do modelo: {acuracia:.2%}")
+    return acuracia
+
 def main():
     try:
         df_dados = carregar_dados()
@@ -245,6 +274,8 @@ def main():
 
         print("Pipeline completo. Pronto para identificar idiomas!")
 
+        #avaliar_acuracia_modelo(df_dados, resultados_mlp, kmeans_model)
+        
         texto_exemplo = ''
         while texto_exemplo != '/q':
             # Exemplo de identificação:
@@ -257,6 +288,7 @@ def main():
                 print(f"Idioma previsto: {nome_idioma}")
                 print(f"Probabilidade: {prob:.2%}")
                 print(f"Precisão da MLP: {precisao:.2f}%\n\n")
+        
     except Exception as e:
         print(e)
         raise
