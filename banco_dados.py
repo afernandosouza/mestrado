@@ -44,7 +44,7 @@ def carregar_dados():
     cursor = conn.cursor()
 
     # Lê os dados
-    query = "SELECT idioma, conteudo, media_utf8 FROM textos"
+    query = "SELECT idioma, media_utf8 FROM textos"
     df = pd.read_sql_query(query, conn)
     conn.close()
 

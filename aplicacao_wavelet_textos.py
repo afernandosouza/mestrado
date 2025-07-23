@@ -37,7 +37,7 @@ def extrair_caracteristicas_wavelet(df_kmeans):
                     features.append({
                         'idioma': row.idioma,
                         'cluster': row.cluster,
-                        **{f'Subbanda_{i}': wavelet_features[i] for i in range(32)}
+                        **{f'Subbanda_{i}': wavelet_features[0, i] for i in range(32)}
                     })
             except Exception as e:
                 print(f"Erro no cluster {cluster_id}: {e}")

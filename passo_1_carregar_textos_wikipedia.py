@@ -6,7 +6,7 @@ import os
 
 # Configuração do User-Agent para cumprir a política da Wikipédia
 USER_AGENT = "MeuScriptMestradoUfalPPGI/1.0 (afernandosouza@gmail.com)"
-NUMERO_TEXTOS = 1
+NUMERO_TEXTOS = 14
 NUMERO_TENTATIVAS = 3000
 
 def obter_textos_aleatorios(limite, idioma):
