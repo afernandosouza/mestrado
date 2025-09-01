@@ -95,6 +95,10 @@ def main():
 
         precisao_media = np.mean(resumo['Precisão (%)'])
         print('Precisão média: ', precisao_media)
+
+        print('\n\ndados com 5 espaços:\n', bd.dados_com_espacos(5)[:10])
+        print('\n\ndados com 7 espaços:\n', bd.dados_com_espacos(7)[:10])
+        print('\n\ndados com 12 espaços:\n', bd.dados_com_espacos(12)[:10])
     except Exception as e:
         print(e)
         raise
