@@ -6,8 +6,70 @@ import os
 
 # Configuração do User-Agent para cumprir a política da Wikipédia
 USER_AGENT = "MeuScriptMestradoUfalPPGI/1.0 (afernandosouza@gmail.com)"
-NUMERO_TEXTOS = 14
+NUMERO_TEXTOS = 100
 NUMERO_TENTATIVAS = 3000
+LISTA_IDIOMAS_DICT = {
+    '1': 'pt',
+    '2': 'en',
+    '3': 'fr',
+    '4': 'it',
+    '5': 'ar',
+    '6': 'ru',
+    '7': 'arz', 
+    '8': 'az',
+    '9': 'be',
+    '10': 'bg',
+    '11': 'ca',
+    '12': 'cs',
+    '13': 'de',
+    '14': 'eo',
+    '15': 'es',
+    '16': 'fa',
+    '17': 'fi',
+    '18': 'gl',
+    '19': 'he',
+    '20': 'hi',
+    '21': 'hr',
+    '22': 'id',
+    '23': 'nl',
+    '24': 'pl',
+    '25': 'ps',
+    '26': 'ro',
+    '27': 'ta',
+    '28': 'tr',
+    '29': 'ckb'
+}
+LISTA_IDIOMAS = """
+    1. Português
+    2. Inglês
+    3. Francês
+    4. Itália
+    5. Árabe
+    6. Russo
+    7. Árabe egípcio
+    8. Azerbaijano
+    9. Bielo-russo
+    10. Búlgaro
+    11. Catalão
+    12. Tcheco
+    13. Alemão
+    14. Esperanto
+    15. Espanhol
+    16. Persa
+    17. Finlandês
+    18. Galego
+    19. Hebraico
+    20. Hindi
+    21. Croata
+    22. Indonésio
+    23. Holandês
+    24. Polonês
+    25. Pashto
+    26. Romeno
+    27. Tâmil
+    28. Turco
+    29. Sorani central kurdish
+"""
 
 def obter_textos_aleatorios(limite, idioma):
     try:
@@ -109,6 +171,19 @@ def carrega_idiomas():
         print(e)
         raise
 
+def ler_idioma():
+    idioma = input("Informe o idioma para o qual deseja carregar os textos (%s): " % LISTA_IDIOMAS)
+    while not idioma:
+        idioma = input("Informe o idioma para o qual deseja carregar os textos (%s): " % LISTA_IDIOMAS)
+
+    return idioma
+
+def ler_limite():
+    return input("Informe a quantidade de textos que deseja carregar (Enter para a quantidade padrão: %s): " % limite)
+
+def carregar_idioma_seleconado(idioma_selecionado):
+    return LISTA_IDIOMAS_DICT[idioma_selecionado]
+
 if __name__ == '__main__':
     try: 
         # Executa o código para obter 1000 textos aleatórios em um idioma especificado
@@ -116,16 +191,30 @@ if __name__ == '__main__':
         limite = NUMERO_TEXTOS  # Quantidade de textos a serem obtidos
         hoje = datetime.now()
 
-        for idioma in carrega_idiomas():
-            textos_aleatorios = obter_textos_aleatorios(limite, idioma)
+        idioma_informado = carregar_idioma_seleconado(ler_idioma())
+        limite_informado = ler_limite()
+        if limite_informado: limite = int(limite_informado)
+
+        textos_aleatorios = obter_textos_aleatorios(limite, idioma_informado)
+
+        # Salva os textos em um arquivo JSON
+        arquivo_saida = os.path.join(os.getcwd(),'TEXTOS',f"textos_{idioma_informado}_{hoje.strftime('%d%m%Y%H%M%S')}.json")
+        with open(arquivo_saida, "w", encoding="utf-8") as f:
+            json.dump(textos_aleatorios, f, ensure_ascii=False, indent=4)
+
+        print(f"Total de textos obtidos para o idioma {idioma_informado}: {len(textos_aleatorios)}")
+        print(f"Textos salvos em: {arquivo_saida}")
+
+        #for idioma in carrega_idiomas():
+        #    textos_aleatorios = obter_textos_aleatorios(limite, idioma)
 
             # Salva os textos em um arquivo JSON
-            arquivo_saida = os.path.join(os.getcwd(),'TEXTOS',f"textos_{idioma}_{hoje.strftime('%d%m%Y%H%M%S')}.json")
-            with open(arquivo_saida, "w", encoding="utf-8") as f:
-                json.dump(textos_aleatorios, f, ensure_ascii=False, indent=4)
+            #arquivo_saida = os.path.join(os.getcwd(),'TEXTOS',f"textos_{idioma}_{hoje.strftime('%d%m%Y%H%M%S')}.json")
+            #with open(arquivo_saida, "w", encoding="utf-8") as f:
+                #json.dump(textos_aleatorios, f, ensure_ascii=False, indent=4)
 
-            print(f"Total de textos obtidos para o idioma {idioma}: {len(textos_aleatorios)}")
-            print(f"Textos salvos em: {arquivo_saida}")
+            #print(f"Total de textos obtidos para o idioma {idioma}: {len(textos_aleatorios)}")
+            #print(f"Textos salvos em: {arquivo_saida}")
     except Exception as e:
         print(e)
         raise

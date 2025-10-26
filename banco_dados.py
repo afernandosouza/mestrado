@@ -52,12 +52,27 @@ def carrega_nome_idioma(codigo_idioma):
 
     return nome_idioma[0]
 
-def carregar_dados():
+def carregar_dados(idioma=None):
     conn = conectar()
     cursor = conn.cursor()
 
     # Lê os dados
-    query = "SELECT * FROM textos"
+    if idioma:
+        query = "SELECT * FROM textos WHERE idioma='%s' ORDER BY idioma" % idioma
+    else:
+        query = "SELECT * FROM textos ORDER BY idioma"
+    
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+
+    return df
+
+def carregar_dados_com_media():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # Lê os dados
+    query = "SELECT *, avg(media_utf8) media FROM textos"
     df = pd.read_sql_query(query, conn)
     conn.close()
 

@@ -1,0 +1,2 @@
+venv\Scripts\python.exe experimento_caracterizacao.py
+pause

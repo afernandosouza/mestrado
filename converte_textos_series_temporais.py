@@ -29,6 +29,7 @@ def remover_caracteres_especiais(texto):
 	texto_limpo = ''
 	try:
 		texto_limpo = re.sub(r'[@\-\+#=]', '', texto)
+		texto_limpo = re.sub(r'\n{3}', '\n', texto_limpo)
 	except Exception as e:
 		print(e)
 		raise
