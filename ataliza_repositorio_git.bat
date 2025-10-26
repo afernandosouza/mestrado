@@ -1,4 +1,4 @@
 git add .
-git commit -m "Atalização de código"
+git commit -m "Atalizacao de codigo"
 git push origin master
 pause

@@ -26,6 +26,7 @@ from joblib import Parallel, delayed
 # Bibliotecas de Visualização
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 import banco_dados as bd
 
@@ -137,10 +138,9 @@ def complexity_cjs(P):
 def extract_characterization_metrics(row, wavelet='db4', maxlevel=5, bandt_D=6):
     """Extrai o conjunto de métricas para caracterização."""
     s = row['series']
-    #wfeat = wavelet_packet_features(s, wavelet=wavelet, maxlevel=maxlevel)
+    wfeat = wavelet_packet_features(s, wavelet=wavelet, maxlevel=maxlevel)
     
-    #features = {f'WPT_{i}': float(wfeat[i]) for i in range(len(wfeat))}
-    features = {}
+    features = {f'WPT_{i}': float(wfeat[i]) for i in range(len(wfeat))}
     P = ordinal_patterns(s, D=bandt_D, tau=1)
     HS, CJS = complexity_cjs(P)
     features['HS'] = float(HS)
@@ -168,6 +168,51 @@ def plot_complexity_entropy_plane(df, filename="plano_complexidade_entropia.png"
     plt.savefig(filename)
     print(f"Gráfico salvo em {filename}")
 
+def plot_complexity_entropy_plane_iteractive(df, filename="plano_complexidade_entropia.html"):
+    """
+    Gera e salva o gráfico interativo do plano de Complexidade-Entropia.
+    Permite ativar/desativar individualmente os idiomas no gráfico.
+    """
+    fig = px.scatter(
+        df,
+        x="HS",
+        y="CJS",
+        color="language",
+        symbol="language",
+        title="Distribuição de Idiomas no Plano Complexidade-Entropia",
+        labels={
+            "HS": "Entropia Normalizada (HS)",
+            "CJS": "Complexidade de Jensen-Shannon (CJS)",
+            "language": "Idioma"
+        },
+        width=1000,
+        height=700
+    )
+
+    # Personaliza layout e estilo
+    fig.update_layout(
+        title_font=dict(size=20),
+        xaxis_title_font=dict(size=16),
+        yaxis_title_font=dict(size=16),
+        legend_title_text="Idioma",
+        legend=dict(
+            title="Idioma",
+            x=1.02,
+            y=1,
+            traceorder="normal",
+            bgcolor="rgba(255,255,255,0)",
+            bordercolor="rgba(0,0,0,0)"
+        ),
+        template="plotly_white"
+    )
+
+    # Exibe o gráfico interativo no navegador ou notebook
+    fig.show()
+
+    # Salva como arquivo HTML interativo
+    fig.write_html(filename)
+    print(f"Gráfico interativo salvo em {filename}")
+
 # ----------------------------
 # Bloco Principal do Experimento
 # ----------------------------
@@ -177,7 +222,7 @@ def main():
         inicio = datetime.now()
         print('Iniciando o processo de caracterização...')
         
-        df_texts = load_data()
+        df_texts = load_data()[:3000]
         
         records = []
         for _, row in tqdm(df_texts.iterrows(), total=len(df_texts), desc="Pré-processando e extraindo métricas"):
@@ -195,7 +240,7 @@ def main():
         print(df_metrics.head())
 
         # Visualiza os resultados no plano de Complexidade-Entropia
-        plot_complexity_entropy_plane(df_metrics, 'plano_complexidade_entropia_%s.png' % lang)
+        plot_complexity_entropy_plane_iteractive(df_metrics, 'plano_complexidade_entropia_%s.png' % lang)
         
         print('Processo de caracterização finalizado em %s' % (datetime.now() - inicio))
     except Exception as e:
