@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import pywt
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
+from matplotlib import cm
 import banco_dados as bd 
 
 # ----------------------------
@@ -88,7 +92,7 @@ def plot_wpt_features(text: str, lang_code: str, filename: str):
         plt.xticks(x_axis, rotation=45)
         plt.grid(axis='y', linestyle='--', alpha=0.6)
         plt.tight_layout()
-        #plt.savefig(filename)
+        plt.savefig(filename)
         print('Feche o gráfico para finalizar')
         plt.show()
         
@@ -97,17 +101,92 @@ def plot_wpt_features(text: str, lang_code: str, filename: str):
         print(e)
         raise
 
+def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", max_texts=10):
+    """
+    Gera um gráfico interativo (Plotly) com as 32 bandas de frequência WPT
+    sobrepostas para múltiplos textos, agrupados por idioma.
+    
+    Args:
+        df (DataFrame): Deve conter colunas ['idioma', 'conteudo'].
+        filename (str): Caminho do arquivo HTML a ser salvo.
+        max_texts (int): Número máximo de textos por idioma a serem plotados.
+    """
+    idiomas = df['idioma'].unique()
+    x_axis = np.arange(1, 33)
+    mean_dict = {}
+
+    # 1️⃣ Calcula os vetores médios por idioma
+    for idioma in idiomas:
+        subset = df[df['idioma'] == idioma].head(max_texts)
+        features_list = []
+        for _, row in subset.iterrows():
+            text = clean_text(row['conteudo'])
+            series = text_to_utf8_series(text)
+            if series.size < 16:
+                continue
+            features = wavelet_packet_features(series)
+            features_list.append(features)
+
+        if features_list:
+            features_arr = np.vstack(features_list)
+            mean_dict[idioma] = features_arr.mean(axis=0)
+
+    if not mean_dict:
+        print("Nenhum idioma válido encontrado.")
+        return
+
+    # 2️⃣ Cria matriz com os vetores médios
+    idioma_list = list(mean_dict.keys())
+    mean_matrix = np.vstack([mean_dict[i] for i in idioma_list])
+
+    # 3️⃣ Projeta em 1D com PCA para definir similaridade
+    pca = PCA(n_components=1)
+    proj = pca.fit_transform(mean_matrix)
+    proj_scaled = MinMaxScaler().fit_transform(proj).ravel()
+
+    # 4️⃣ Gera cores contínuas baseadas nessa projeção
+    colormap = cm.get_cmap("turbo")
+    colors = [f"rgba{cm.colors.to_rgba(colormap(p))}" for p in proj_scaled]
+
+    # 5️⃣ Cria o gráfico interativo
+    fig = go.Figure()
+
+    for idioma, color in zip(idioma_list, colors):
+        mean_features = mean_dict[idioma]
+        fig.add_trace(go.Scatter(
+            x=x_axis,
+            y=mean_features,
+            mode='lines+markers',
+            name=f"{idioma.upper()}",
+            line=dict(width=3, color=color),
+            hovertemplate="Banda %{x}<br>Log-Energia média: %{y:.3f}<extra>%{fullData.name}</extra>"
+        ))
+
+    fig.update_layout(
+        title="Espectro Médio WPT por Idioma (Cores por Similaridade)",
+        xaxis_title="Banda de Frequência WPT (1–32)",
+        yaxis_title="Magnitude Média (Log-Energia Mediana)",
+        template="plotly_white",
+        width=1100,
+        height=700,
+        legend_title="Idiomas",
+        hovermode="x unified"
+    )
+
+    fig.show()
+    fig.write_html(filename)
+    print(f"Gráfico interativo salvo em {filename}")
+
 def load_data(idioma=None):
     if idioma:
-        return bd.carregar_dados(idioma)[['idioma', 'conteudo']].copy()[:1000]
-    return bd.carregar_dados()[['idioma', 'conteudo']].copy()[:1000]
+        return bd.carregar_dados(idioma)[['idioma', 'conteudo']].copy()
+    return bd.carregar_dados()[['idioma', 'conteudo']].copy()
 
 def main():
     try:
-        idioma = 'pt'
-        texto = load_data(idioma)
-        print(texto)
-        plot_wpt_features(texto.iloc[0,1], idioma, 'espectro_wpt_pt.png')
+        idioma = input("informe o idioma (Enter para todos): ")
+        df = load_data(idioma) if idioma else load_data()
+        plot_wpt_features_interactive(df, 'espectro_wpt_%s.html' % idioma)
     except Exception as e:
         print(e)
         raise

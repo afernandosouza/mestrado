@@ -137,15 +137,18 @@ def complexity_cjs(P):
 
 def extract_characterization_metrics(row, wavelet='db4', maxlevel=5, bandt_D=6):
     """Extrai o conjunto de métricas para caracterização."""
+    features = {}
     s = row['series']
-    wfeat = wavelet_packet_features(s, wavelet=wavelet, maxlevel=maxlevel)
-    
-    features = {f'WPT_{i}': float(wfeat[i]) for i in range(len(wfeat))}
+
     P = ordinal_patterns(s, D=bandt_D, tau=1)
     HS, CJS = complexity_cjs(P)
     features['HS'] = float(HS)
     features['CJS'] = float(CJS)
-        
+
+    wfeat = wavelet_packet_features(s, wavelet=wavelet, maxlevel=maxlevel)
+    for i in range(len(wfeat)):
+        features[f'WPT_{i}'] = float(wfeat[i])
+         
     return features
 
 # ----------------------------
@@ -222,7 +225,7 @@ def main():
         inicio = datetime.now()
         print('Iniciando o processo de caracterização...')
         
-        df_texts = load_data()[:3000]
+        df_texts = load_data()[:2000]
         
         records = []
         for _, row in tqdm(df_texts.iterrows(), total=len(df_texts), desc="Pré-processando e extraindo métricas"):
