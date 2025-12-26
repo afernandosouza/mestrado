@@ -7,22 +7,17 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from matplotlib import cm
 import banco_dados as bd 
+import converte_textos_series_temporais as cst
 
 # ----------------------------
 # Funções de Extração de Características (Mantidas)
 # ----------------------------
 
 def clean_text(text: str, remove_chars=None):
-    """Limpa o texto, removendo caracteres indesejados e padronizando."""
-    if remove_chars is None:
-        remove_chars = set(['@', '-', '+', '#', '\t', '\r', '\n'])
-    out = ''.join(ch for ch in text if ch not in remove_chars)
-    out = ' '.join(out.split())
-    return out
+    return cst.remover_caracteres_especiais(text)
 
 def text_to_utf8_series(text: str):
-    """Converte um texto para uma série temporal de códigos UTF-8."""
-    return np.array([ord(ch) for ch in text], dtype=np.int32)
+    return cst.converter_texto_serie_temporal(text)
 
 def wavelet_packet_features(series: np.ndarray, wavelet='db4', maxlevel=5):
     """
@@ -86,9 +81,9 @@ def plot_wpt_features(text: str, lang_code: str, filename: str):
         plt.bar(x_axis, features, color='darkred', alpha=0.7)
         
         # Título ajustado para usar o código do idioma
-        plt.title(f'Espectro de Frequência do Sinal de Texto ({lang_code.upper()})', fontsize=16)
-        plt.xlabel('Banda de Frequência WPT (1 a 32)', fontsize=14)
-        plt.ylabel('Magnitude (Log-Energia Mediana)', fontsize=14)
+        plt.title(f'Frequency Spectrum of the Text Signal ({lang_code.upper()})', fontsize=16)
+        plt.xlabel('WPT Frequency Band (1 to 32)', fontsize=14)
+        plt.ylabel('Magnitude (Median Log-Energy)', fontsize=14)
         plt.xticks(x_axis, rotation=45)
         plt.grid(axis='y', linestyle='--', alpha=0.6)
         plt.tight_layout()
@@ -117,6 +112,7 @@ def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", m
 
     # 1️⃣ Calcula os vetores médios por idioma
     for idioma in idiomas:
+        nome_idioma = df[df['idioma'] == idioma]['nome_idioma'].unique()[0]
         subset = df[df['idioma'] == idioma].head(max_texts)
         features_list = []
         for _, row in subset.iterrows():
@@ -129,7 +125,7 @@ def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", m
 
         if features_list:
             features_arr = np.vstack(features_list)
-            mean_dict[idioma] = features_arr.mean(axis=0)
+            mean_dict['%s - %s' % (idioma, nome_idioma)] = features_arr.mean(axis=0)
 
     if not mean_dict:
         print("Nenhum idioma válido encontrado.")
@@ -157,15 +153,15 @@ def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", m
             x=x_axis,
             y=mean_features,
             mode='lines+markers',
-            name=f"{idioma.upper()}",
+            name=f"{idioma}",
             line=dict(width=3, color=color),
             hovertemplate="Banda %{x}<br>Log-Energia média: %{y:.3f}<extra>%{fullData.name}</extra>"
         ))
 
     fig.update_layout(
-        title="Espectro Médio WPT por Idioma (Cores por Similaridade)",
-        xaxis_title="Banda de Frequência WPT (1–32)",
-        yaxis_title="Magnitude Média (Log-Energia Mediana)",
+        title="Average WPT Spectrum by Language (Colors by Similarity)",
+        xaxis_title="WPT Frequency Band (1–32)",
+        yaxis_title="Average Magnitude (Median Log-Energy)",
         template="plotly_white",
         width=1100,
         height=700,
@@ -179,13 +175,14 @@ def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", m
 
 def load_data(idioma=None):
     if idioma:
-        return bd.carregar_dados(idioma)[['idioma', 'conteudo']].copy()
-    return bd.carregar_dados()[['idioma', 'conteudo']].copy()
+        return bd.carregar_dados(idioma)[['nome_idioma', 'idioma', 'conteudo']].copy()
+
+    return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo']].copy()
 
 def main():
     try:
         idioma = input("informe o idioma (Enter para todos): ")
-        df = load_data(idioma) if idioma else load_data()
+        df = load_data(idioma=idioma) if idioma else load_data()
         plot_wpt_features_interactive(df, 'espectro_wpt_%s.html' % idioma)
     except Exception as e:
         print(e)

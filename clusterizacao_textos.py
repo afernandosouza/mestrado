@@ -40,10 +40,17 @@ def aplicar_kmeans(df):
 
     return df, kmeans
 
+def load_data(idioma=None):
+    if idioma:
+        return bd.carregar_dados(idioma)[['nome_idioma', 'idioma', 'conteudo', 'media_utf8']].copy()
+
+    return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo', 'media_utf8']].copy()
+
 def main():
     try:
         print("Carregando dados...")
-        df_dados = bd.carregar_dados_com_media()
+        idioma = input("informe o idioma (Enter para todos): ")
+        df_dados = load_data(idioma=idioma) if idioma else load_data()
 
         print("Aplicando KMeans...")
         df, km = aplicar_kmeans(df_dados)

@@ -1,1 +1,0 @@
-venv\Scripts\python.exe mapa_calor_correlacao_metricas.py

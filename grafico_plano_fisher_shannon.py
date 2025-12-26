@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 import banco_dados as bd
+import converte_textos_series_temporais as cst
 
 # ===============================================================
 # 1️⃣ Utilitários
@@ -10,11 +11,11 @@ import banco_dados as bd
 
 def clean_text(text):
     """Remove caracteres não imprimíveis e normaliza espaços."""
-    return ' '.join(ch for ch in text if ch.isprintable()).strip()
+    return cst.remover_caracteres_especiais(text)
 
 def text_to_utf8_series(text):
     """Converte texto em série temporal numérica (UTF-8)."""
-    return np.array([ord(ch) for ch in text if ch.isprintable()], dtype=np.float64)
+    return cst.converter_texto_serie_temporal(text)
 
 # ===============================================================
 # 2️⃣ Métricas Fisher–Shannon
@@ -50,6 +51,7 @@ def compute_fisher_shannon_for_languages(df, bins=256, max_texts=50):
     results = []
 
     for lang in df['idioma'].unique():
+        nome_idioma = df[df['idioma'] == lang]['nome_idioma'].unique()[0]
         subset = df[df['idioma'] == lang].head(max_texts)
         Hs, Fs = [], []
 
@@ -63,7 +65,7 @@ def compute_fisher_shannon_for_languages(df, bins=256, max_texts=50):
 
         if Hs and Fs:
             results.append({
-                "idioma": lang,
+                "idioma": '%s - %s' % (lang, nome_idioma),
                 "H": np.mean(Hs),
                 "F": np.mean(Fs)
             })
@@ -99,7 +101,7 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon.html"):
             y=[row['F']],
             mode='markers+text',
             name=row['idioma'],
-            text=[row['idioma'].upper()],
+            text=[row['idioma']],
             textposition='top center',
             marker=dict(size=14, opacity=0.85),
             hovertemplate=(
@@ -110,9 +112,9 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon.html"):
         ))
 
     fig.update_layout(
-        title="Plano de Fisher–Shannon por Idioma",
-        xaxis_title="Entropia de Shannon Normalizada (H)",
-        yaxis_title="Informação de Fisher Normalizada (F)",
+        title="Fisher–Shannon Language Plan",
+        xaxis_title="Normalized Shannon Entropy (H)",
+        yaxis_title="Normalized Fisher's Information (F)",
         template="plotly_white",
         width=900,
         height=700,
@@ -126,14 +128,16 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon.html"):
 
 def load_data(idioma=None):
     if idioma:
-        return bd.carregar_dados(idioma)[['idioma', 'conteudo']].copy()
-    return bd.carregar_dados()[['idioma', 'conteudo']].copy()
+        return bd.carregar_dados(idioma)[['nome_idioma', 'idioma', 'conteudo']].copy()
+
+    return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo']].copy()
 
 # ===============================================================
 # 5️⃣ Exemplo de uso
 # ===============================================================
 
 if __name__ == "__main__":
-    df = load_data()
+    idioma = input("informe o idioma (Enter para todos): ")
+    df = load_data(idioma=idioma) if idioma else load_data()
     df_fs = compute_fisher_shannon_for_languages(df)
     plot_fisher_shannon(df_fs)

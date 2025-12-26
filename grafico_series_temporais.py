@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 import banco_dados as bd
+import converte_textos_series_temporais as cst
 
 # ===============================================================
 # 1️⃣ Utilitários
@@ -10,11 +11,11 @@ import banco_dados as bd
 
 def text_to_utf8_series(text: str):
     """Converte texto para série temporal de códigos UTF-8."""
-    return np.array([ord(ch) for ch in text if ch.isprintable()], dtype=np.int32)
+    return cst.converter_texto_serie_temporal(text)
 
 def clean_text(text: str):
     """Limpa o texto removendo caracteres não imprimíveis e excesso de espaços."""
-    return ' '.join(ch for ch in text if ch.isprintable()).strip()
+    return cst.remover_caracteres_especiais(text)
 
 # ===============================================================
 # 2️⃣ Função para gerar as séries por idioma
@@ -32,6 +33,7 @@ def compute_language_series(df, normalize=True, max_texts=50):
     language_series = {}
 
     for lang in df['idioma'].unique():
+        nome_idioma = df[df['idioma'] == lang]['nome_idioma'].unique()[0]
         subset = df[df['idioma'] == lang].head(max_texts)
         all_series = []
 
@@ -53,7 +55,7 @@ def compute_language_series(df, normalize=True, max_texts=50):
             scaler = MinMaxScaler()
             avg_series = scaler.fit_transform(avg_series.reshape(-1, 1)).flatten()
 
-        language_series[lang] = avg_series
+        language_series['%s - %s' % (lang, nome_idioma)] = avg_series
 
     return language_series
 
@@ -83,9 +85,9 @@ def plot_language_series(df, filename="series_temporais_idiomas.html", normalize
         ))
 
     fig.update_layout(
-        title="Séries Temporais UTF-8 por Idioma",
-        xaxis_title="Posição no Texto",
-        yaxis_title="Amplitude Normalizada" if normalize else "Código UTF-8",
+        title="UTF-8 Time Series by Language",
+        xaxis_title="Position in the Text",
+        yaxis_title="Normalized Amplitude" if normalize else "Código UTF-8",
         template="plotly_white",
         width=950,
         height=600,
@@ -99,8 +101,9 @@ def plot_language_series(df, filename="series_temporais_idiomas.html", normalize
 
 def load_data(idioma=None):
     if idioma:
-        return bd.carregar_dados(idioma)[['idioma', 'conteudo']].copy()
-    return bd.carregar_dados()[['idioma', 'conteudo']].copy()
+        return bd.carregar_dados(idioma)[['nome_idioma', 'idioma', 'conteudo']].copy()
+
+    return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo']].copy()
 
 # ===============================================================
 # 4️⃣ Exemplo de uso
@@ -108,5 +111,6 @@ def load_data(idioma=None):
 
 if __name__ == "__main__":
     # Exemplo simples (substitua por seu carregamento real)
-    df = load_data()
+    idioma = input("informe o idioma (Enter para todos): ")
+    df = load_data(idioma=idioma) if idioma else load_data()
     plot_language_series(df)

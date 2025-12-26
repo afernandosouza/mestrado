@@ -58,9 +58,9 @@ def carregar_dados(idioma=None):
 
     # Lê os dados
     if idioma:
-        query = "SELECT * FROM textos WHERE idioma='%s' ORDER BY idioma" % idioma
+        query = "SELECT i.nome nome_idioma, t.* FROM textos t INNER JOIN idioma i ON t.idioma = i.codigo WHERE t.idioma='%s' ORDER BY t.idioma" % idioma
     else:
-        query = "SELECT * FROM textos ORDER BY idioma"
+        query = "SELECT i.nome nome_idioma, t.* FROM textos t INNER JOIN idioma i ON t.idioma = i.codigo ORDER BY t.idioma"
     
     df = pd.read_sql_query(query, conn)
     conn.close()
