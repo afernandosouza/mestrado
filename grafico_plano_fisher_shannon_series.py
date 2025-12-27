@@ -112,7 +112,7 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon_series.html"):
         ))
 
     fig.update_layout(
-        title="Fisher–Shannon Language Plan (Time Series)",
+        title="Fisher–Shannon Plane (Time Series)",
         xaxis_title="Normalized Shannon Entropy (H)",
         yaxis_title="Normalized Fisher's Information (F)",
         template="plotly_white",

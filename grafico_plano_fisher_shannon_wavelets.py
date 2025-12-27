@@ -133,7 +133,7 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon_wavelet.html"):
         ))
 
     fig.update_layout(
-        title="Fisher–Shannon Plane Based (Wavelet Packet Energies)",
+        title="Fisher–Shannon Plane (Wavelet Packet Energies)",
         xaxis_title="Normalized Shannon Entropy (H)",
         yaxis_title="Normalized Fisher Information (F)",
         template="plotly_white",
