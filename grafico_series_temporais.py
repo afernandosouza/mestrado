@@ -63,7 +63,7 @@ def compute_language_series(df, normalize=True, max_texts=50):
 # 3️⃣ Função de plotagem interativa
 # ===============================================================
 
-def plot_language_series(df, filename="series_temporais_idiomas.html", normalize=True):
+def plot_language_series(df, filename="grafico_series_temporais_idiomas.html", normalize=True):
     """
     Plota um gráfico interativo das séries temporais médias por idioma.
     """

@@ -96,7 +96,7 @@ def plot_wpt_features(text: str, lang_code: str, filename: str):
         print(e)
         raise
 
-def plot_wpt_features_interactive(df, filename="espectro_wpt_interativo.html", max_texts=10):
+def plot_wpt_features_interactive(df, filename="grafico_espectro_wpt_idiomas.html", max_texts=10):
     """
     Gera um gráfico interativo (Plotly) com as 32 bandas de frequência WPT
     sobrepostas para múltiplos textos, agrupados por idioma.

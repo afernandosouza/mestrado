@@ -1,0 +1,2 @@
+venv\Scripts\python.exe grafico_plano_fisher_shannon_series_wavelets.py
+pause

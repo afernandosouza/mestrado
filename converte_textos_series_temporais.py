@@ -1,19 +1,13 @@
 #encoding: utf-8
+import numpy as np
 from slugify import slugify
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import re
 import os
 
 def converter_texto_serie_temporal(texto, data_inicio="2025-01-01", frequencia="h"):
-    """
-    Converte um texto em uma série temporal com base nos valores UTF-8 dos caracteres.
-
-    :parametro texto: String de entrada
-    :parametro data_inicio: Data inicial da série temporal (YYYY-MM-DD)
-    :parametro frequencia: Frequência da série temporal (ex: 'D' para diário, 'H' para horário)
-    :retorno: Série temporal Pandas
-    """
     series = None
     try:
         valores_utf8 = [ord(c) for c in texto]
@@ -24,6 +18,21 @@ def converter_texto_serie_temporal(texto, data_inicio="2025-01-01", frequencia="
         raise
     
     return series
+
+def converter_textos_serie_temporal(lista_textos, data_inicio="2025-01-01", frequencia="h"):
+    lista_series = []
+    try:
+    	lista_series = [converter_texto_serie_temporal(txt) for txt in lista_textos]
+    except Exception as e:
+        print(e)
+        raise
+    
+    return lista_series
+
+def normaliza_series(x):
+	x = np.asarray(x, dtype=float)
+	scaler = MinMaxScaler()
+	return scaler.fit_transform(x.reshape(-1,1)).ravel()
 
 def remover_caracteres_especiais(texto):
 	texto_limpo = ''

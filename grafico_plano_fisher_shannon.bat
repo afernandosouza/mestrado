@@ -1,2 +1,0 @@
-venv\Scripts\python.exe grafico_plano_fisher_shannon.py
-pause
