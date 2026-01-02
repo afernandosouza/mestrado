@@ -1,0 +1,2 @@
+venv\Scripts\python.exe grafico_analise_metricas_wavelets.py
+pause
