@@ -6,7 +6,7 @@ import banco_dados as bd
 import converte_textos_series_temporais as cst
 
 # ===============================================================
-# 1️⃣ Utilitários
+# Utilitários
 # ===============================================================
 
 def text_to_utf8_series(text: str):
@@ -18,7 +18,7 @@ def clean_text(text: str):
     return cst.remover_caracteres_especiais(text)
 
 # ===============================================================
-# 2️⃣ Função para gerar as séries por idioma
+# Função para gerar as séries por idioma
 # ===============================================================
 
 def compute_language_series(df, normalize=True, max_texts=50):
@@ -60,7 +60,7 @@ def compute_language_series(df, normalize=True, max_texts=50):
     return language_series
 
 # ===============================================================
-# 3️⃣ Função de plotagem interativa
+# Função de plotagem interativa
 # ===============================================================
 
 def plot_language_series(df, filename="grafico_series_temporais_idiomas.html", normalize=True):
@@ -106,7 +106,7 @@ def load_data(idioma=None):
     return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo']].copy()
 
 # ===============================================================
-# 4️⃣ Exemplo de uso
+# Exemplo de uso
 # ===============================================================
 
 if __name__ == "__main__":

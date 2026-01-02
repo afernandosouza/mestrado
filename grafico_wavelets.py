@@ -24,15 +24,16 @@ def wavelet_packet_features(series: np.ndarray, wavelet='db4', maxlevel=5):
     Extrai 32 características (logaritmo da mediana da energia parcial)
     usando a Transformada de Pacote de Wavelet (WPT).
     """
+    bands = 2**maxlevel
     eps = 1e-10
     if series.size < 16:
         # Padding se o sinal for muito curto
         series = np.pad(series, (0, 16 - series.size), 'constant')
     
-    # Realiza a decomposição WPT até o nível 5
+    # Realiza a decomposição WPT até o nível bands
     wp = pywt.WaveletPacket(data=series, wavelet=wavelet, mode='symmetric', maxlevel=maxlevel)
     
-    # Coleta os nós (bandas de frequência) do último nível (32 bandas)
+    # Coleta os nós (bandas de frequência) do último nível (bands bandas)
     nodes = [node.path for node in wp.get_level(maxlevel, order='freq')]
     features = []
     
@@ -44,7 +45,7 @@ def wavelet_packet_features(series: np.ndarray, wavelet='db4', maxlevel=5):
         med = np.median(energy) if energy.size > 0 else 0.0
         features.append(np.log(abs(med) + eps))
         
-    return np.array(features[:32], dtype=np.float64)
+    return np.array(features[:bands], dtype=np.float64)
 
 # ----------------------------
 # Função de Plotagem Ajustada
@@ -110,7 +111,7 @@ def plot_wpt_features_interactive(df, filename="grafico_espectro_wpt_idiomas.htm
     x_axis = np.arange(1, 33)
     mean_dict = {}
 
-    # 1️⃣ Calcula os vetores médios por idioma
+    # Calcula os vetores médios por idioma
     for idioma in idiomas:
         nome_idioma = df[df['idioma'] == idioma]['nome_idioma'].unique()[0]
         subset = df[df['idioma'] == idioma].head(max_texts)
@@ -131,20 +132,20 @@ def plot_wpt_features_interactive(df, filename="grafico_espectro_wpt_idiomas.htm
         print("Nenhum idioma válido encontrado.")
         return
 
-    # 2️⃣ Cria matriz com os vetores médios
+    # Cria matriz com os vetores médios
     idioma_list = list(mean_dict.keys())
     mean_matrix = np.vstack([mean_dict[i] for i in idioma_list])
 
-    # 3️⃣ Projeta em 1D com PCA para definir similaridade
+    # Projeta em 1D com PCA para definir similaridade
     pca = PCA(n_components=1)
     proj = pca.fit_transform(mean_matrix)
     proj_scaled = MinMaxScaler().fit_transform(proj).ravel()
 
-    # 4️⃣ Gera cores contínuas baseadas nessa projeção
+    # Gera cores contínuas baseadas nessa projeção
     colormap = cm.get_cmap("turbo")
     colors = [f"rgba{cm.colors.to_rgba(colormap(p))}" for p in proj_scaled]
 
-    # 5️⃣ Cria o gráfico interativo
+    # Cria o gráfico interativo
     fig = go.Figure()
 
     for idioma, color in zip(idioma_list, colors):
