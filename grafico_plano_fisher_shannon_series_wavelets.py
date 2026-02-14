@@ -115,7 +115,7 @@ def compute_fisher_shannon_hybrid(df, max_texts=50):
 # 5️⃣ Gráfico interativo
 # ===============================================================
 
-def plot_fisher_shannon(df, filename="plano_fisher_shannon_hibrido.html"):
+def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series_wavelets.html"):
     if df.empty:
         print("DataFrame vazio. Nenhum gráfico gerado.")
         return

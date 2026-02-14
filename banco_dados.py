@@ -106,6 +106,29 @@ def dados_com_espacos(espacos=5):
     novo_df['texto_com_espacos'] = novo_df['conteudo'].apply(inserir_espacos)
     return novo_df
 
+def export_series_to_csv(
+    lang_series: dict,
+    csv_filename: str = "series_temporais_idiomas.csv"
+):
+    """
+    Exporta as séries temporais médias por idioma para um arquivo CSV.
+
+    Cada coluna representa um idioma e cada linha uma posição da série temporal.
+    """
+    if not lang_series:
+        print("Nenhum dado disponível para exportação.")
+        return
+
+    # Converte o dicionário em DataFrame
+    df_csv = pd.DataFrame(dict(
+        (lang, pd.Series(series)) for lang, series in lang_series.items()
+    ))
+
+    df_csv.index.name = "posicao"
+    df_csv.to_csv(csv_filename, encoding="utf-8", index=True)
+
+    print(f"📁 Dados exportados para: {csv_filename}")
+
 def main():
     try:
         textos = carregar_textos()

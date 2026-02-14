@@ -7,7 +7,7 @@ import pandas as pd
 import re
 import os
 
-def converter_texto_serie_temporal(texto, data_inicio="2025-01-01", frequencia="h"):
+def converter_texto_serie_temporal(texto, data_inicio="2000-01-01", frequencia="h"):
     series = None
     try:
         valores_utf8 = [ord(c) for c in texto]

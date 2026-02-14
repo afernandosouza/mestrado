@@ -56,7 +56,7 @@ def fisher_information_from_pdf(p):
 # 4️⃣ Processamento por idioma (WAVELET ONLY)
 # ===============================================================
 
-def compute_fisher_shannon_wavelet(df, max_texts=50):
+def compute_fisher_shannon_wavelet(df, max_texts=1000):
     """
     Calcula o plano Fisher–Shannon usando apenas energias Wavelet Packet.
     """
@@ -109,7 +109,7 @@ def compute_fisher_shannon_wavelet(df, max_texts=50):
 # 5️⃣ Gráfico interativo
 # ===============================================================
 
-def plot_fisher_shannon(df, filename="plano_fisher_shannon_wavelet.html"):
+def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_wavelets.html"):
     if df.empty:
         print("DataFrame vazio. Nenhum gráfico gerado.")
         return
@@ -133,7 +133,7 @@ def plot_fisher_shannon(df, filename="plano_fisher_shannon_wavelet.html"):
         ))
 
     fig.update_layout(
-        title="Fisher–Shannon Plane (Wavelet Packet Energies)",
+        title="Fisher–Shannon Plane (Wavelet Packet Transform)",
         xaxis_title="Normalized Shannon Entropy (H)",
         yaxis_title="Normalized Fisher Information (F)",
         template="plotly_white",

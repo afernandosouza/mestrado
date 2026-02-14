@@ -204,17 +204,6 @@ if __name__ == '__main__':
 
         print(f"Total de textos obtidos para o idioma {idioma_informado}: {len(textos_aleatorios)}")
         print(f"Textos salvos em: {arquivo_saida}")
-
-        #for idioma in carrega_idiomas():
-        #    textos_aleatorios = obter_textos_aleatorios(limite, idioma)
-
-            # Salva os textos em um arquivo JSON
-            #arquivo_saida = os.path.join(os.getcwd(),'TEXTOS',f"textos_{idioma}_{hoje.strftime('%d%m%Y%H%M%S')}.json")
-            #with open(arquivo_saida, "w", encoding="utf-8") as f:
-                #json.dump(textos_aleatorios, f, ensure_ascii=False, indent=4)
-
-            #print(f"Total de textos obtidos para o idioma {idioma}: {len(textos_aleatorios)}")
-            #print(f"Textos salvos em: {arquivo_saida}")
     except Exception as e:
         print(e)
         raise

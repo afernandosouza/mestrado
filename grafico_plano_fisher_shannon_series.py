@@ -44,7 +44,7 @@ def fisher_information(series, bins=256):
 # 3️⃣ Processamento por idioma
 # ===============================================================
 
-def compute_fisher_shannon_for_languages(df, bins=256, max_texts=50):
+def compute_fisher_shannon_for_languages(df, bins=256, max_texts=1000):
     """
     Calcula as métricas médias de Fisher–Shannon por idioma.
     """
@@ -85,7 +85,7 @@ def compute_fisher_shannon_for_languages(df, bins=256, max_texts=50):
 # 4️⃣ Gráfico interativo
 # ===============================================================
 
-def plot_fisher_shannon(df, filename="plano_fisher_shannon_series.html"):
+def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series.html"):
     """
     Gera o gráfico interativo do plano Fisher–Shannon.
     """

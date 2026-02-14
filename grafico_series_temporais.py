@@ -21,7 +21,7 @@ def clean_text(text: str):
 # Função para gerar as séries por idioma
 # ===============================================================
 
-def compute_language_series(df, normalize=True, max_texts=50):
+def compute_language_series(df, normalize=True, max_texts=1000):
     """
     Cria um dicionário com as séries médias UTF-8 por idioma.
     
@@ -63,7 +63,7 @@ def compute_language_series(df, normalize=True, max_texts=50):
 # Função de plotagem interativa
 # ===============================================================
 
-def plot_language_series(df, filename="grafico_series_temporais_idiomas.html", normalize=True):
+def plot_language_series(df, filename="grafico_series_temporais.html", normalize=True):
     """
     Plota um gráfico interativo das séries temporais médias por idioma.
     """
@@ -98,6 +98,7 @@ def plot_language_series(df, filename="grafico_series_temporais_idiomas.html", n
     fig.show()
     fig.write_html(filename)
     print(f"✅ Gráfico interativo salvo em: {filename}")
+    bd.export_series_to_csv(lang_series, filename.replace('.html','.csv'))
 
 def load_data(idioma=None):
     if idioma:
