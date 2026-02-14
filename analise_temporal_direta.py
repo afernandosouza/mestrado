@@ -124,9 +124,9 @@ if __name__ == "__main__":
     print("📊 Normalizando métricas...")
     df_features_norm = normalize_features(df_features)
 
-    df_features.to_csv("temporal_features_raw.csv", index=False)
-    df_features_norm.to_csv("temporal_features_normalized.csv", index=False)
+    df_features.to_csv("analise_temporal_direta.csv", index=False)
+    df_features_norm.to_csv("analise_temporal_direta_normalized.csv", index=False)
 
     print("✅ Arquivos gerados:")
-    print("- temporal_features_raw.csv")
-    print("- temporal_features_normalized.csv")
+    print("- analise_temporal_direta.csv")
+    print("- analise_temporal_direta_normalized.csv")

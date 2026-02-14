@@ -78,7 +78,7 @@ def wavelet_statistics(energies):
 # 4️⃣ Processamento do corpus
 # ============================================================
 
-def extract_wavelet_features(df, max_texts=50, min_length=100):
+def extract_wavelet_features(df, max_texts=1000, min_length=100):
     records = []
 
     for lang in df['idioma'].unique():
@@ -141,9 +141,9 @@ if __name__ == "__main__":
     print("📊 Normalizando métricas wavelet...")
     df_wavelet_norm = normalize_features(df_wavelet)
 
-    df_wavelet.to_csv("wavelet_features_raw.csv", index=False)
-    df_wavelet_norm.to_csv("wavelet_features_normalized.csv", index=False)
+    df_wavelet.to_csv("analise_metricas_wavelets.csv", index=False)
+    df_wavelet_norm.to_csv("analise_metricas_wavelets_normalized.csv", index=False)
 
     print("✅ Arquivos gerados:")
-    print("- wavelet_features_raw.csv")
-    print("- wavelet_features_normalized.csv")
+    print("- analise_metricas_wavelets.csv")
+    print("- analise_metricas_wavelets_normalized.csv")

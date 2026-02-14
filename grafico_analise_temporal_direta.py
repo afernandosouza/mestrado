@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 # 1️⃣ Configurações
 # ============================================================
 
-CSV_PATH = "temporal_features_normalized.csv"
+CSV_PATH = "analise_temporal_direta.csv"
 
 METRICS = [
     "shannon_entropy_norm",
@@ -77,12 +77,10 @@ fig.update_layout(
         )
     ),
     showlegend=True,
-    width=900,
-    height=800,
     template="plotly_white"
 )
 
 fig.show()
-fig.write_html("radar_temporal_languages.html")
+fig.write_html("grafico_analise_temporal_direta.html")
 
-print("✅ Radar chart salvo em radar_temporal_languages.html")
+print("✅ Radar chart salvo em grafico_analise_temporal_direta.html")

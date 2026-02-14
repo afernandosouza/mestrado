@@ -89,8 +89,6 @@ def plot_language_series(df, filename="grafico_series_temporais.html", normalize
         xaxis_title="Position in the Text",
         yaxis_title="Normalized Amplitude" if normalize else "Código UTF-8",
         template="plotly_white",
-        width=950,
-        height=600,
         hovermode="x unified",
         legend_title="Idiomas"
     )

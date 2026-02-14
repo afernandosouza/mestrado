@@ -164,8 +164,6 @@ def plot_wpt_features_interactive(df, filename="grafico_wavelets.html", max_text
         xaxis_title="WPT Frequency Band (1–32)",
         yaxis_title="Average Magnitude (Median Log-Energy)",
         template="plotly_white",
-        width=1100,
-        height=700,
         legend_title="Idiomas",
         hovermode="x unified"
     )
@@ -185,7 +183,7 @@ def main():
     try:
         idioma = input("informe o idioma (Enter para todos): ")
         df = load_data(idioma=idioma) if idioma else load_data()
-        plot_wpt_features_interactive(df, 'espectro_wpt_%s.html' % idioma)
+        plot_wpt_features_interactive(df)
     except Exception as e:
         print(e)
         raise

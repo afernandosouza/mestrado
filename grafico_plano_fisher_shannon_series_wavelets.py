@@ -61,9 +61,10 @@ def fisher_information_from_pdf(p):
 # 4️⃣ Processamento por idioma (HÍBRIDO)
 # ===============================================================
 
-def compute_fisher_shannon_hybrid(df, max_texts=50):
+def compute_fisher_shannon_hybrid(df, max_texts=1000):
     """
-    Calcula o plano Fisher–Shannon usando série temporal + Wavelet Packet.
+    Calcula métrica híbrida (Série Temporal + Wavelet)
+    e Shannon como eixo separado.
     """
     results = []
 
@@ -71,7 +72,8 @@ def compute_fisher_shannon_hybrid(df, max_texts=50):
         nome_idioma = df[df['idioma'] == lang]['nome_idioma'].unique()[0]
         subset = df[df['idioma'] == lang].head(max_texts)
 
-        Hs, Fs = [], []
+        hybrid_metrics = []
+        Hs = []
 
         for text in subset['conteudo']:
             cleaned = clean_text(text)
@@ -81,35 +83,44 @@ def compute_fisher_shannon_hybrid(df, max_texts=50):
                 continue
 
             series = normalize_series(series)
-            energies = wavelet_packet_energies(series)
 
+            # Métrica da série temporal (variância)
+            temporal_metric = np.var(series)
+
+            # Métrica wavelet (energia total)
+            energies = wavelet_packet_energies(series)
             if energies is None:
                 continue
 
+            wavelet_metric = np.sum(energies ** 2)
+
+            # Shannon (mantido separado)
             H = shannon_entropy_from_pdf(energies)
-            F = fisher_information_from_pdf(energies)
 
+            # Métrica híbrida (média das duas)
+            hybrid_value = (temporal_metric + wavelet_metric) / 2
+
+            hybrid_metrics.append(hybrid_value)
             Hs.append(H)
-            Fs.append(F)
 
-        if Hs and Fs:
+        if hybrid_metrics and Hs:
             results.append({
                 "idioma": f"{lang} - {nome_idioma}",
-                "H": np.mean(Hs),
-                "F": np.mean(Fs)
+                "Hybrid": np.mean(hybrid_metrics),
+                "H": np.mean(Hs)
             })
 
-    df_fs = pd.DataFrame(results)
+    df_result = pd.DataFrame(results)
 
-    if df_fs.empty:
+    if df_result.empty:
         print("Nenhum idioma válido para análise.")
         return pd.DataFrame()
 
     # Normalização final
     scaler = MinMaxScaler()
-    df_fs[['H', 'F']] = scaler.fit_transform(df_fs[['H', 'F']])
+    df_result[['Hybrid', 'H']] = scaler.fit_transform(df_result[['Hybrid', 'H']])
 
-    return df_fs
+    return df_result
 
 # ===============================================================
 # 5️⃣ Gráfico interativo
@@ -124,8 +135,8 @@ def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series_wavele
 
     for _, row in df.iterrows():
         fig.add_trace(go.Scatter(
-            x=[row['H']],
-            y=[row['F']],
+            x=[row['Hybrid']],
+            y=[row['H']],
             mode='markers+text',
             name=row['idioma'],
             text=[row['idioma']],
@@ -133,18 +144,16 @@ def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series_wavele
             marker=dict(size=14, opacity=0.85),
             hovertemplate=(
                 f"<b>{row['idioma']}</b><br>"
-                f"Shannon Entropy (H): {row['H']:.3f}<br>"
-                f"Fisher Information (F): {row['F']:.3f}<extra></extra>"
+                f"Métrica Híbrida: {row['Hybrid']:.3f}<br>"
+                f"Shannon (H): {row['H']:.3f}<extra></extra>"
             )
         ))
 
     fig.update_layout(
-        title="Fisher–Shannon Plane (Time Series + Wavelet Energies)",
-        xaxis_title="Normalized Shannon Entropy (H)",
-        yaxis_title="Normalized Fisher Information (F)",
+        title="Hybrid Metric (Time Series + Wavelet) vs Shannon",
+        xaxis_title="Hybrid Metric (Temporal + Wavelet)",
+        yaxis_title="Normalized Shannon Entropy (H)",
         template="plotly_white",
-        width=900,
-        height=700,
         hovermode="closest"
     )
 

@@ -137,8 +137,6 @@ def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_wavelets.html
         xaxis_title="Normalized Shannon Entropy (H)",
         yaxis_title="Normalized Fisher Information (F)",
         template="plotly_white",
-        width=900,
-        height=700,
         hovermode="closest"
     )
 
