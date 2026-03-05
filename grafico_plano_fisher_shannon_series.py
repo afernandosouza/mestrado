@@ -6,7 +6,7 @@ import banco_dados as bd
 import converte_textos_series_temporais as cst
 
 # ===============================================================
-# 1️⃣ Utilitários
+# 1️ Utilitários
 # ===============================================================
 
 def clean_text(text):
@@ -18,7 +18,7 @@ def text_to_utf8_series(text):
     return cst.converter_texto_serie_temporal(text)
 
 # ===============================================================
-# 2️⃣ Métricas Fisher–Shannon
+# 2️ Métricas Fisher–Shannon
 # ===============================================================
 
 def shannon_entropy(series, bins=256):
@@ -41,7 +41,7 @@ def fisher_information(series, bins=256):
     return F
 
 # ===============================================================
-# 3️⃣ Processamento por idioma
+# 3️ Processamento por idioma
 # ===============================================================
 
 def compute_fisher_shannon_for_languages(df, bins=256, max_texts=1000):

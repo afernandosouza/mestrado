@@ -8,7 +8,7 @@ import banco_dados as bd
 import converte_textos_series_temporais as cst
 
 # ===============================================================
-# 1️⃣ Utilitários
+# 1️ Utilitários
 # ===============================================================
 
 def clean_text(text):
@@ -26,7 +26,7 @@ def normalize_series(x):
     return scaler.fit_transform(x.reshape(-1, 1)).ravel()
 
 # ===============================================================
-# 2️⃣ Wavelet Packet + Energias
+# 2️ Wavelet Packet + Energias
 # ===============================================================
 
 def wavelet_packet_energies(series, wavelet="db4", level=5):
@@ -45,7 +45,7 @@ def wavelet_packet_energies(series, wavelet="db4", level=5):
     return energies / energies.sum()
 
 # ===============================================================
-# 3️⃣ Métricas Fisher–Shannon (sobre energias)
+# 3️ Métricas Fisher–Shannon (sobre energias)
 # ===============================================================
 
 def shannon_entropy_from_pdf(p):
@@ -58,7 +58,7 @@ def fisher_information_from_pdf(p):
     return np.sum((dp ** 2) / p[:-1])
 
 # ===============================================================
-# 4️⃣ Processamento por idioma (HÍBRIDO)
+# 4️ Processamento por idioma (HÍBRIDO)
 # ===============================================================
 
 def compute_fisher_shannon_hybrid(df, max_texts=1000):
@@ -123,7 +123,7 @@ def compute_fisher_shannon_hybrid(df, max_texts=1000):
     return df_result
 
 # ===============================================================
-# 5️⃣ Gráfico interativo
+# 5️ Gráfico interativo
 # ===============================================================
 
 def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series_wavelets.html"):
@@ -162,7 +162,7 @@ def plot_fisher_shannon(df, filename="grafico_plano_fisher_shannon_series_wavele
     print(f"✅ Gráfico interativo salvo em: {filename}")
 
 # ===============================================================
-# 6️⃣ Carregamento de dados
+# 6️ Carregamento de dados
 # ===============================================================
 
 def load_data(idioma=None):
@@ -171,7 +171,7 @@ def load_data(idioma=None):
     return bd.carregar_dados()[['nome_idioma', 'idioma', 'conteudo']].copy()
 
 # ===============================================================
-# 7️⃣ Execução
+# 7️ Execução
 # ===============================================================
 
 if __name__ == "__main__":
