@@ -13,11 +13,13 @@ from data.dataset_loader import load_dataset_sqlite
 from pipeline.lid_pipeline import LIDPipeline
 from experiments.spacing_experiment import apply_spacing
 
-from logger import setup_logger
+from logger import setup_logger, log_final_results
 from evaluation.save_results import save_results
 from evaluation.plot_results import plot_results
 from evaluation.confusion import save_confusion
 from evaluation.statistics import compute_statistics
+
+from utils.system_info import print_and_log_system_info, SystemMonitor, print_and_log_monitor_results
 
 
 def run_experiment():
@@ -31,6 +33,17 @@ def run_experiment():
 
     start_datetime = datetime.now()
     start_time = time.time()
+
+    print_and_log_system_info(logger)
+
+    monitor = SystemMonitor(interval=1)
+    monitor.start()
+
+    logger.info("====================================================")
+    logger.info("INÍCIO DA EXECUÇÃO DA PIPELINE")
+    logger.info("====================================================")
+    logger.info(f"Início: {start_datetime.strftime('%d/%m/%Y %H:%M:%S')}")
+    logger.info("")
 
     print("Data/Hora início:", start_datetime.strftime("%d/%m/%Y %H:%M:%S"))
     print()
@@ -144,6 +157,24 @@ def run_experiment():
 
     for k, v in results.items():
         print(f"{k} espaço(s) → {v['mean']:.4f}")
+
+    log_final_results(logger, results)
+
+    end_time = datetime.now()
+
+    total_time = end_time - start_datetime
+
+    logger.info("====================================================")
+    logger.info("TEMPO TOTAL DE EXECUÇÃO")
+    logger.info("====================================================")
+
+    logger.info(f"Fim: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Tempo total: {str(total_time)}")
+    logger.info("")
+
+    monitor.stop()
+    stats = monitor.get_stats()
+    print_and_log_monitor_results(stats, logger)
 
     save_results(results)
     plot_results(results)
