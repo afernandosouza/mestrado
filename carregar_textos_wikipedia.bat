@@ -1,1 +1,0 @@
-venv\Scripts\python.exe carregar_textos_wikipedia.py

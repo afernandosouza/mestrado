@@ -1,2 +1,0 @@
-venv\Scripts\python.exe remove_quebras_linhas_extras.py
-pause

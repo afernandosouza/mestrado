@@ -1,0 +1,88 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="INFORMATION" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="acme" />
+          <option value="attrs" />
+          <option value="Automat" />
+          <option value="blinker" />
+          <option value="certbot" />
+          <option value="certbot-nginx" />
+          <option value="chardet" />
+          <option value="Click" />
+          <option value="cloud-init" />
+          <option value="colorama" />
+          <option value="command-not-found" />
+          <option value="ConfigArgParse" />
+          <option value="configobj" />
+          <option value="constantly" />
+          <option value="dbus-python" />
+          <option value="distro" />
+          <option value="distro-info" />
+          <option value="django-cleanup" />
+          <option value="entrypoints" />
+          <option value="future" />
+          <option value="httplib2" />
+          <option value="hyperlink" />
+          <option value="importlib-metadata" />
+          <option value="incremental" />
+          <option value="Jinja2" />
+          <option value="josepy" />
+          <option value="jsonpatch" />
+          <option value="jsonpointer" />
+          <option value="jsonschema" />
+          <option value="keyring" />
+          <option value="language-selector" />
+          <option value="launchpadlib" />
+          <option value="lazr.restfulclient" />
+          <option value="lazr.uri" />
+          <option value="MarkupSafe" />
+          <option value="mock" />
+          <option value="more-itertools" />
+          <option value="netifaces" />
+          <option value="oauthlib" />
+          <option value="parsedatetime" />
+          <option value="pbr" />
+          <option value="pexpect" />
+          <option value="pyasn1" />
+          <option value="pyasn1-modules" />
+          <option value="PyGObject" />
+          <option value="PyHamcrest" />
+          <option value="PyICU" />
+          <option value="PyJWT" />
+          <option value="pymacaroons" />
+          <option value="PyNaCl" />
+          <option value="pyOpenSSL" />
+          <option value="pyparsing" />
+          <option value="pyRFC3339" />
+          <option value="pyrsistent" />
+          <option value="pyserial" />
+          <option value="python-apt" />
+          <option value="python-debian" />
+          <option value="requests-toolbelt" />
+          <option value="requests-unixsocket" />
+          <option value="SecretStorage" />
+          <option value="service-identity" />
+          <option value="simplejson" />
+          <option value="sos" />
+          <option value="ssh-import-id" />
+          <option value="systemd-python" />
+          <option value="Twisted" />
+          <option value="typing-extensions" />
+          <option value="ubuntu-advantage-tools" />
+          <option value="ufw" />
+          <option value="unattended-upgrades" />
+          <option value="uWSGI" />
+          <option value="wadllib" />
+          <option value="zipp" />
+          <option value="zope.component" />
+          <option value="zope.event" />
+          <option value="zope.hookable" />
+          <option value="zope.interface" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

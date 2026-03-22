@@ -1,2 +1,0 @@
-venv\Scripts\python.exe grafico_analise_temporal_direta.py
-pause
