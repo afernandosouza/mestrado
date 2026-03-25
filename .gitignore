@@ -1,7 +1,10 @@
 venv/
+.venv/
 __pycache__/
 .ipynb_checkpoints/
+.idea/
 codigo_antigo/
 IDIOMA.txt
 banco_texto.db
 *.png
+*.xml

@@ -1,10 +1,12 @@
+# config.py (atualizado)
+
 DATABASE = "../banco_texto.db"
 
 TEST_SPLIT = 0.2
 
 N_CLUSTERS = 6
 
-N_RUNS = 1
+N_RUNS = 10
 
 SPACING_LEVELS = [1, 5, 7, 12]
 

@@ -9,11 +9,11 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
 from config import *
-from data.dataset_loader import load_dataset_sqlite
-from pipeline.lid_pipeline import LIDPipeline
-from experiments.spacing_experiment import apply_spacing
+from dataset_loader import load_dataset_sqlite
+from lid_pipeline import LIDPipeline
+from spacing_experiment import apply_spacing
 
-from logger import setup_logger, log_final_results
+from utils.logger import setup_logger, log_final_results
 from evaluation.save_results import save_results
 from evaluation.plot_results import plot_results
 from evaluation.confusion import save_confusion
