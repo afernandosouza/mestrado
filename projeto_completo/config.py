@@ -1,10 +1,29 @@
 # config.py (atualizado)
 
-DATABASE = "../banco_texto.db"
+from pathlib import Path
+
+DATABASE = "banco_texto.db"
+
+# --------------------------------------------------------------------
+# Configuração de conteúdo utilizado nos experimentos
+# True  → usa 'conteudo_uma_quebra' (quebras múltiplas → 1 quebra)
+# False → usa 'conteudo' (texto original, sem tratamento)
+# --------------------------------------------------------------------
+USAR_CONTEUDO_TRATADO = True
+
+# Caracteres removidos antes do cálculo da média UTF-8
+# Conforme artigo de Hassanpour et al. (2021):
+# "Characters such as @, -, + and # may exist in different texts.
+#  Therefore, they are removed from the time series."
+CHARS_TO_REMOVE = set('@-+#')
 
 TEST_SPLIT = 0.2
 
 N_CLUSTERS = 6
+
+N_SPACES   = 7
+
+RANDOM_STATE = 42
 
 N_RUNS = 10
 
@@ -17,6 +36,8 @@ WAVELET = "db4"
 WAVELET_LEVEL = 5
 
 CODE_UTF8_TYPE = 'unicode_codepoints'  # ['utf8_bytes', 'unicode_codepoints']
+
+BATCH_SIZE  = 200
 
 # Parâmetros de Teoria da Informação
 EMBEDDING_DIM = 6  # Dimensão de imersão Bandt-Pompe
@@ -32,3 +53,9 @@ ENSEMBLE_WEIGHTS = {
     'ch': 0.25,
     'fs': 0.25
 }
+
+# Parâmetros para redução de dimensionalidade / t-SNE
+TSNE_PERPLEXITY = 30
+TSNE_N_ITER     = 2000
+
+RESULTS_DIR = Path("results")

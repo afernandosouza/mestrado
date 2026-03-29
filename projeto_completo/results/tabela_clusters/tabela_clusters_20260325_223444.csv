@@ -1,0 +1,7 @@
+Cluster members,Cluster centre,Accuracy (%)
+"az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr",77.02,78.28
+"be, bg, ru",470.25,73.67
+"ar, arz, fa, he, ps",618.8,93.8
+ckb,767.31,100.0
+hi,866.81,100.0
+ta,1436.46,100.0

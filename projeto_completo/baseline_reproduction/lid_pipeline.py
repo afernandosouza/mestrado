@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from cluster_model import ClusterModel
 from signal_processing.wavelet_features import extract_features
 from ml.mlp_model import create_mlp
+from config import *
 
 
 class LIDPipeline:

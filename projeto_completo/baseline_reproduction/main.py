@@ -1,6 +1,18 @@
 import warnings
 warnings.filterwarnings('ignore')
 
+import sys
+from pathlib import Path
+
+# --------------------------------------------------------------------
+# Ajuste do sys.path
+# Sobe dois níveis a partir de baseline_reproduction/:
+#   baseline_reproduction/ -> projeto_completo/
+# Assim todos os módulos do projeto ficam acessíveis diretamente
+# --------------------------------------------------------------------
+ROOT_DIR = Path(__file__).resolve().parents[1]  # projeto_completo/
+sys.path.insert(0, str(ROOT_DIR))
+
 import time
 import numpy as np
 from datetime import datetime
@@ -9,7 +21,7 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
 from config import *
-from dataset_loader import load_dataset_sqlite
+from data.dataset_loader import load_dataset_sqlite
 from lid_pipeline import LIDPipeline
 from spacing_experiment import apply_spacing
 
@@ -52,7 +64,7 @@ def run_experiment():
 
     print("Carregando dataset do banco SQLite...")
 
-    texts, labels = load_dataset_sqlite(DATABASE)
+    texts, labels, unique_langs = load_dataset_sqlite(DATABASE)
 
     print("Total de textos carregados:", len(texts))
     print("Total de idiomas:", len(set(labels)))

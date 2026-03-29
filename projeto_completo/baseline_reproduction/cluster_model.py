@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from typing import List
+from config import *
 from signal_processing.text_signal import text_to_signal
 
 class ClusterModel:
@@ -12,13 +13,9 @@ class ClusterModel:
     Reproduz exatamente o método do artigo Hassanpour et al. (2021)
     """
 
-    def __init__(self, n_clusters: int = 6):
-        """
-        Args:
-            n_clusters: Número de clusters (K=6 no artigo)
-        """
+    def __init__(self, n_clusters):
         self.n_clusters = n_clusters
-        self.kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+        self.kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
         self.scaler = StandardScaler()
         self.centers_ = None
         self.is_fitted = False
@@ -31,7 +28,7 @@ class ClusterModel:
 
         for text in texts:
             # Remove caracteres comuns mencionados no artigo
-            cleaned = ''.join(c for c in text if c not in ['@', '-', '+', '#', '"'])
+            cleaned = ''.join(c for c in text if c not in CHARS_TO_REMOVE)
             signal = text_to_signal(cleaned)
             mean_value = np.mean(signal)
             means.append([mean_value])

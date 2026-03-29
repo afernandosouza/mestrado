@@ -1,0 +1,7 @@
+Cluster members,Cluster centre,Accuracy (%)
+"['ar', 'arz', 'az', 'be', 'bg', 'ca', 'ckb', 'cs', 'de', 'en', 'eo', 'es', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'id', 'it', 'nl', 'pl', 'ps', 'pt', 'ro', 'ru', 'ta', 'tr']",76.98106159393373,77.77
+"['ar', 'arz', 'az', 'be', 'bg', 'ckb', 'cs', 'en', 'eo', 'es', 'fa', 'fi', 'fr', 'he', 'hi', 'id', 'pl', 'ps', 'pt', 'ru', 'ta', 'tr']",520.360226623219,84.33
+"['ar', 'arz', 'bg', 'ckb', 'en', 'fa', 'fr', 'gl', 'he', 'hi', 'id', 'pl', 'ps', 'ru', 'ta']",730.8765999111818,92.53
+"['hi', 'id', 'ta']",1477.4809636047426,100.0
+"['ckb', 'ps']",11834.323752404096,0.0
+['ps'],19896.585285759393,100.0
