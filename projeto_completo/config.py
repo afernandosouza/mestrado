@@ -59,3 +59,10 @@ TSNE_PERPLEXITY = 30
 TSNE_N_ITER     = 2000
 
 RESULTS_DIR = Path("results")
+
+# Parâmetros de Teoria da Informação — Bandt-Pompe
+# Dimensão de imersão para cálculo da entropia de permutação
+# e informação de Fisher no plano CH (Fisher-Shannon).
+# Valor padrão recomendado: 6 (Bandt & Pompe, 2002; Rosso et al., 2007)
+# Requisito mínimo de comprimento do sinal: n >> dim! = 720
+EMBEDDING_DIM = 6

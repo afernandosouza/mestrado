@@ -34,7 +34,7 @@ from config import (
     RESULTS_DIR,         # certifique-se de ter essa constante no config.py
                          # sugestão: RESULTS_DIR = Path("results")
 )
-from data.dataset_loader import load_dataset_sqlite
+from information_theory.dataset_it import load_dataset_it
 from signal_processing.text_signal import text_to_signal
 
 
@@ -162,7 +162,7 @@ def extract_information_theoretic_features(
         lang_codes,
         raw_labels,
         medias_utf8,
-    ) = load_dataset_sqlite(DATABASE, usar_tratado=USAR_CONTEUDO_TRATADO)
+    ) = load_dataset_it(DATABASE)
 
     n_samples = len(texts)
     print(f"Total de textos : {n_samples}")
