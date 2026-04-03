@@ -21,18 +21,12 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches # Para a elipse
 
-# NOVO: Importar pywt para transformada wavelet
-import pywt
-
 from config import DATABASE, EMBEDDING_DIM, RANDOM_STATE
 from information_theory.dataset_it import load_dataset_it # Usaremos esta para obter os códigos
 from signal_processing.text_signal import text_to_signal
 from information_theory.experiment_cache import save_experiment, load_experiment
 from information_theory.fisher_shannon_experiment import compute_hs_f
 from information_theory.bandt_pompe_complexity import bandt_pompe_complexity
-
-from sklearn.metrics import silhouette_score
-from scipy.spatial.distance import cdist
 
 # Garante que o diretório de resultados exista
 RESULTS_DIR = Path("results") / "experiments"
@@ -115,10 +109,6 @@ class ExperimentGUI:
         # Radio button: 'bp', 'fs' (Histograma removido)
         self.plot_type = tk.StringVar(value="bp") 
 
-        # NOVO: Variável para o tipo de sinal (Original ou Wavelet)
-        self.signal_type_var = tk.StringVar(value="original") # Padrão: original
-        self.wavelet_level_var = tk.IntVar(value=3) # Nível de detalhe padrão para wavelet (D3)
-
         self.fig = plt.Figure(figsize=(6, 4), dpi=100)
         self.ax  = self.fig.add_subplot(111)
 
@@ -171,212 +161,6 @@ class ExperimentGUI:
             return base
 
     # ------------------------------------------------------------------
-    # NOVO: Função para gerar sinal wavelet
-    # ------------------------------------------------------------------
-    def _get_wavelet_signal(self, original_signal, wavelet_name="db4", level=5, detail_level_to_use=3):
-        """
-        Aplica a transformada wavelet discreta e retorna os coeficientes de detalhe de um nível específico.
-        wavelet_name: Família da wavelet (ex: "db4")
-        level: Número total de níveis de decomposição.
-        detail_level_to_use: O nível de detalhe (D1 a D5) cujos coeficientes serão usados como sinal.
-        """
-        try:
-            wavelet = pywt.Wavelet(wavelet_name)
-        except ValueError:
-            raise ValueError(f"Wavelet '{wavelet_name}' inválida.")
-
-        # Garante que o sinal seja numpy array e float para pywt
-        signal_float = np.array(original_signal, dtype=float)
-
-        # Verifica se o sinal é longo o suficiente para a decomposição
-        # pywt.dwt_max_level retorna o nível máximo possível para um dado comprimento de sinal e wavelet
-        max_possible_level = pywt.dwt_max_level(len(signal_float), wavelet)
-        if level > max_possible_level:
-            # Reduz o nível de decomposição se o sinal for muito curto
-            level = max_possible_level
-            if level == 0: # Se nem nível 1 for possível
-                messagebox.showwarning("Aviso Wavelet", "Sinal muito curto para qualquer decomposição wavelet. Usando sinal original.")
-                return original_signal # Retorna o sinal original como fallback
-
-        # Realiza a decomposição wavelet
-        coeffs = pywt.wavedec(signal_float, wavelet, level=level)
-
-        # coeffs[0] é o coeficiente de aproximação (cA_level)
-        # coeffs[1] é o coeficiente de detalhe D_level
-        # ...
-        # coeffs[level] é o coeficiente de detalhe D1
-
-        # Queremos o coeficiente de detalhe do nível especificado (D_detail_level_to_use)
-        # A ordem em coeffs é [cA_N, cD_N, cD_N-1, ..., cD_1]
-        # Então, cD_detail_level_to_use está em coeffs[level - detail_level_to_use + 1]
-
-        # Ex: se level=5 e detail_level_to_use=3 (D3)
-        # coeffs = [cA5, cD5, cD4, cD3, cD2, cD1]
-        # cD3 está em coeffs[5 - 3 + 1] = coeffs[3]
-
-        # Verifica se o nível de detalhe solicitado é válido
-        if not (1 <= detail_level_to_use <= level):
-            messagebox.showwarning("Aviso Wavelet", f"Nível de detalhe {detail_level_to_use} inválido para {level} níveis. Usando D1.")
-            detail_level_to_use = 1 # Fallback para D1
-
-        # Pega os coeficientes de detalhe do nível desejado
-        wavelet_signal = coeffs[level - detail_level_to_use + 1]
-
-        # Opcional: Normalizar os coeficientes para evitar valores muito grandes/pequenos
-        # Isso pode ajudar na estabilidade dos cálculos de Hs/C/F
-        if len(wavelet_signal) > 0:
-            wavelet_signal = (wavelet_signal - np.mean(wavelet_signal)) / (np.std(wavelet_signal) + 1e-10)
-
-        return wavelet_signal
-
-        # ------------------------------------------------------------------
-    # Avaliação de separabilidade (sem ML treinado)
-    # ------------------------------------------------------------------
-    def evaluate_current_space(self):
-        """
-        Avalia quão bem os idiomas se separam no espaço atual (bp ou fs),
-        usando apenas as métricas de Teoria da Informação.
-
-        Métricas:
-          - Índice de Silhueta (quanto maior, melhor, típico 0.0–1.0)
-          - Razão intra/inter-distância (quanto menor, melhor)
-          - Acurácia por centróide (classificação por idioma mais próximo)
-        """
-        if self.current_space not in ("bp", "fs"):
-            messagebox.showwarning(
-                "Aviso",
-                "Gere primeiro um gráfico Bandt-Pompe ou Fisher-Shannon para avaliar a separabilidade."
-            )
-            return
-
-        if not self.current_data_points_multi:
-            messagebox.showwarning(
-                "Aviso",
-                "Nenhum dado disponível para avaliação. Gere um gráfico primeiro."
-            )
-            return
-
-        # Monta matriz de pontos X e rótulos numéricos y
-        all_points = []
-        all_labels = []
-        lang_list = []
-
-        for idx, (lang, data) in enumerate(self.current_data_points_multi.items()):
-            if data.get("type") != self.current_space:
-                continue
-            hs = data["hs"]
-            yvals = data["y"]
-            if len(hs) == 0:
-                continue
-            pts = np.column_stack((hs, yvals))  # (n_textos, 2)
-            all_points.append(pts)
-            all_labels.append(np.full(len(pts), idx))
-            lang_list.append(lang)
-
-        if not all_points:
-            messagebox.showwarning(
-                "Aviso",
-                "Nenhum dado válido no espaço atual para avaliação."
-            )
-            return
-
-        X = np.vstack(all_points)          # todos os pontos (N_total, 2)
-        y = np.concatenate(all_labels)     # rótulos numéricos (N_total,)
-
-        if len(np.unique(y)) < 2:
-            messagebox.showwarning(
-                "Aviso",
-                "É necessário pelo menos 2 idiomas para calcular a separabilidade."
-            )
-            return
-
-        # 1. Índice de Silhueta
-        try:
-            sil_score = silhouette_score(X, y, metric="euclidean")
-        except Exception as e:
-            sil_score = np.nan
-            print(f"Aviso: não foi possível calcular Silhueta: {e}")
-
-        # 2. Razão intra/inter-distância
-        intra_dists = []
-        inter_dists = []
-
-        # Calcula centróides por idioma no plano atual
-        centroids = {}
-        for idx, lang in enumerate(lang_list):
-            mask = (y == idx)
-            pts_lang = X[mask]
-            if len(pts_lang) == 0:
-                continue
-            centroids[lang] = pts_lang.mean(axis=0)
-
-        # Se não tiver pelo menos 2 centróides válidos, não faz sentido continuar
-        if len(centroids) < 2:
-            messagebox.showwarning(
-                "Aviso",
-                "Não há idiomas suficientes com dados válidos para calcular distâncias intra/inter."
-            )
-            return
-
-        for idx, lang in enumerate(lang_list):
-            mask = (y == idx)
-            pts_lang = X[mask]
-            if len(pts_lang) < 2:
-                # não dá pra calcular distância intra com 1 ponto só
-                continue
-
-            # Distância média intra-idioma
-            dist_matrix = cdist(pts_lang, pts_lang, metric="euclidean")
-            # pega apenas parte superior da matriz, sem diagonal
-            triu_indices = np.triu_indices(len(pts_lang), k=1)
-            intra = dist_matrix[triu_indices].mean()
-            intra_dists.append(intra)
-
-            # Distância média do centróide desse idioma para os centróides dos outros
-            this_centroid = centroids[lang]
-            other_centroids = [
-                c for l, c in centroids.items() if l != lang
-            ]
-            dists_to_others = [np.linalg.norm(this_centroid - oc) for oc in other_centroids]
-            inter_dists.append(np.mean(dists_to_others))
-
-        if intra_dists and inter_dists:
-            R = float(np.mean(intra_dists) / (np.mean(inter_dists) + 1e-10))
-        else:
-            R = np.nan
-
-        # 3. Acurácia por centróide mais próximo
-        correct = 0
-        total = 0
-        for point, label_idx in zip(X, y):
-            true_lang = lang_list[label_idx]
-            # distâncias para todos os centróides calculados a partir dos dados
-            dists = {lang: np.linalg.norm(point - c) for lang, c in centroids.items()}
-            predicted_lang = min(dists, key=dists.get)
-            if predicted_lang == true_lang:
-                correct += 1
-            total += 1
-
-        centroid_accuracy = correct / total if total > 0 else np.nan
-
-        # Mostra os resultados em uma janela
-        space_name = "Bandt-Pompe (CH)" if self.current_space == "bp" else "Fisher-Shannon (FS)"
-        msg = (
-            f"Avaliação de separabilidade no espaço {space_name}:\n\n"
-            f"- Índice de Silhueta médio: {sil_score:.3f}\n"
-            f"- Razão intra/inter-distância (R): {R:.3f}\n"
-            f"  (quanto menor R, melhor separação entre idiomas)\n"
-            f"- Acurácia por centróide mais próximo: {centroid_accuracy*100:.2f}%\n\n"
-            f"Interpretação rápida:\n"
-            f"• Silhueta alta (≈0.5 ou mais) indica clusters bem separados.\n"
-            f"• R baixo (< 0.7) indica que textos de um mesmo idioma estão, em média,\n"
-            f"  mais próximos entre si do que de outros idiomas.\n"
-            f"• Acurácia por centróide alta sugere que um classificador simples baseado\n"
-            f"  apenas em distância no plano de Teoria da Informação já seria eficaz."
-        )
-        messagebox.showinfo("Avaliação de separabilidade", msg)
-
-    # ------------------------------------------------------------------
     # Layout
     # ------------------------------------------------------------------
     def _build_layout(self):
@@ -420,23 +204,6 @@ class ExperimentGUI:
         ttk.Label(params_frame, text="Atraso (τ):").pack(anchor="w", padx=2, pady=2)
         ttk.Entry(params_frame, textvariable=self.tau_var, width=5).pack(anchor="w", padx=2, pady=2)
 
-        # NOVO: Frame para seleção do tipo de sinal
-        signal_type_frame = ttk.LabelFrame(top_frame, text="Tipo de Sinal")
-        signal_type_frame.pack(side=tk.LEFT, padx=10, pady=5, fill=tk.Y)
-
-        ttk.Radiobutton(signal_type_frame, text="Original (Codepoints)", variable=self.signal_type_var, value="original", command=self._toggle_wavelet_options).pack(anchor="w", padx=2)
-        ttk.Radiobutton(signal_type_frame, text="Wavelet (db4, 5 níveis)", variable=self.signal_type_var, value="wavelet", command=self._toggle_wavelet_options).pack(anchor="w", padx=2)
-
-        # NOVO: Opções de nível wavelet (inicialmente desabilitadas)
-        self.wavelet_level_label = ttk.Label(signal_type_frame, text="Nível Detalhe (D1-D5):")
-        self.wavelet_level_label.pack(anchor="w", padx=2, pady=2)
-        self.wavelet_level_entry = ttk.Entry(signal_type_frame, textvariable=self.wavelet_level_var, width=5)
-        self.wavelet_level_entry.pack(anchor="w", padx=2, pady=2)
-
-        # Desabilita as opções de wavelet por padrão
-        self.wavelet_level_label.config(state=tk.DISABLED)
-        self.wavelet_level_entry.config(state=tk.DISABLED)
-
 
         # Radio buttons para seleção do tipo de gráfico (Histograma removido)
         radio_frame = ttk.LabelFrame(top_frame, text="Tipo de Gráfico")
@@ -473,14 +240,6 @@ class ExperimentGUI:
         self.export_data_button = ttk.Button(export_frame, text="Dados (CSV)", command=self.export_data)
         self.export_data_button.pack(side=tk.LEFT, padx=5)
 
-        # Botão para avaliar separabilidade no plano atual (bp ou fs)
-        self.evaluate_button = ttk.Button(
-            export_frame,
-            text="Avaliar separabilidade (TI)",
-            command=self.evaluate_current_space
-        )
-        self.evaluate_button.pack(side=tk.LEFT, padx=5)
-
 
         # Área de comparação (texto novo) — só para BP e FS
         bottom_frame = ttk.LabelFrame(self.master, text="Comparar texto com idioma de referência")
@@ -489,8 +248,12 @@ class ExperimentGUI:
         self.text_input = tk.Text(bottom_frame, height=4)
         self.text_input.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-        control_frame = ttk.LabelFrame(bottom_frame, text="Controles") # Mudei para LabelFrame para organizar
+        control_frame = ttk.Frame(bottom_frame)
         control_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=5, pady=5)
+
+        self.clear_text_button = ttk.Button(control_frame, text="Limpar Texto", command=self.clear_text_input)
+        self.clear_text_button.pack(fill=tk.X, pady=5) # Adicionei um pady para espaçar um pouco
+        create_tooltip(self.clear_text_button, "Limpa o campo de texto para nova entrada.")
 
         self.compare_bp_button = ttk.Button(control_frame, text="Comparar (BP)", command=self.on_compare_bp)
         self.compare_bp_button.pack(fill=tk.X, pady=2)
@@ -502,26 +265,6 @@ class ExperimentGUI:
 
         self.result_label = ttk.Label(control_frame, text="", foreground="blue")
         self.result_label.pack(fill=tk.X, pady=5)
-
-        # NOVO: Desabilita os botões de comparação por padrão
-        self.compare_bp_button.config(state=tk.DISABLED)
-        self.compare_fs_button.config(state=tk.DISABLED)
-
-        # Botão para limpar o texto
-        self.clear_text_button = ttk.Button(control_frame, text="Limpar Texto", command=self.clear_text_input)
-        self.clear_text_button.pack(fill=tk.X, pady=5)
-        create_tooltip(self.clear_text_button, "Limpa o campo de texto para nova entrada.")
-
-    # ------------------------------------------------------------------
-    # NOVO: Habilitar/Desabilitar opções de wavelet
-    # ------------------------------------------------------------------
-    def _toggle_wavelet_options(self):
-        if self.signal_type_var.get() == "wavelet":
-            self.wavelet_level_label.config(state=tk.NORMAL)
-            self.wavelet_level_entry.config(state=tk.NORMAL)
-        else:
-            self.wavelet_level_label.config(state=tk.DISABLED)
-            self.wavelet_level_entry.config(state=tk.DISABLED)
 
     # ------------------------------------------------------------------
     # Geração dos gráficos
@@ -541,13 +284,6 @@ class ExperimentGUI:
                 return
         except tk.TclError:
             messagebox.showerror("Erro de Parâmetros", "Dimensão (m) e Atraso (τ) devem ser números inteiros.")
-            return
-
-        # Pega o tipo de sinal e nível wavelet
-        signal_type = self.signal_type_var.get()
-        wavelet_level = self.wavelet_level_var.get() if signal_type == "wavelet" else None
-        if signal_type == "wavelet" and not (1 <= wavelet_level <= 5):
-            messagebox.showerror("Erro de Parâmetros", "Nível de detalhe wavelet deve ser entre 1 e 5.")
             return
 
         # Salva os valores atuais de dim e tau antes de qualquer alteração
@@ -581,24 +317,12 @@ class ExperimentGUI:
 
             # Histograma foi removido, então não há mais essa opção
             if plot_type == "bp":
-                self._plot_bp_space(all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level)
+                self._plot_bp_space(all_texts_data, selected_lang_codes, dim, tau)
             elif plot_type == "fs":
-                self._plot_fs_space(all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level)
+                self._plot_fs_space(all_texts_data, selected_lang_codes, dim, tau)
 
             self.canvas.draw()
             self.result_label.config(text="")
-
-            # NOVO: Habilita/Desabilita botões de comparação com base no gráfico gerado
-            plot_type = self.plot_type.get() # Pega o tipo de gráfico que acabou de ser gerado
-            if plot_type == "bp":
-                self.compare_bp_button.config(state=tk.NORMAL)
-                self.compare_fs_button.config(state=tk.DISABLED)
-            elif plot_type == "fs":
-                self.compare_bp_button.config(state=tk.DISABLED)
-                self.compare_fs_button.config(state=tk.NORMAL)
-            else: # Para "hist" ou qualquer outro caso, desabilita ambos
-                self.compare_bp_button.config(state=tk.DISABLED)
-                self.compare_fs_button.config(state=tk.DISABLED)
 
         except Exception as e:
             messagebox.showerror("Erro de processamento", f"Ocorreu um erro: {e}")
@@ -609,18 +333,14 @@ class ExperimentGUI:
 
     # Removido _plot_histogram
 
-    def _plot_bp_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level):
+    def _plot_bp_space(self, all_texts_data, selected_lang_codes, dim, tau):
 
         all_hs_values = []
         all_y_values = []
 
         for lang_code in selected_lang_codes:
-            # NOVO: Adiciona signal_type e wavelet_level ao cache_key
-            cache_key_suffix = f"_{signal_type}"
-            if signal_type == "wavelet":
-                cache_key_suffix += f"_w{wavelet_level}"
-
-            cached = load_experiment(lang_code, "bp", dim, tau, cache_key_suffix=cache_key_suffix)
+            texts_lang = all_texts_data[lang_code]
+            cached = load_experiment(lang_code, "bp", dim, tau) # Usa o código para o cache
             if cached is not None and cached["hs"] is not None:
                 hs = cached["hs"]
                 C  = cached["y"]
@@ -629,24 +349,15 @@ class ExperimentGUI:
                 std_C    = cached["std_y"]
             else:
                 hs_list, C_list = [], []
-                for t in all_texts_data[lang_code]:
-                    original_sig = text_to_signal(t)
-
-                    # NOVO: Escolhe o sinal a ser usado
-                    if signal_type == "original":
-                        sig = original_sig
-                    else: # wavelet
-                        sig = self._get_wavelet_signal(original_sig, level=5, detail_level_to_use=wavelet_level)
-                        if sig is None or len(sig) == 0: # Fallback se wavelet falhar ou retornar vazio
-                            continue # Pula este texto se o sinal wavelet for inválido
-
+                for t in texts_lang:
+                    sig = text_to_signal(t)
                     if len(sig) >= dim * tau:
                         Hs, C = bandt_pompe_complexity(sig, dim, tau)
                         hs_list.append(Hs)
                         C_list.append(C)
 
                 if not hs_list:
-                    messagebox.showwarning("Aviso", f"Nenhum texto longo o suficiente para Bandt-Pompe para o idioma '{lang_code}' com dim={dim}, tau={tau} e sinal '{signal_type}'.")
+                    messagebox.showwarning("Aviso", f"Nenhum texto longo o suficiente para Bandt-Pompe para o idioma '{lang_code}' com dim={dim}, tau={tau}.")
                     continue
 
                 hs = np.array(hs_list)
@@ -655,13 +366,11 @@ class ExperimentGUI:
                 centroid = np.array([hs.mean(), C.mean()])
                 std_hs   = hs.std()
                 std_C    = C.std()
-                # NOVO: Salva no cache com sufixo
-                save_experiment(lang_code, "bp", dim, tau, hs, C, cache_key_suffix=cache_key_suffix)
+                save_experiment(lang_code, "bp", dim, tau, hs, C) # Usa o código para o cache
 
             self.current_stats_multi[lang_code] = { # Chave é o código
                 "lang": lang_code, "space": "bp", "dim": dim, "tau": tau,
                 "hs": hs, "y": C, "centroid": centroid, "std_hs": std_hs, "std_y": std_C,
-                "signal_type": signal_type, "wavelet_level": wavelet_level # NOVO: Salva tipo de sinal
             }
             self.current_data_points_multi[lang_code] = {"type": "bp", "hs": hs, "y": C, "centroid": centroid, "std_hs": std_hs, "std_y": std_C}
 
@@ -693,30 +402,22 @@ class ExperimentGUI:
             messagebox.showwarning("Aviso", "Nenhum dado válido para plotar o Plano Bandt-Pompe.")
             return
 
-        title_suffix = f"Sinal: {signal_type.capitalize()}"
-        if signal_type == "wavelet":
-            title_suffix += f" (db4, Nível D{wavelet_level})"
-
         self.ax.set_xlim(-0.02, 1.02)
         self.ax.set_ylim(-0.02, 1.02)
         self.ax.set_xlabel("Entropia de permutação normalizada $H_s$")
         self.ax.set_ylabel("Complexidade estatística $C$")
-        self.ax.set_title(f"Plano Complexidade–Entropia (Bandt-Pompe) — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}. {title_suffix}")
+        self.ax.set_title(f"Plano Complexidade–Entropia (Bandt-Pompe) — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}")
         self.ax.legend(fontsize=8)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
-    def _plot_fs_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level):
+    def _plot_fs_space(self, all_texts_data, selected_lang_codes, dim, tau):
 
         all_hs_values = []
         all_y_values = []
 
         for lang_code in selected_lang_codes:
-            # NOVO: Adiciona signal_type e wavelet_level ao cache_key
-            cache_key_suffix = f"_{signal_type}"
-            if signal_type == "wavelet":
-                cache_key_suffix += f"_w{wavelet_level}"
-
-            cached = load_experiment(lang_code, "fs", dim, tau, cache_key_suffix=cache_key_suffix)
+            texts_lang = all_texts_data[lang_code]
+            cached = load_experiment(lang_code, "fs", dim, tau) # Usa o código para o cache
             if cached is not None and cached["hs"] is not None:
                 hs = cached["hs"]
                 F  = cached["y"]
@@ -725,24 +426,15 @@ class ExperimentGUI:
                 std_F    = cached["std_y"]
             else:
                 hs_list, F_list = [], []
-                for t in all_texts_data[lang_code]:
-                    original_sig = text_to_signal(t)
-
-                    # NOVO: Escolhe o sinal a ser usado
-                    if signal_type == "original":
-                        sig = original_sig
-                    else: # wavelet
-                        sig = self._get_wavelet_signal(original_sig, level=5, detail_level_to_use=wavelet_level)
-                        if sig is None or len(sig) == 0: # Fallback se wavelet falhar ou retornar vazio
-                            continue # Pula este texto se o sinal wavelet for invál
-
+                for t in texts_lang:
+                    sig = text_to_signal(t)
                     if len(sig) >= dim * tau:
                         Hs, F = compute_hs_f(sig, dim, tau)
                         hs_list.append(Hs)
                         F_list.append(F)
 
                 if not hs_list:
-                    messagebox.showwarning("Aviso", f"Nenhum texto longo o suficiente para Fisher-Shannon para o idioma '{lang_code}' com dim={dim}, tau={tau} e sinal '{signal_type}'.")
+                    messagebox.showwarning("Aviso", f"Nenhum texto longo o suficiente para Fisher-Shannon para o idioma '{lang_code}' com dim={dim}, tau={tau}.")
                     continue
 
                 hs = np.array(hs_list)
@@ -751,13 +443,11 @@ class ExperimentGUI:
                 centroid = np.array([hs.mean(), F.mean()])
                 std_hs   = hs.std()
                 std_F    = F.std()
-                # NOVO: Salva no cache com sufixo
-                save_experiment(lang_code, "fs", dim, tau, hs, F, cache_key_suffix=cache_key_suffix)
+                save_experiment(lang_code, "fs", dim, tau, hs, F) # Usa o código para o cache
 
             self.current_stats_multi[lang_code] = { # Chave é o código
                 "lang": lang_code, "space": "fs", "dim": dim, "tau": tau,
                 "hs": hs, "y": F, "centroid": centroid, "std_hs": std_hs, "std_y": std_F,
-                "signal_type": signal_type, "wavelet_level": wavelet_level # NOVO: Salva tipo de sinal
             }
             self.current_data_points_multi[lang_code] = {"type": "fs", "hs": hs, "y": F, "centroid": centroid, "std_hs": std_hs, "std_y": std_F}
 
@@ -789,15 +479,11 @@ class ExperimentGUI:
             messagebox.showwarning("Aviso", "Nenhum dado válido para plotar o Plano Fisher-Shannon.")
             return
 
-        title_suffix = f"Sinal: {signal_type.capitalize()}"
-        if signal_type == "wavelet":
-            title_suffix += f" (db4, Nível D{wavelet_level})"
-
         self.ax.set_xlim(-0.02, 1.02)
         self.ax.set_ylim(-0.02, 1.02)
         self.ax.set_xlabel("Entropia de permutação normalizada $H_s$")
         self.ax.set_ylabel("Informação de Fisher normalizada $F$")
-        self.ax.set_title(f"Plano Fisher–Shannon — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}. {title_suffix}")
+        self.ax.set_title(f"Plano Fisher–Shannon — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}")
         self.ax.legend(fontsize=8)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
@@ -826,44 +512,26 @@ class ExperimentGUI:
         texto = self.text_input.get("1.0", tk.END).strip()
         if not texto:
             messagebox.showwarning("Aviso", "Digite um texto para comparar.")
-            # Restaura os valores originais na GUI
-            self.dim_var.set(current_gui_dim)
-            self.tau_var.set(current_gui_tau)
             return
 
         # Pega as estatísticas do idioma de referência
         ref_stats = self.current_stats_multi[ref_lang_code]
         ref_dim = ref_stats["dim"] # Dimensão usada para gerar o cluster do idioma
         ref_tau = ref_stats["tau"] # Atraso usado para gerar o cluster do idioma
-        ref_signal_type = ref_stats["signal_type"] # NOVO: Tipo de sinal do cluster
-        ref_wavelet_level = ref_stats["wavelet_level"] # NOVO: Nível wavelet do cluster
         centroid = ref_stats["centroid"]
         std_hs = ref_stats["std_hs"]
         std_y  = ref_stats["std_y"]
 
-        original_sig = text_to_signal(texto)
-        L_original = len(original_sig)
-        if L_original == 0:
+        sig = text_to_signal(texto)
+        L = len(sig)
+        if L == 0:
             messagebox.showwarning("Aviso", "Texto vazio após conversão em sinal.")
             # Restaura os valores originais na GUI
             self.dim_var.set(current_gui_dim)
             self.tau_var.set(current_gui_tau)
             return
 
-        # NOVO: Gera o sinal para o texto novo usando o MESMO TIPO de sinal do cluster de referência
-        if ref_signal_type == "original":
-            sig = original_sig
-            L = L_original
-        else: # wavelet
-            sig = self._get_wavelet_signal(original_sig, level=5, detail_level_to_use=ref_wavelet_level)
-            if sig is None or len(sig) == 0:
-                messagebox.showwarning("Aviso", "Sinal wavelet do texto novo é inválido ou muito curto.")
-                self.dim_var.set(current_gui_dim)
-                self.tau_var.set(current_gui_tau)
-                return
-            L = len(sig) # O comprimento do sinal wavelet pode ser diferente
-
-        # NOVO: parâmetros adaptativos para o texto novo (baseado no comprimento do SINAL FINAL)
+        # NOVO: parâmetros adaptativos para o texto novo
         dim, tau = self._get_adaptive_params(L, ref_dim, ref_tau)
 
         # ATUALIZA A GUI COM OS PARÂMETROS ADAPTATIVOS
@@ -874,8 +542,8 @@ class ExperimentGUI:
         if L < dim * tau: # Verifica se o sinal é longo o suficiente para Bandt-Pompe com os parâmetros adaptados
             messagebox.showwarning(
                 "Aviso",
-                f"Sinal (tipo '{ref_signal_type}') muito curto para análise com m={dim}, τ={tau} "
-                f"(mín. {dim * tau} pontos)."
+                f"Texto muito curto para análise com m={dim}, τ={tau} "
+                f"(mín. {dim * tau} caracteres)."
             )
             # Restaura os valores originais na GUI
             self.dim_var.set(current_gui_dim)
@@ -894,7 +562,7 @@ class ExperimentGUI:
         d_Y  = (Y_new - centroid[1]) / (std_y  + 1e-10)
         dist = float(np.sqrt(d_Hs**2 + d_Y**2))
 
-        # NOVO: limiar adaptativo (baseado no comprimento do SINAL FINAL)
+        # NOVO: limiar adaptativo
         threshold = self._get_adaptive_threshold(L)
         belongs = dist <= threshold
 
@@ -924,9 +592,7 @@ class ExperimentGUI:
         self.canvas.draw()
 
         msg = (
-            f"Texto novo (m={dim}, τ={tau}, sinal='{ref_signal_type}'"
-            f"{f', D{ref_wavelet_level}' if ref_signal_type == 'wavelet' else ''}): "
-            f"Hs={Hs_new:.4f}, {y_label}={Y_new:.4f}, "
+            f"Texto novo (m={dim}, τ={tau}): Hs={Hs_new:.4f}, {y_label}={Y_new:.4f}, "
             f"dist={dist:.2f} (vs {ref_lang_code}, limiar={threshold:.2f}). "
             f"{'Pertence ao idioma.' if belongs else 'Não pertence ao idioma.'}"
         )
@@ -937,19 +603,10 @@ class ExperimentGUI:
         self.tau_var.set(current_gui_tau)
         self.master.update_idletasks() # Força a atualização visual
 
-    def on_compare_bp(self):
-        self._compare_text_in_space("bp")
-
-    def on_compare_fs(self):
-        self._compare_text_in_space("fs")
-
-    # ------------------------------------------------------------------
-    # Limpar campo de texto
-    # ------------------------------------------------------------------
     def clear_text_input(self):
-        """Limpa o conteúdo do widget de entrada de texto e o resultado da comparação."""
+        """Limpa o conteúdo do widget de entrada de texto."""
         self.text_input.delete("1.0", tk.END)
-        self.result_label.config(text="", foreground="blue")
+        self.result_label.config(text="", foreground="blue") # Opcional: limpa também o resultado da comparação
         # Opcional: Limpar o ponto do texto novo do gráfico, se houver
         label_to_remove = "Texto novo"
         for artist in self.ax.collections:
@@ -960,6 +617,12 @@ class ExperimentGUI:
                 artist.remove()
         self.ax.legend(loc="upper left", fontsize=8) # Atualiza a legenda
         self.canvas.draw() # Redesenha o canvas para remover o ponto
+
+    def on_compare_bp(self):
+        self._compare_text_in_space("bp")
+
+    def on_compare_fs(self):
+        self._compare_text_in_space("fs")
 
     # ------------------------------------------------------------------
     # Funções de Exportação
@@ -976,17 +639,9 @@ class ExperimentGUI:
         # Pega os parâmetros de dimensão e atraso atuais da GUI para o nome do arquivo
         dim = self.dim_var.get()
         tau = self.tau_var.get()
-        signal_type = self.signal_type_var.get()
-        wavelet_level = self.wavelet_level_var.get() if signal_type == "wavelet" else None
 
         lang_str = "_".join(selected_lang_codes) # Usa códigos para o nome do arquivo
-
-        # NOVO: Adiciona tipo de sinal e nível wavelet ao nome do arquivo
-        file_name_parts = [self.current_space, lang_str, f"m{dim}", f"t{tau}"]
-        if signal_type == "wavelet":
-            file_name_parts.append(f"w{wavelet_level}")
-        file_name = "_".join(file_name_parts) + ".png"
-
+        file_name = f"{self.current_space}_{lang_str}_m{dim}_t{tau}.png"
         file_path = filedialog.asksaveasfilename(
             defaultextension=".png",
             initialfile=file_name,
@@ -1008,17 +663,9 @@ class ExperimentGUI:
         # Pega os parâmetros de dimensão e atraso atuais da GUI para o nome do arquivo
         dim = self.dim_var.get()
         tau = self.tau_var.get()
-        signal_type = self.signal_type_var.get()
-        wavelet_level = self.wavelet_level_var.get() if signal_type == "wavelet" else None
 
         lang_str = "_".join(selected_lang_codes) # Usa códigos para o nome do arquivo
-
-        # NOVO: Adiciona tipo de sinal e nível wavelet ao nome do arquivo
-        file_name_parts = ["data", self.current_space, lang_str, f"m{dim}", f"t{tau}"]
-        if signal_type == "wavelet":
-            file_name_parts.append(f"w{wavelet_level}")
-        file_name = "_".join(file_name_parts) + ".csv"
-
+        file_name = f"data_{self.current_space}_{lang_str}_m{dim}_t{tau}.csv"
         file_path = filedialog.asksaveasfilename(
             defaultextension=".csv",
             initialfile=file_name,
@@ -1090,13 +737,7 @@ class ExperimentGUI:
         1.  Série Temporal de Codepoints:
             - Para cada texto, é gerada uma série numérica onde cada elemento x[n] é o valor Unicode (ord(caractere)) do n-ésimo caractere.
 
-        2.  Transformada Wavelet Discreta (DWT) - Daubechies db4, 5 níveis:
-            - Quando o modo "Wavelet" é selecionado, o sinal original de codepoints passa por uma DWT usando a família Daubechies de ordem 4 (db4) com 5 níveis de decomposição.
-            - A decomposição gera coeficientes de aproximação (A5) e coeficientes de detalhe (D5, D4, D3, D2, D1).
-            - Para a análise, é utilizado um nível de detalhe específico (por exemplo, D3), cujos coeficientes formam a nova série temporal para os cálculos de complexidade.
-            - Os coeficientes são normalizados (média zero, desvio padrão um) para estabilidade.
-
-        3.  Plano de Complexidade-Entropia (Bandt-Pompe):
+        2.  Plano de Complexidade-Entropia (Bandt-Pompe):
             - Este plano utiliza a Entropia de Permutação (Hs) e a Complexidade Estatística (C) para caracterizar a série.
             - Parâmetros:
                 - Dimensão de Imersão (m): Número de pontos na janela de observação (ex: 3, 4, 5).
@@ -1123,7 +764,7 @@ class ExperimentGUI:
                 - J(P, P_eq) = H(0.5*P + 0.5*P_eq) - 0.5*H(P) - 0.5*H(P_eq) (H é a entropia de Shannon).
                 - C varia de 0 (ruído ou ordem perfeita) a um valor máximo para sistemas com estrutura complexa.
 
-        4.  Plano de Fisher-Shannon:
+        3.  Plano de Fisher-Shannon:
             - Este plano utiliza a Entropia de Shannon Normalizada (Hs) e a Informação de Fisher Normalizada (F).
             - Parâmetros:
                 - Dimensão de Imersão (m): Número de pontos na janela de observação (ex: 3, 4, 5).
@@ -1143,7 +784,6 @@ class ExperimentGUI:
         - Ambos os planos fornecem uma "impressão digital" do comportamento da série temporal.
         - Pontos em diferentes regiões do plano indicam diferentes tipos de processos (ex: ruído, periodicidade, caos, processos com memória).
         - A elipse de pertencimento no gráfico representa a região esperada para o idioma de referência, com base na média e desvio padrão dos pontos de Hs e C/F. Um texto novo que cai dentro dessa elipse é considerado "pertencente" ao idioma.
-        - Para textos curtos, os parâmetros (m, τ) e o limiar de pertencimento são ajustados automaticamente para maior robustez.
         """
         text_area.insert(tk.END, content)
         text_area.config(state="disabled") # Torna o texto somente leitura
