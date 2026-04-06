@@ -5,7 +5,6 @@ warnings.filterwarnings('ignore')
 
 import sys
 from pathlib import Path
-# Não é mais necessário importar sqlite3 diretamente aqui, pois os códigos vêm de load_dataset_it
 
 # Localiza o diretório principal do projeto (uma pasta acima deste arquivo)
 ROOT_DIR = Path(__file__).resolve().parents[1]  # Assumindo estrutura: projeto_completo/information_theory/gui_experiment.py

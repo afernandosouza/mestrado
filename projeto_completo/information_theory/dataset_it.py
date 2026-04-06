@@ -114,6 +114,7 @@ def load_dataset_it(
     """
     if db_path is None:
         db_path = Path(DATABASE)
+    print(DATABASE)
 
     # ------------------------------------------------------------------
     # 1. Carrega via função original (3 retornos)
