@@ -1,262 +1,175 @@
-# cluster_hassanpour.py
+# clustering_utf8_from_text.py
 
+import sqlite3
 import sys
 from pathlib import Path
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.model_selection import train_test_split
-from collections import Counter
-import warnings
-import pandas as pd
+from collections import Counter, defaultdict
 
-# Suprime warnings de KMeans se houver poucos dados em algum cluster
-warnings.filterwarnings("ignore", category=UserWarning, module="sklearn.cluster._kmeans")
-
-# Localiza o diretório principal do projeto (uma pasta acima deste arquivo)
+# Ajuste o ROOT_DIR para ser mais robusto, se necessário.
+# Assumindo que config.py está no mesmo nível ou em um nível acima.
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
 
-# Importa as configurações e o carregador de dados do seu projeto
-from config import DATABASE, RANDOM_STATE, MIN_TEXT_LENGTH, CHARS_TO_REMOVE
-from data.dataset_loader import load_dataset_sqlite 
-from signal_processing.text_signal import text_to_signal
+import numpy as np
+from sklearn.cluster import KMeans
 
-# Garante que o diretório de resultados exista
-RESULTS_DIR = Path("results")
-RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+from config import *
 
-# --- Funções Auxiliares ---
 
-def preprocess_text_for_clustering(text):
+def mean_codepoint(text: str) -> float:
     """
-    Remove caracteres especiais conforme Hassanpour et al. (2021) para clusterização,
-    utilizando a constante CHARS_TO_REMOVE de config.py.
+    Converte cada caractere do texto em codepoint Unicode (ord)
+    e retorna a média.
     """
-    processed_text = text
-    for char in CHARS_TO_REMOVE:
-        processed_text = processed_text.replace(char, '')
-    return processed_text
-
-def text_to_codepoints(text_str):
-    return text_to_signal(text_str)
-
-def calculate_utf8_mean(codepoint_series):
-    """
-    Calcula a média dos códigos UTF-8 (codepoints) de uma série numérica.
-    """
-    if not codepoint_series.size:
+    if not text:
         return 0.0
-    return np.mean(codepoint_series)
+    codes = [ord(ch) for ch in text]
+    return float(np.mean(codes))
 
-def evaluate_cluster_purity(true_lang_labels, predicted_cluster_labels):
+
+def load_texts_and_langs(db_path: Path):
     """
-    Avalia a "precisão de clusterização" (purity) para cada cluster.
-    true_lang_labels: lista de strings com os nomes dos idiomas ('pt', 'en', etc.)
-    predicted_cluster_labels: lista de IDs numéricos dos clusters (0, 1, 2...)
+    Lê os textos e idiomas do banco SQLite.
+    Retorna:
+        texts      : list[str]
+        langs      : list[str] com o código de idioma de cada linha
     """
-    n_clusters = len(np.unique(predicted_cluster_labels))
-    cluster_results = {}
+    print("Carregando textos e idiomas a partir do banco de dados...")
 
-    for i in range(n_clusters):
-        cluster_indices = np.where(predicted_cluster_labels == i)[0]
-        if len(cluster_indices) == 0:
-            cluster_results[f"Cluster {i}"] = {"dominant_language": "N/A", "purity": 0.0, "members": [], "total_texts": 0}
-            continue
+    conn   = sqlite3.connect(str(db_path))
+    cursor = conn.cursor()
 
-        # GARANTIA DE STRINGS: true_lang_labels já deve ser uma lista de strings aqui.
-        # Convertemos para lista de strings explicitamente para garantir.
-        true_labels_in_cluster = [str(label) for label in [true_lang_labels[j] for j in cluster_indices]]
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = [r[0] for r in cursor.fetchall()]
+    if not tables:
+        raise RuntimeError("Nenhuma tabela encontrada no banco de dados.")
+    table = tables[0]
 
-        lang_counts = Counter(true_labels_in_cluster)
+    if USAR_CONTEUDO_TRATADO:
+        COL_TEXT = "conteudo_uma_quebra"
+        COL_LANG = "idioma"
+    else:
+        COL_TEXT = "conteudo"
+        COL_LANG = "idioma"
 
-        if lang_counts:
-            dominant_lang_name = lang_counts.most_common(1)[0][0] # Já é string
-            purity = lang_counts[dominant_lang_name] / len(true_labels_in_cluster)
-        else:
-            dominant_lang_name = "N/A"
-            purity = 0.0
+    cursor.execute(f"SELECT {COL_TEXT}, {COL_LANG} FROM textos")
+    rows = cursor.fetchall()
+    conn.close()
 
-        members_names_list = sorted(list(set(true_labels_in_cluster))) # Já são strings
+    texts = []
+    langs = []
 
-        cluster_results[f"Cluster {i}"] = {
-            "dominant_language": dominant_lang_name,
-            "purity": purity,
-            "members": members_names_list,
-            "total_texts": len(true_labels_in_cluster)
-        }
-    return cluster_results
+    for text, lang in rows:
+        if text and lang:
+            texts.append(text)
+            langs.append(lang)
 
-# --- Main Execution ---
+    print(f"Textos carregados : {len(texts)}")
+    print(f"Idiomas únicos ({len(set(langs))}): {sorted(list(set(langs)))}")
 
-def run_hassanpour_clustering():
-    print("Iniciando reprodução da clusterização Hassanpour et al. (2021)...")
-    print(f"Utilizando caracteres para remoção: {CHARS_TO_REMOVE}")
+    return texts, langs
 
-    # 1. Carregar os dados do seu banco de dados SQLite
-    try:
-        # load_dataset_sqlite retorna (texts, lang_labels, _). O terceiro retorno é ignorado.
-        raw_texts, raw_lang_labels, lang_codes = load_dataset_sqlite(Path(DATABASE))
 
-        # Filtragem pós-carregamento para garantir MIN_TEXT_LENGTH e num_texts_per_lang
-        # Conforme Artigo_SBPO_2026.pdf (pág. 6): 1.000 textos por idioma, min 5.000 caracteres.
-        filtered_texts = []
-        filtered_lang_labels = []
-        lang_counts = Counter()
+def main():
+    # Ajuste o caminho do banco de dados para ser relativo ao script
+    db_path = Path(DATABASE)
+    if not db_path.is_absolute():
+        db_path = ROOT_DIR / db_path
+    if not db_path.exists():
+        print(f"Erro: Banco de dados não encontrado em {db_path}")
+        sys.exit(1)
 
-        for text, lang_label, lang_code in zip(raw_texts, raw_lang_labels, lang_codes):
-            # Garante que lang_label é uma string
-            #lang_label_str = str(lang_label) 
-            #if len(text) >= MIN_TEXT_LENGTH:
-                # Limita a 1000 textos por idioma
-                #if lang_counts[lang_label_str] < 1000: 
-            filtered_texts.append(text)
-            filtered_lang_labels.append(lang_code)
-            lang_counts[lang_code] += 1
+    texts, langs = load_texts_and_langs(db_path)
 
-        all_texts = filtered_texts
-        all_lang_labels = filtered_lang_labels # Esta lista agora contém apenas strings
+    print("Calculando médias de codepoints por texto...")
+    means = np.array([mean_codepoint(t) for t in texts], dtype=np.float64)
+    X = means.reshape(-1, 1)   # KMeans espera matriz (n amostras, n features)
 
-        print(f"Dados carregados e filtrados: {len(all_texts)} textos de {len(set(all_lang_labels))} idiomas.")
-        print(f"Idiomas presentes: {sorted(list(set(all_lang_labels)))}")
-        print(f"Comprimento mínimo do texto: {MIN_TEXT_LENGTH} caracteres.")
-
-    except Exception as e:
-        print(f"Erro ao carregar o dataset do SQLite: {e}")
-        print("Verifique se o caminho do DATABASE em config.py está correto e se data/dataset_loader.py existe e funciona.")
-        print("Certifique-se que load_dataset_sqlite retorna (texts, lang_labels, _).")
-        return
-
-    # 2. Pré-processar textos e calcular a média UTF-8
-    features = []
-    processed_true_labels = [] # Rótulos (strings) dos textos que foram processados com sucesso
-
-    print("Pré-processando textos e calculando médias UTF-8...")
-    for i, text in enumerate(all_texts):
-        preprocessed_text_str = preprocess_text_for_clustering(text)
-        codepoint_series = text_to_codepoints(preprocessed_text_str)
-
-        if codepoint_series.size > 0:
-            mean_utf8 = calculate_utf8_mean(codepoint_series)
-            features.append([mean_utf8]) # K-means espera um array 2D
-            processed_true_labels.append(all_lang_labels[i]) # all_lang_labels já é lista de strings
-        else:
-            pass # Ignora textos que ficam vazios após a remoção de caracteres
-
-    if not features:
-        print("Nenhum texto válido para clusterização após pré-processamento.")
-        return
-
-    X = np.array(features)
-    y_true_str = np.array(processed_true_labels, dtype=str) # Garante que o array numpy é de strings
-
-    # 3. Dividir os dados (80% para clusterização, 20% para teste)
-    # Usamos stratify=y_true_str para garantir que a proporção de idiomas seja mantida
-    X_train, X_test, y_train_str, y_test_str = train_test_split(
-        X, y_true_str, test_size=0.2, random_state=RANDOM_STATE, stratify=y_true_str
+    # K-means com 6 clusters
+    n_clusters = 6
+    print(f"Executando KMeans com {n_clusters} clusters...")
+    kmeans = KMeans(
+        n_clusters=n_clusters,
+        random_state=42,
+        n_init="auto",   # troque por um inteiro (p.ex. 10) se sua versão do sklearn reclamar
     )
-    print(f"Dados para K-means (treino): {len(X_train)} textos.")
-    print(f"Dados para avaliação (teste): {len(X_test)} textos.")
+    cluster_ids = kmeans.fit_predict(X)
+    centers = kmeans.cluster_centers_.flatten()  # shape (6,)
 
-    # 4. Aplicar K-means
-    n_clusters = 6 # Conforme Hassanpour et al. (2021) e Artigo_SBPO_2026.pdf (pág. 5)
-    print(f"Aplicando K-means com k={n_clusters}...")
-    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=10)
-    kmeans.fit(X_train)
+    # 1. Contagem de idiomas por cluster
+    cluster_lang_counts = [Counter() for _ in range(n_clusters)]
+    total_lang_counts = Counter(langs) # Contagem total de cada idioma no dataset
 
-    cluster_centers = kmeans.cluster_centers_
-    print(f"Centróides dos clusters (médias UTF-8): {cluster_centers.flatten()}")
+    for lang, cid in zip(langs, cluster_ids):
+        cluster_lang_counts[cid][lang] += 1
 
-    # 5. Prever os clusters para os dados de teste
-    labels_pred_test = kmeans.predict(X_test)
+    # 2. Determinar o cluster "principal" para cada idioma
+    #    Um idioma é atribuído ao cluster onde ele tem a maior contagem.
+    #    Se houver empate, a ordem dos clusters (cid) pode decidir.
+    lang_to_assigned_cluster = {}
+    for lang_code in total_lang_counts.keys():
+        max_count = -1
+        assigned_cid = -1
+        for cid in range(n_clusters):
+            count_in_cluster = cluster_lang_counts[cid].get(lang_code, 0)
+            if count_in_cluster > max_count:
+                max_count = count_in_cluster
+                assigned_cid = cid
+        if assigned_cid != -1:
+            lang_to_assigned_cluster[lang_code] = assigned_cid
 
-    # 6. Avaliar a pureza dos clusters nos dados de teste
-    print("\nAvaliação da pureza dos clusters (dados de teste):")
-    # Passamos os rótulos verdadeiros como strings diretamente
-    cluster_purity_results = evaluate_cluster_purity(y_test_str.tolist(), labels_pred_test)
+    # 3. Reconstruir os membros do cluster e calcular a acurácia
+    #    Agora, cada cluster só listará os idiomas para os quais ele é o "principal".
+    final_cluster_members = defaultdict(list)
+    final_cluster_data_counts = defaultdict(int) # Total de textos dos idiomas atribuídos a este cluster
 
-    # Preparar dados para o CSV e impressão formatada
-    csv_data = []
-    total_purity = 0
-    total_texts_evaluated = 0
+    for lang_code, assigned_cid in lang_to_assigned_cluster.items():
+        final_cluster_members[assigned_cid].append(lang_code)
+        # Soma a contagem de textos desse idioma no cluster atribuído
+        final_cluster_data_counts[assigned_cid] += cluster_lang_counts[assigned_cid].get(lang_code, 0)
 
-    # Mapear centróides para os clusters preditos nos dados de teste
-    cluster_centroid_map = {}
-    for i, center in enumerate(kmeans.cluster_centers_):
-        cluster_centroid_map[i] = center[0] # K-means centers são arrays, pegamos o valor escalar
+    rows = []
+    for cid in range(n_clusters):
+        members_in_cluster = final_cluster_members[cid]
+        center = centers[cid]
+        current_cluster_size = final_cluster_data_counts[cid]
 
-    # Impressão formatada e uso de códigos de idioma (strings)
-    print("\n--- Nossos Resultados de Clusterização (Reprodução Hassanpour) ---")
-    print(f"{'Cluster members':<50} | {'Cluster centre':<16} | {'Accuracy (%)':<14} | {'Total Texts':<13}")
-    print("-" * 98)
+        if not members_in_cluster:
+            members_str = "-" # Cluster sem idiomas "principais" atribuídos
+            accuracy = 0.0
+        else:
+            # Ordenar os idiomas atribuídos por sua frequência original no cluster
+            sorted_members = sorted(
+                members_in_cluster,
+                key=lambda lang: cluster_lang_counts[cid].get(lang, 0),
+                reverse=True
+            )
+            members_str = ", ".join(sorted_members)
 
-    for cluster_id_num_str in sorted(cluster_purity_results.keys()): # Itera pelos clusters em ordem
-        result = cluster_purity_results[cluster_id_num_str]
+            # Calcular a acurácia do cluster com base no idioma majoritário *entre os atribuídos*
+            if current_cluster_size > 0:
+                majority_lang_for_display = sorted_members[0]
+                majority_count_in_cluster = cluster_lang_counts[cid].get(majority_lang_for_display, 0)
+                accuracy = (majority_count_in_cluster / current_cluster_size) * 100.0
+            else:
+                accuracy = 0.0
 
-        cluster_idx = int(cluster_id_num_str.split(' ')[1])
-        centroid_value = cluster_centroid_map.get(cluster_idx, np.nan)
+        rows.append((members_str, center, accuracy))
 
-        # Formata a string de membros do cluster para caber na tabela
-        members_str = ', '.join(result['members'])
-        if len(members_str) > 48: # Limita para caber na coluna
-            members_str = members_str[:45] + "..."
+    # Ordenar por centro, como na tabela do paper
+    rows.sort(key=lambda r: r[1])
 
-        csv_data.append({
-            "Cluster ID": cluster_id_num_str,
-            "Cluster members": ', '.join(result['members']), # Versão completa para CSV
-            "Cluster centre": f"{centroid_value:.2f}",
-            "Accuracy (%)": f"{result['purity']*100:.2f}",
-            "Dominant Language": result['dominant_language'],
-            "Total Texts in Cluster": result['total_texts']
-        })
+    # Impressão no formato da imagem
+    print()
+    print("TABLE 1. Clustering the data into six clusters (Exclusive Language Assignment, calculated means)")
+    print()
+    header = f"{'Cluster members':60} {'Cluster centre':>15} {'Accuracy (%)':>15}"
+    print(header)
+    print("-" * len(header))
 
-        # Imprimir no console com formatação de tabela
-        print(f"{members_str:<50} | {centroid_value:<16.2f} | {result['purity']*100:<14.2f} | {result['total_texts']:<13}")
-
-        total_purity += result['purity'] * result['total_texts']
-        total_texts_evaluated += result['total_texts']
-
-    overall_purity = total_purity / total_texts_evaluated if total_texts_evaluated > 0 else 0.0
-    print("-" * 98)
-    print(f"{'Pureza Média Ponderada Geral':<50} | {'':<16} | {overall_purity*100:<14.2f} | {total_texts_evaluated:<13}")
-    print("\n")
-
-    # Salvar resultados em CSV
-    df_results = pd.DataFrame(csv_data)
-
-    # Adicionar a linha da pureza média ponderada no final do DataFrame
-    df_overall = pd.DataFrame([{
-        "Cluster ID": "Overall Weighted Average",
-        "Cluster members": "",
-        "Cluster centre": "",
-        "Accuracy (%)": f"{overall_purity*100:.2f}",
-        "Dominant Language": "",
-        "Total Texts in Cluster": total_texts_evaluated
-    }])
-    df_results = pd.concat([df_results, df_overall], ignore_index=True)
-
-    csv_filename = RESULTS_DIR / "hassanpour_clustering_results.csv"
-    df_results.to_csv(csv_filename, index=False)
-    print(f"\nResultados da clusterização salvos em: {csv_filename}")
-
-    # Comparar com a Tabela 1 do artigo (página 4 de A_signal_processing.pdf)
-    print("\n--- Tabela 1 de Hassanpour et al. (2021) para Comparação ---")
-    print(f"{'Cluster members':<50} | {'Cluster centre':<16} | {'Accuracy (%)':<14}")
-    print("-" * 82)
-    print(f"{'ar, arz, ps':<50} | {1246.56:<16.2f} | {87.00:<14.2f}")
-    print(f"{'ru, be, bg':<50} | {878.73:<16.2f} | {94.83:<14.2f}")
-    print(f"{'fa, ckb':<50} | {1370.18:<16.2f} | {77.50:<14.2f}")
-    print(f"{'ta':<50} | {2820.96:<16.2f} | {90.50:<14.2f}")
-    print(f"{'hi':<50} | {1874.38:<16.2f} | {95.50:<14.2f}")
-    print(f"{'en, fr, it, az, ca, cs, de, eo, es, fi, gl, he, hr, id, it, nl, pl, pt, ro, tr':<50} | {107.67:<16.2f} | {98.55:<14.2f}")
-    print("-" * 82)
-    print(f"{'Média geral reportada para os 6 clusters':<50} | {'':<16} | {95.14:<14.2f}")
-    print("\nNote que a correspondência exata dos clusters e acurácias pode variar devido a:")
-    print("1. Diferenças no dataset exato (mesmo sendo Wikipedia, pode haver variações).")
-    print("2. Detalhes de pré-processamento (quais caracteres exatos foram removidos, como UTF-8 foi tratado).")
-    print("3. Aleatoriedade na inicialização do K-means (mitigada com n_init=10).")
-    print("4. A 'acurácia' no artigo é a acurácia de clusterização, não de classificação final.")
-    print("   Nossa 'pureza' é uma métrica similar à 'clustering precision' do artigo.")
+    for members, center, acc in rows:
+        print(f"{members:60} {center:15.2f} {acc:15.2f}")
 
 
 if __name__ == "__main__":
-    run_hassanpour_clustering()
+    main()
