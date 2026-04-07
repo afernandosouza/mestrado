@@ -25,7 +25,7 @@ N_SPACES   = 7
 
 RANDOM_STATE = 42
 
-N_RUNS = 10
+N_RUNS = 1
 
 SPACING_LEVELS = [1, 5, 7, 12]
 
