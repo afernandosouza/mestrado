@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path
 
 # Caminho do banco SQLite
-CAMINHO_DB = Path("banco_texto.db")
+CAMINHO_DB = Path("..\\..\\projeto_completo\\banco_texto.db")
 # Caminho para o diretório com os arquivos JSON
 DIRETORIO_JSON = Path("TEXTOS")
 

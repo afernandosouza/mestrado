@@ -1,2 +1,2 @@
-venv\Scripts\python.exe popula_tabela_idiomas.py
+..\..\projeto_completo\.venv\Scripts\python.exe popula_tabela_idiomas.py
 pause
