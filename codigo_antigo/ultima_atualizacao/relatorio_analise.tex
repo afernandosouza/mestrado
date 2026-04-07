@@ -1,0 +1,131 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{booktabs}
+\geometry{margin=2.5cm}
+\title{Relatório Técnico\\Análise Interpretativa: Correlações entre Classificação Linguística, Complexidade--Entropia (Bandt--Pompe) e Espectro WPT}
+\author{Análise gerada automaticamente}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Este relatório apresenta uma análise interpretativa, baseada na leitura visual dos gráficos fornecidos (Plano Complexidade--Entropia de Bandt--Pompe e Espectro Médio WPT por idioma) e na tabela de classificação linguística anexa. O objetivo é descrever padrões visuais observáveis, discutir possíveis relações entre classificação linguística e métricas extraídas e apontar limitações e recomendações para validação quantitativa posterior.
+\end{abstract}
+
+\section{Dados anexados}
+Foram fornecidos os seguintes arquivos:
+\begin{itemize}
+  \item \texttt{classificacao\_idiomas.xlsx} -- tabela com família, subfamília e subgrupo para os idiomas analisados.
+  \item \texttt{grafico\_complexidade\_entropia.png} -- plano Complexidade--Entropia (Bandt--Pompe, d=5, $\tau$=1).
+  \item \texttt{grafico\_wavelets.png} -- espectro médio WPT (32 bandas) por idioma.
+\end{itemize}
+
+\section{Tabela de classificação}
+\begin{center}
+\begin{table}
+\centering
+\caption{Classificação linguística (família, subfamília, subgrupo)}
+\label{tab:classificacao}
+\begin{tabular}{lllll}
+\toprule
+Código &                 Idioma &               Família &                 Sub‑família &                           Subgrupo \\
+\midrule
+    ar &                  Árabe &         Afro‑Asiática &                    Semítica &           Árabe Central / Sudárabe \\
+   arz &          Árabe Egípcio &         Afro‑Asiática &                    Semítica &            Árabe Egípcio (dialeto) \\
+    he &               Hebraico &         Afro‑Asiática &                    Semítica &                          Canaanita \\
+    id &              Indonésio &           Austronésia &            Malaio‑Polinésia &                   Malaio‑Indonésio \\
+    eo &              Esperanto & Construto (planejada) &                         NaN &                                NaN \\
+    ta &                  Tâmil &             Dravídica &                       Tâmil &                   Tâmil Meridional \\
+    en &                 Inglês &         Indo‑Europeia &   Germânica (West Germanic) &              Anglo‑Frísio / Anglic \\
+    fr &                Francês &         Indo‑Europeia &          Itálica → Românica &                      Galo‑Românica \\
+    it &               Italiano &         Indo‑Europeia &          Itálica → Românica &                     Italo‑Românica \\
+    ru &                  Russo &         Indo‑Europeia &                      Eslava &                    Eslava Oriental \\
+    be &            Bielo‑russo &         Indo‑Europeia &                      Eslava &                    Eslava Oriental \\
+    bg &                Búlgaro &         Indo‑Europeia &                      Eslava &                  Eslava Meridional \\
+    ca &                Catalão &         Indo‑Europeia &          Itálica → Românica &                      Galo‑Românica \\
+    cs &                 Tcheco &         Indo‑Europeia &                      Eslava &                   Eslava Ocidental \\
+    de &                 Alemão &         Indo‑Europeia &   Germânica (West Germanic) &      Alto‑Saxônica / Alemão padrão \\
+    es &               Espanhol &         Indo‑Europeia &          Itálica → Românica &                   Ibérico‑Românica \\
+    fa &                  Persa &         Indo‑Europeia &    Indo‑Iraniana → Iraniana &                 Iraniana Ocidental \\
+    gl &                 Galego &         Indo‑Europeia &          Itálica → Românica &                   Ibérico‑Românica \\
+    hi &                  Hindi &         Indo‑Europeia & Indo‑Iraniana → Indo‑Ariana &     Indo‑Ária Central / Hindi‑Urdu \\
+    hr &                 Croata &         Indo‑Europeia &                      Eslava &                  Eslava Meridional \\
+    nl &               Holandês &         Indo‑Europeia &   Germânica (West Germanic) &                    Holandês padrão \\
+    pl &                Polonês &         Indo‑Europeia &                      Eslava &                   Eslava Ocidental \\
+    ps &                 Pashto &         Indo‑Europeia &    Indo‑Iraniana → Iraniana &                  Iraniana Oriental \\
+    pt &              Português &         Indo‑Europeia &          Itálica → Românica &                   Ibérico‑Românica \\
+    ro &                 Romeno &         Indo‑Europeia &          Itálica → Românica &      Oriental (Balcânica) Românica \\
+   ckb & Sorani (Curdo Central) &         Indo‑Europeia &    Indo‑Iraniana → Iraniana & Noroeste Iraniana → Curdo (Sorani) \\
+    az &            Azerbaijano &                 Turca &                       Oghuz &            Azerbaijano Norte / Sul \\
+    tr &                  Turco &                 Turca &                       Oghuz &                       Turco padrão \\
+    fi &              Finlandês &              Uraliana &                Finno‑Úgrica &                         Finlândica \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{center}
+
+\section{Resumo executivo}
+\begin{itemize}
+  \item Idiomas romano-germânicos que usam alfabeto latino tendem a agrupar-se no plano Bandt--Pompe com \textbf{alta entropia normalizada} e \textbf{baixa complexidade}, e apresentam \textbf{energias WPT menores} (camada inferior do espectro).
+  \item Idiomas indo-iranianos e alguns idiomas sul-asiáticos (Hindi, Persa, Tâmil) apresentam assinaturas distintas: \textbf{maior energia WPT} e, no caso de Tâmil e Hindi, \textbf{maior complexidade ordinal}.
+  \item Há grupos intermediários (árabe, sorani, algumas línguas eslavas) que ocupam posições entre os blocos acima.
+  \item Conclusão: existe correlação parcial entre classificação linguística e métricas, fortemente mediada por \textbf{sistema de escrita}, \textbf{codificação} e \textbf{pré-processamento}.
+\end{itemize}
+
+\section{Observações detalhadas}
+As observações detalhadas das posições dos idiomas nos gráficos, interpretações tipológicas e hipóteses sobre mecanismos geradores das assinaturas (escrita, morfologia, codificação UTF-8, etc.) estão descritas no corpo do relatório. Para referência visual, seguem as figuras analisadas.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.95\linewidth]{/mnt/data/grafico_complexidade_entropia.png}
+  \caption{Plano Complexidade--Entropia de Bandt--Pompe (d=5, $\tau$=1).}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.95\linewidth]{/mnt/data/grafico_wavelets.png}
+  \caption{Espectro Médio WPT por idioma (32 bandas).}
+\end{figure}
+
+\section{Interpretação e justificativas}
+\subsection{Efeito do sistema de escrita}
+Línguas que compartilham alfabeto latino e convenções ortográficas similares tendem a gerar sequências de bytes mais parecidas depois da conversão UTF-8; isso reduz a variabilidade entre espectros e aumenta a entropia estimada para os vetores de símbolos em muitos casos.
+
+\subsection{Tipologia e morfologia}
+Línguas aglutinantes ou com conjuntos complexos de morfemas (por exemplo turco, azeri) podem apresentar energia distribuída de forma distinta nas bandas WPT. Sistemas de escrita abugida ou silábicos (Devanagari para Hindi, escrita Tamil) frequentemente produzem padrões multibyte que geram forte estrutura ordinal reconhecível por Bandt--Pompe.
+
+\subsection{Outliers}
+Tâmil apresenta comportamento extremo (baixa entropia normalizada e alta complexidade); Hindi e Persa têm energias altas no espectro WPT.
+
+\section{Limitações}
+\begin{itemize}
+  \item A análise é \textbf{interpretativa} e baseada em leitura visual dos gráficos: não foram realizados testes estatísticos numéricos porque os dados brutos (vetores HS/CJ por texto e vetores WPT por banda) não foram disponibilizados.
+  \item Resultados podem ser sensíveis ao pré-processamento (normalização Unicode, remoção de pontuação, transliteração).
+  \item O gráfico WPT usa escala logarítmica e medianização, que pode alterar a percepção de diferenças absolutas.
+\end{itemize}
+
+\section{Recomendações para validação quantitativa}
+\begin{enumerate}
+  \item Reunir os vetores numéricos originais: HS, CJ por texto e vetores de energia WPT (32 bandas) por texto/idioma.
+  \item Calcular matrizes de distância e realizar \textbf{Mantel test} para correlação entre distância linguística e distância das features.
+  \item Aplicar \textbf{clustering} (hierárquico e k-means) e comparar com labels linguísticos (usar ARI, purity).
+  \item Testes de hipótese (ANOVA/Kruskal-Wallis) para verificar diferenças entre famílias nas energias por banda e nas métricas HS/CJ.
+  \item Visualizações complementares (PCA/UMAP) usando vetores WPT+HS+CJ.
+\end{enumerate}
+
+\section{Conclusão}
+A análise visual indica sinal linguístico nas métricas HS/CJ e WPT que corresponde em boa medida a fatores tipológicos e de escrita. Para transformar essas observações em evidência estatística são necessários os dados numéricos brutos e testes formais detalhados, conforme recomendado.
+
+\section{Anexos}
+\begin{itemize}
+  \item Arquivo de classificação: \texttt{classificacao\_idiomas.xlsx}
+  \item Figuras: \texttt{grafico\_complexidade\_entropia.png}, \texttt{grafico\_wavelets.png}
+\end{itemize}
+
+\end{document}
