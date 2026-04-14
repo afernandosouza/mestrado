@@ -119,23 +119,27 @@ def obter_textos_aleatorios(limite, idioma):
                     conteudo = obter_conteudo_pagina(page_id, base_url)
                     contador += 1
                     
-                    if conteudo:
-                        if len(conteudo) < 5000:
-                            conteudo5000 += f'\n{conteudo}'
-                        else:
-                            conteudo5000 = conteudo
+                    #if conteudo:
+                    #    if len(conteudo) < 5000:
+                    #        conteudo5000 += f'\n\n{conteudo}'
+                    #    else:
+                    #        conteudo5000 = conteudo
 
-                    if len(conteudo5000) >= 5000:
-                        textos.append({"title": title, "content": conteudo5000, "tamanho": len(conteudo5000)})
-                        print(f'texto {len(textos)}/{limite} adicionado', len(conteudo5000))
-                        conteudo5000 = ''
+                    #if len(conteudo5000) >= 5000:
+                        #textos.append({"title": title, "content": conteudo5000, "tamanho": len(conteudo5000)})
+                        #print('texto adicionado', len(conteudo5000))
+                        #conteudo5000 = ''
+
+                    if len(conteudo) >= 5000:
+                        textos.append({"title": title, "content": conteudo, "tamanho": len(conteudo)})
+                        print('texto', len(textos), '/', limite,  'adicionado', len(conteudo))
                         
             # Adiciona um pequeno atraso para evitar sobrecarregar a API
             time.sleep(0.5)
 
             if len(textos) >= limite or contador == NUMERO_TENTATIVAS:
                 limite_atingido = True
-                conteudo5000 = ''
+                conteudo = ''
     except Exception as e:
         print(e)
         raise

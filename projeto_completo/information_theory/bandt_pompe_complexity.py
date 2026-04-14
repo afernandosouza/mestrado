@@ -50,11 +50,15 @@ def jensen_divergence(P: np.ndarray, P_eq: np.ndarray) -> float:
     return shannon_entropy(M) - 0.5 * shannon_entropy(P) - 0.5 * shannon_entropy(P_eq)
 
 
-def bandt_pompe_complexity(signal: np.ndarray, dim: int, tau: int = 1) -> tuple[float, float]:
+# information_theory/bandt_pompe_complexity.py
+
+# ... (imports e funções auxiliares existentes) ...
+
+def bandt_pompe_complexity(signal: np.ndarray, dim: int, tau: int = 1, normalize: bool = True) -> tuple[float, float]:
     """
     Retorna:
-      Hs : entropia de permutação normalizada ∈ [0,1]
-      C  : complexidade estatística normalizada ∈ [0,1]
+      Hs : entropia de permutação (normalizada ou não)
+      C  : complexidade estatística (normalizada ou não)
     """
     P = probability_distribution(signal, dim, tau)
     N = P.size
@@ -64,7 +68,26 @@ def bandt_pompe_complexity(signal: np.ndarray, dim: int, tau: int = 1) -> tuple[
 
     P_eq = np.ones(N) / N
 
-    Hs   = normalized_entropy(P)
+    if normalize:
+        # Se normalizar, usa a entropia de permutação normalizada
+        # (que já é a shannon_entropy dividida por log(N) ou log(dim!))
+        # Para Bandt-Pompe, a Hs já é normalizada por log(dim!)
+        # Vamos ajustar para usar a normalized_entropy que você já tem,
+        # que normaliza por log(N) onde N é o número de estados (dim!)
+        # A função `permutation_entropy` do `fisher_shannon_experiment.py`
+        # já faz a normalização por log(dim!).
+        # Para manter a consistência, vamos usar a `shannon_entropy` e normalizar
+        # explicitamente por log(factorial(dim)) se `normalize` for True.
+        H_raw = shannon_entropy(P)
+        max_H = np.log(factorial(dim))
+        if max_H == 0:
+            Hs = 0.0
+        else:
+            Hs = H_raw / max_H
+    else:
+        # Se não normalizar, usa a entropia de Shannon bruta
+        Hs = shannon_entropy(P)
+
     J    = jensen_divergence(P, P_eq)
 
     # Divergência máxima de Jensen entre P e P_eq ocorre para uma distribuição delta
@@ -77,5 +100,11 @@ def bandt_pompe_complexity(signal: np.ndarray, dim: int, tau: int = 1) -> tuple[
     else:
         Q_J = J / J_max
 
-    C = Q_J * Hs
-    return Hs, float(np.clip(C, 0.0, 1.0))
+    C = Q_J * Hs # C é sempre o produto de Q_J e Hs (normalizado ou não)
+
+    # Se for para normalizar, clipamos C para [0,1]
+    if normalize:
+        return Hs, float(np.clip(C, 0.0, 1.0))
+    else:
+        # Se não for para normalizar, C pode ser maior que 1.0
+        return Hs, float(C)

@@ -1,0 +1,2 @@
+.venv\Scripts\python.exe information_theory\evaluation_information_theory_methodology.py
+pause

@@ -33,6 +33,7 @@ from evaluation.statistics import compute_statistics
 
 from utils.system_info import print_and_log_system_info, SystemMonitor, print_and_log_monitor_results
 
+DATABASE_REF = '..\\' + DATABASE
 
 def run_experiment():
 
@@ -64,7 +65,7 @@ def run_experiment():
 
     print("Carregando dataset do banco SQLite...")
 
-    texts, labels, unique_langs = load_dataset_sqlite(DATABASE)
+    texts, labels, unique_langs = load_dataset_sqlite(DATABASE_REF)
 
     print("Total de textos carregados:", len(texts))
     print("Total de idiomas:", len(set(labels)))

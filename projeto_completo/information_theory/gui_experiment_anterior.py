@@ -37,8 +37,6 @@ from scipy.spatial.distance import cdist
 RESULTS_DIR = Path("results") / "experiments"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-DATABASE_REF = '..\\' + DATABASE
-
 # --- Tooltip Class ---
 class ToolTip(object):
     def __init__(self, widget):
@@ -92,16 +90,13 @@ class ExperimentGUI:
         try:
             # load_dataset_it retorna: texts, labels, lang_codes, raw_labels, lang_names
             # Pegamos apenas os lang_codes para os checkboxes
-            _, _, self.all_lang_codes, _, _ = load_dataset_it(DATABASE_REF)
+            _, _, self.all_lang_codes, _, _ = load_dataset_it()
             self.all_lang_codes.sort() # Ordena os códigos para exibição
 
         except Exception as e: # Captura qualquer erro ao carregar o dataset
             messagebox.showerror("Erro ao carregar dados", f"Não foi possível carregar os idiomas do dataset: {e}")
             self.all_lang_codes = []
         # --------------------------------------------------
-
-        self.centroid_annotations = {} # Para armazenar as anotações dos tooltips dos centroides
-        self.hover_connection = None # Para armazenar a conexão do evento de hover
 
         # Variáveis para os checkboxes de idioma
         self.lang_vars = {} # Armazena {código_do_idioma: tk.BooleanVar}
@@ -139,48 +134,6 @@ class ExperimentGUI:
         # Ciclo de cores para os gráficos
         self.colors = plt.cm.get_cmap('tab10', max(1, len(self.all_lang_codes))) # Garante pelo menos 1 cor
         self.color_map = {code: self.colors(i) for i, code in enumerate(self.all_lang_codes)}
-
-    def _on_hover(self, event):
-        if event.inaxes == self.ax:
-            for lang_code, data in self.current_data_points_multi.items():
-                if "centroid" in data and "centroid_scatter" in data:
-                    centroid_point = data["centroid"]
-                    scatter_obj = data["centroid_scatter"]
-
-                    # Verifica se o mouse está sobre o ponto do centroide
-                    cont, ind = scatter_obj.contains(event)
-                    if cont:
-                        # Se o mouse está sobre o centroide, mostra o tooltip
-                        if lang_code not in self.centroid_annotations:
-                            # Cria a anotação se ainda não existir
-                            self.centroid_annotations[lang_code] = self.ax.annotate(
-                                "",
-                                xy=(centroid_point[0], centroid_point[1]),
-                                xytext=(5, 5),
-                                textcoords="offset points",
-                                bbox=dict(boxstyle="round,pad=0.3", fc="yellow", alpha=0.9),
-                                arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=0")
-                            )
-
-                        annotation = self.centroid_annotations[lang_code]
-
-                        # Formata o texto do tooltip
-                        space_name = "C" if self.current_space == "bp" else "F"
-                        tooltip_text = (
-                            f"Idioma: {lang_code}\n"
-                            f"Hs: {centroid_point[0]:.4f}\n"
-                            f"{space_name}: {centroid_point[1]:.4f}"
-                        )
-                        annotation.set_text(tooltip_text)
-                        annotation.set_visible(True)
-                        self.fig.canvas.draw_idle()
-                        return # Sai do loop, pois já encontramos o centroide
-
-            # Se chegou aqui, o mouse não está sobre nenhum centroide, então esconde todos os tooltips
-            for annotation in self.centroid_annotations.values():
-                if annotation.get_visible():
-                    annotation.set_visible(False)
-                    self.fig.canvas.draw_idle()
 
     # ------------------------------------------------------------------
     # Parâmetros adaptativos para textos curtos
@@ -277,7 +230,7 @@ class ExperimentGUI:
 
         return wavelet_signal
 
-    # ------------------------------------------------------------------
+        # ------------------------------------------------------------------
     # Avaliação de separabilidade (sem ML treinado)
     # ------------------------------------------------------------------
     def evaluate_current_space(self):
@@ -431,9 +384,6 @@ class ExperimentGUI:
         # Frame superior para controles de seleção e geração
         top_frame = ttk.Frame(self.master)
         top_frame.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
-
-        # Conecta o evento de hover
-        self.hover_connection = self.fig.canvas.mpl_connect("motion_notify_event", self._on_hover)
 
         # Frame para os checkboxes de idioma
         lang_selection_frame = ttk.LabelFrame(top_frame, text="Idiomas")
@@ -623,7 +573,6 @@ class ExperimentGUI:
             self.fig.clf() # Limpa a figura atual
             self.ax = self.fig.add_subplot(111) # Adiciona um novo subplot
             self.ax.set_aspect('equal', adjustable='box')
-            self.centroid_annotations = {}
 
             plot_type = self.plot_type.get()
             self.current_space = plot_type
@@ -632,7 +581,7 @@ class ExperimentGUI:
 
             all_texts_data = {} # Para carregar textos uma vez
             # Carrega os textos usando os códigos de idioma
-            texts_all_db, labels_all_db, lang_codes_all_db, _, _ = load_dataset_it(DATABASE_REF)
+            texts_all_db, labels_all_db, lang_codes_all_db, _, _ = load_dataset_it()
 
             for lang_code in selected_lang_codes:
                 if lang_code not in lang_codes_all_db:
@@ -705,9 +654,6 @@ class ExperimentGUI:
         # Para replicar exatamente a imagem, precisaríamos saber a função exata que gera esses rótulos.
         # Por enquanto, vamos apenas plotar as curvas.
 
-    def _get_ncols(self, lang_codes_length) -> int:
-        return int(lang_codes_length/8) + 1
-        
     def _plot_bp_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level, normalize_data: bool):
 
         suffix_norm = ''
@@ -719,7 +665,6 @@ class ExperimentGUI:
         all_y_values = []
         all_handles = []
         all_labels = []
-        n_cols = self._get_ncols(len(selected_lang_codes))
 
         for lang_code in selected_lang_codes:
             # NOVO: Adiciona signal_type e wavelet_level ao cache_key
@@ -783,7 +728,6 @@ class ExperimentGUI:
             scatter_centroid = self.ax.scatter(centroid[0], centroid[1], c=color, s=100, marker="X", edgecolors='black', linewidths=0.8, label=f"Centroide {lang_code}", zorder=4) # Zorder para centroide
             all_handles.append(scatter_centroid)
             all_labels.append(f"Centroide {lang_code}")
-            self.current_data_points_multi[lang_code]["centroid_scatter"] = scatter_centroid
 
             # Elipse de pertencimento
             threshold = 1.0
@@ -851,7 +795,7 @@ class ExperimentGUI:
             self.ax.set_ylabel("Complexidade estatística $C$")
 
         self.ax.set_title(f"Plano Complexidade–Entropia (Bandt-Pompe) — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}. {title_suffix}")
-        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0., ncol=n_cols)
+        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0.)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
     def _plot_fs_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level, normalize_data: bool):
@@ -860,7 +804,6 @@ class ExperimentGUI:
         all_y_values = []
         all_handles = []
         all_labels = []
-        n_cols = self._get_ncols(len(selected_lang_codes))
 
         for lang_code in selected_lang_codes:
             # NOVO: Adiciona signal_type e wavelet_level ao cache_key
@@ -988,7 +931,7 @@ class ExperimentGUI:
             self.ax.set_ylabel("Informação de Fisher $F$")
 
         self.ax.set_title(f"Plano Fisher–Shannon — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}. {title_suffix}")
-        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0., ncols=n_cols)
+        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0.)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
 
@@ -1170,7 +1113,7 @@ class ExperimentGUI:
             # em self.current_data_points_multi junto com hs e y.
             # Por simplicidade, vamos carregar os textos aqui, mas idealmente
             # eles estariam já carregados e indexados.
-            texts_all_db, labels_all_db, lang_codes_all_db, _, _ = load_dataset_it(DATABASE_REF)
+            texts_all_db, labels_all_db, lang_codes_all_db, _, _ = load_dataset_it()
             idx_lang = lang_codes_all_db.index(lang_code)
             original_texts_for_lang = [texts_all_db[i] for i in range(len(texts_all_db)) if labels_all_db[i] == idx_lang]
 

@@ -53,7 +53,7 @@ from config import (
     EMBEDDING_DIM,
     RANDOM_STATE,
 )
-from information_theory.dataset_it import load_dataset_it
+from data.dataset_it import load_dataset_it
 from signal_processing.text_signal import text_to_signal
 
 MAX_TEXTS = 1000
@@ -92,11 +92,11 @@ def _ordinal_patterns(signal: np.ndarray, dim: int, tau: int = 1) -> np.ndarray:
     return patterns
 
 
-def permutation_entropy(signal: np.ndarray, dim: int, tau: int = 1) -> float:
+def permutation_entropy(signal: np.ndarray, dim: int, tau: int = 1, normalize: bool = True) -> float:
     """
-    Entropia de permutação normalizada Hs ∈ [0, 1].
-
-    H_s = - (1 / log(dim!)) * sum p_pi * log(p_pi)
+    Entropia de permutação Hs.
+    Se normalize=True, retorna Hs ∈ [0, 1].
+    Se normalize=False, retorna a entropia de Shannon bruta.
 
     Referência: Bandt & Pompe (2002), PRL.
     """
@@ -106,10 +106,6 @@ def permutation_entropy(signal: np.ndarray, dim: int, tau: int = 1) -> float:
 
     n_total  = len(patterns)
     counter  = Counter(patterns)
-    max_H    = np.log(factorial(dim))   # log(dim!) — entropia máxima
-
-    if max_H == 0:
-        return 0.0
 
     H = 0.0
     for count in counter.values():
@@ -117,18 +113,20 @@ def permutation_entropy(signal: np.ndarray, dim: int, tau: int = 1) -> float:
         if p > 0:
             H -= p * np.log(p)
 
-    return float(H / max_H)
+    if normalize:
+        max_H = np.log(factorial(dim))   # log(dim!) — entropia máxima
+        if max_H == 0:
+            return 0.0
+        return float(H / max_H)
+    else:
+        return float(H)
 
 
-def fisher_information(signal: np.ndarray, dim: int, tau: int = 1) -> float:
+def fisher_information(signal: np.ndarray, dim: int, tau: int = 1, normalize: bool = True) -> float:
     """
-    Informação de Fisher normalizada F ∈ [0, 1] baseada em padrões ordinais.
-
-    Definição discreta (Rosso et al., 2007):
-        F = F0 * sum_{pi} [ sqrt(p_{pi+1}) - sqrt(p_{pi}) ]^2
-
-    onde a soma é sobre pares de permutações adjacentes (ordenadas
-    lexicograficamente), e F0 é o fator de normalização.
+    Informação de Fisher baseada em padrões ordinais.
+    Se normalize=True, retorna F ∈ [0, 1].
+    Se normalize=False, retorna a Informação de Fisher bruta.
 
     Referência: Rosso et al. (2007), PRL 99, 154102.
     """
@@ -150,28 +148,30 @@ def fisher_information(signal: np.ndarray, dim: int, tau: int = 1) -> float:
     sqrt_p = np.sqrt(probs)
     F_raw  = float(np.sum((sqrt_p[1:] - sqrt_p[:-1]) ** 2))
 
-    # Normalização: F0 = 1 / (2 * (1 - 1/dim!))
-    n_perms = factorial(dim)
-    if n_perms <= 1:
-        return 0.0
+    if normalize:
+        # Normalização: F0 = 1 / (2 * (1 - 1/dim!))
+        n_perms = factorial(dim)
+        if n_perms <= 1:
+            return 0.0
 
-    F0 = 1.0 / (2.0 * (1.0 - 1.0 / n_perms))
-    F_norm = float(F0 * F_raw)
+        F0 = 1.0 / (2.0 * (1.0 - 1.0 / n_perms))
+        F_norm = float(F0 * F_raw)
+        # Garante que F ∈ [0, 1] mesmo com arredondamentos
+        return float(np.clip(F_norm, 0.0, 1.0))
+    else:
+        return F_raw
 
-    # Garante que F ∈ [0, 1] mesmo com arredondamentos
-    return float(np.clip(F_norm, 0.0, 1.0))
 
-
-def compute_hs_f(signal: np.ndarray, dim: int, tau: int = 1) -> tuple[float, float]:
+def compute_hs_f(signal: np.ndarray, dim: int, tau: int = 1, normalize: bool = True) -> tuple[float, float]:
     """
     Calcula (Hs, F) para um sinal.
 
     Retorna:
-        Hs : entropia de permutação normalizada ∈ [0, 1]
-        F  : informação de Fisher normalizada  ∈ [0, 1]
+        Hs : entropia de permutação (normalizada ou não)
+        F  : informação de Fisher (normalizada ou não)
     """
-    Hs = permutation_entropy(signal, dim, tau)
-    F  = fisher_information(signal, dim, tau)
+    Hs = permutation_entropy(signal, dim, tau, normalize=normalize)
+    F  = fisher_information(signal, dim, tau, normalize=normalize)
     return Hs, F
 
 
@@ -186,9 +186,7 @@ def load_language_texts(lang: str) -> list[str]:
     Retorna:
         texts_lang : list[str]
     """
-    texts, labels, lang_codes, raw_labels, _ = load_dataset_it(
-        db_path=Path(DATABASE)
-    )
+    texts, labels, lang_codes, raw_labels, _ = load_dataset_it()
 
     if lang not in lang_codes:
         available = ", ".join(lang_codes)
@@ -212,6 +210,7 @@ def compute_ch_plane(
     texts: list[str],
     dim: int,
     tau: int = 1,
+    normalize: bool = True,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Calcula os pontos (Hs, F) de cada texto no plano de Fisher-Shannon.
@@ -226,7 +225,7 @@ def compute_ch_plane(
     print(f"\nCalculando pontos no plano Fisher-Shannon (dim={dim}, tau={tau})...")
     for i, texto in enumerate(texts):
         signal    = text_to_signal(texto)
-        Hs, F     = compute_hs_f(signal, dim=dim, tau=tau)
+        Hs, F     = compute_hs_f(signal, dim=dim, tau=tau, normalize=normalize)
         hs_list.append(Hs)
         f_list.append(F)
 
@@ -366,6 +365,7 @@ def plot_ch_plane(
     new_point: tuple[float, float] | None = None,
     new_point_label: str | None = None,
     new_belongs: bool | None = None,
+    normalize_data: bool = True, # NOVO: Parâmetro de normalização
 ) -> Path:
     """
     Plota o plano de Fisher-Shannon (Hs × F) para os textos do idioma,
@@ -380,77 +380,38 @@ def plot_ch_plane(
         new_point     : (Hs_new, F_new) — ponto do texto a classificar
         new_point_label : rótulo do ponto novo
         new_belongs   : True/False — resultado da classificação
+        normalize_data: Se os dados foram normalizados (afeta rótulos e limites)
 
     Retorna:
         out_path : Path do arquivo salvo
     """
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    # Pontos do idioma
-    scatter = ax.scatter(
-        hs, f,
-        c="steelblue",
-        s=18,
-        alpha=0.55,
-        label=f"Textos — {lang} (n={len(hs)})",
-        zorder=3,
-    )
-
-    # Centroide
-    if centroid is not None:
-        ax.scatter(
-            centroid[0], centroid[1],
-            c="navy",
-            s=100,
-            marker="X",
-            zorder=5,
-            label=f"Centroide — {lang}",
-        )
-
-        # Elipse de pertencimento (±radius * std)
-        if radius is not None:
-            std_hs = hs.std()
-            std_f  = f.std()
-            ellipse = mpatches.Ellipse(
-                xy=(centroid[0], centroid[1]),
-                width=2 * radius * std_hs,
-                height=2 * radius * std_f,
-                edgecolor="navy",
-                facecolor="steelblue",
-                alpha=0.08,
-                linestyle="--",
-                linewidth=1.2,
-                zorder=2,
-                label=f"Região ±{radius:.1f}σ",
-            )
-            ax.add_patch(ellipse)
-
-    # Novo ponto (texto a classificar)
-    if new_point is not None:
-        color_new = "green" if new_belongs else "red"
-        marker_new = "★"
-        label_new  = (
-            f"{new_point_label or 'Novo texto'} "
-            f"({'✓ pertence' if new_belongs else '✗ não pertence'})"
-        )
-        ax.scatter(
-            new_point[0], new_point[1],
-            c=color_new,
-            s=180,
-            marker="*",
-            zorder=6,
-            edgecolors="black",
-            linewidths=0.5,
-            label=label_new,
-        )
+    # ... (código existente para scatter de pontos, centroide, elipse, novo ponto) ...
 
     # Limites e rótulos
-    ax.set_xlim(-0.02, 1.05)
-    ax.set_ylim(-0.02, 1.05)
-    ax.set_xlabel("Entropia de Permutação Normalizada  $H_s$", fontsize=11)
-    ax.set_ylabel("Informação de Fisher Normalizada  $F$", fontsize=11)
+    if normalize_data:
+        ax.set_xlim(-0.02, 1.05)
+        ax.set_ylim(-0.02, 1.05)
+        ax.set_xlabel("Entropia de Permutação Normalizada  $H_s$", fontsize=11)
+        ax.set_ylabel("Informação de Fisher Normalizada  $F$", fontsize=11)
+        title_suffix = " (Normalizado)"
+    else:
+        # Para dados não normalizados, os limites serão dinâmicos
+        min_hs, max_hs = hs.min(), hs.max()
+        min_f, max_f = f.min(), f.max()
+
+        padding_x = (max_hs - min_hs) * 0.1 if (max_hs - min_hs) > 0 else 0.1
+        padding_y = (max_f - min_f) * 0.1 if (max_f - min_f) > 0 else 0.1
+
+        ax.set_xlim(min_hs - padding_x, max_hs + padding_x)
+        ax.set_ylim(min_f - padding_y, max_f + padding_y)
+        ax.set_xlabel("Entropia de Permutação $H_s$", fontsize=11)
+        ax.set_ylabel("Informação de Fisher $F$", fontsize=11)
+        title_suffix = " (Não Normalizado)"
+
     ax.set_title(
-        f"Plano de Fisher-Shannon\nIdioma: '{lang}'",
+        f"Plano de Fisher-Shannon\nIdioma: '{lang}'{title_suffix}",
         fontsize=12,
     )
     ax.legend(fontsize=9, loc="upper left")
@@ -476,26 +437,16 @@ def classify_new_text(
     dim: int,
     tau: int,
     threshold: float = 2.0,
+    normalize: bool = True, # NOVO: Parâmetro de normalização
 ) -> tuple[float, float, bool, float]:
     """
     Classifica um texto novo com base na sua posição no plano CH
     em relação ao centroide do idioma alvo.
 
-    A distância é calculada em espaço normalizado pelos desvios-padrão
-    (distância de Mahalanobis simplificada com diagonal da covariância):
-
-        d = sqrt( ((Hs - Hs_c) / std_Hs)^2 + ((F - F_c) / std_F)^2 )
-
-    O texto pertence ao idioma se d <= threshold.
-
-    Retorna:
-        Hs_new    : entropia do texto novo
-        F_new     : Fisher do texto novo
-        belongs   : True se d <= threshold
-        distance  : distância normalizada ao centroide
+    ... (documentação existente) ...
     """
     signal   = text_to_signal(texto)
-    Hs_new, F_new = compute_hs_f(signal, dim=dim, tau=tau)
+    Hs_new, F_new = compute_hs_f(signal, dim=dim, tau=tau, normalize=normalize) # Passa o parâmetro
 
     d_Hs = (Hs_new - centroid[0]) / (hs_std + 1e-10)
     d_F  = (F_new  - centroid[1]) / (f_std  + 1e-10)
@@ -523,6 +474,7 @@ def run_experiment(
     threshold: float = 2.0,
     new_text: str | None = None,
     new_text_label: str | None = None,
+    normalize_data: bool = True,
 ):
     """
     Executa o experimento Fisher-Shannon completo para o idioma `lang`.
@@ -558,7 +510,7 @@ def run_experiment(
     # ------------------------------------------------------------------
     # 3. Cálculo do plano CH
     # ------------------------------------------------------------------
-    hs, f = compute_ch_plane(texts_lang, dim=dim, tau=tau)
+    hs, f = compute_ch_plane(texts_lang, dim=dim, tau=tau, normalize=normalize_data)
 
     centroid = np.array([hs.mean(), f.mean()])
     hs_std   = hs.std()
@@ -583,6 +535,7 @@ def run_experiment(
             dim=dim,
             tau=tau,
             threshold=threshold,
+            normalize=normalize_data,
         )
         new_point = (Hs_new, F_new)
 
@@ -600,6 +553,7 @@ def run_experiment(
         new_point=new_point,
         new_point_label=new_text_label,
         new_belongs=new_belongs,
+        normalize_data=normalize_data,
     )
 
     # ------------------------------------------------------------------
@@ -625,6 +579,7 @@ def run_experiment(
         "f_std"     : f_std,
         "new_point" : new_point,
         "belongs"   : new_belongs,
+        "normalize_data": normalize_data,
     }
 
 
@@ -736,7 +691,7 @@ def _ask_user_parameters(available_langs: list[str]) -> dict:
 
 if __name__ == "__main__":
     # Carrega lista de idiomas disponíveis antes de perguntar
-    _, _, available_langs, _, _ = load_dataset_it(db_path=Path(DATABASE))
+    _, _, available_langs, _, _ = load_dataset_it()
 
     params = _ask_user_parameters(available_langs)
 

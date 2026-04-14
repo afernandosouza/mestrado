@@ -1,22 +1,13 @@
-"""
-information_theory/dataset_it.py
-
-Adaptador de carregamento de dados para a 2ª etapa.
-
-Estende load_dataset_sqlite (data/dataset_loader.py) sem modificá-lo,
-adicionando:
-  - raw_labels  : lista de strings com o idioma de cada texto
-  - medias_utf8 : array com a média UTF-8 por texto (do banco)
-
-Dessa forma, it_features.py recebe os 5 valores que necessita sem
-quebrar o contrato da função original.
-"""
+# information_theory/dataset_it.py
 
 import warnings
 warnings.filterwarnings('ignore')
 
 import sqlite3
+import sys
 from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[1]  # projeto_completo/
+sys.path.insert(0, str(ROOT_DIR))
 
 import numpy as np
 
@@ -26,14 +17,12 @@ from config import (
 )
 from data.dataset_loader import load_dataset_sqlite
 
-
 # ----------------------------------------------------------------------
 # Constantes internas — campos do banco
 # ----------------------------------------------------------------------
 _COL_LANG = "idioma"
 _COL_MEAN_ORIGINAL = "media_utf8"
 _COL_MEAN_TRATADA  = "media_utf8_uma_quebra"
-
 
 # ----------------------------------------------------------------------
 # Funções auxiliares de leitura direta no banco
@@ -51,7 +40,6 @@ def _get_table_name(db_path: Path) -> str:
             f"Nenhuma tabela encontrada no banco: {db_path}"
         )
     return tables[0]
-
 
 def _load_raw_labels_and_medias(db_path: Path) -> tuple[list[str], np.ndarray]:
     """
@@ -75,6 +63,7 @@ def _load_raw_labels_and_medias(db_path: Path) -> tuple[list[str], np.ndarray]:
         FROM   {table}
         WHERE  {col_text}    IS NOT NULL
           AND  {_COL_LANG}   IS NOT NULL
+        ORDER BY idioma
     """)
     rows = cur.fetchall()
     conn.close()
@@ -89,13 +78,10 @@ def _load_raw_labels_and_medias(db_path: Path) -> tuple[list[str], np.ndarray]:
 
     return raw_labels, np.array(medias_utf8, dtype=np.float64)
 
-
 # ----------------------------------------------------------------------
 # Função pública: load_dataset_it
 # ----------------------------------------------------------------------
-def load_dataset_it(
-    db_path: Path | None = None,
-) -> tuple[list[str], np.ndarray, list[str], list[str], np.ndarray]:
+def load_dataset_it(database) -> tuple[list[str], np.ndarray, list[str], list[str], np.ndarray]:
     """
     Carrega o dataset completo para a 2ª etapa.
 
@@ -112,20 +98,18 @@ def load_dataset_it(
         raw_labels  : list[str]          — idioma original por texto
         medias_utf8 : np.ndarray[float]  — média UTF-8 por texto
     """
-    if db_path is None:
-        db_path = Path(DATABASE)
-    print(DATABASE)
 
     # ------------------------------------------------------------------
     # 1. Carrega via função original (3 retornos)
     # ------------------------------------------------------------------
-    texts, labels, lang_codes = load_dataset_sqlite(db_path)
+    texts, labels, lang_codes = load_dataset_sqlite(database)
 
     # ------------------------------------------------------------------
     # 2. Carrega raw_labels e medias_utf8 com leitura auxiliar
     #    (mesma query / filtro do dataset_loader)
     # ------------------------------------------------------------------
-    raw_labels, medias_utf8 = _load_raw_labels_and_medias(db_path)
+    #database = '../' + DATABASE
+    raw_labels, medias_utf8 = _load_raw_labels_and_medias(database)
 
     # ------------------------------------------------------------------
     # 3. Validação de consistência
@@ -145,3 +129,58 @@ def load_dataset_it(
           f"média={medias_utf8.mean():.2f}")
 
     return texts, labels, lang_codes, raw_labels, medias_utf8
+
+# ----------------------------------------------------------------------
+# NOVA FUNÇÃO: filter_dataset_by_langs
+# ----------------------------------------------------------------------
+def filter_dataset_by_langs(
+    texts: list[str],
+    labels: np.ndarray,
+    lang_codes: list[str],
+    raw_labels: list[str],
+    medias_utf8: np.ndarray,
+    selected_lang_codes: list[str]
+) -> tuple[list[str], np.ndarray, list[str], list[str], np.ndarray]:
+    """
+    Filtra um dataset completo (retornado por load_dataset_it)
+    para incluir apenas os idiomas especificados em selected_lang_codes.
+
+    Parâmetros:
+        texts               : Lista de textos.
+        labels              : Array NumPy de rótulos numéricos.
+        lang_codes          : Lista de códigos de idioma únicos ordenados.
+        raw_labels          : Lista de rótulos de idioma originais por texto.
+        medias_utf8         : Array NumPy de médias UTF-8 por texto.
+        selected_lang_codes : Lista de códigos de idioma a serem mantidos.
+
+    Retorna:
+        Uma tupla com os dados filtrados:
+        (filtered_texts, filtered_labels, filtered_lang_codes,
+         filtered_raw_labels, filtered_medias_utf8)
+    """
+    if not selected_lang_codes:
+        return [], np.array([]), [], [], np.array([])
+
+    # Mapeia os códigos de idioma para seus índices numéricos
+    lang_code_to_idx = {code: i for i, code in enumerate(lang_codes)}
+    selected_indices = [lang_code_to_idx[code] for code in selected_lang_codes if code in lang_code_to_idx]
+
+    if not selected_indices:
+        return [], np.array([]), [], [], np.array([])
+
+    # Cria uma máscara booleana para filtrar os dados
+    mask = np.isin(labels, selected_indices)
+
+    filtered_texts = [texts[i] for i, keep in enumerate(mask) if keep]
+    filtered_raw_labels = [raw_labels[i] for i, keep in enumerate(mask) if keep]
+    filtered_medias_utf8 = medias_utf8[mask]
+
+    # Para os rótulos numéricos, precisamos remapear para uma nova sequência de 0 a N-1
+    # com base nos idiomas selecionados.
+    new_lang_codes_map = {code: i for i, code in enumerate(selected_lang_codes)}
+    filtered_labels = np.array([new_lang_codes_map[rl] for rl in filtered_raw_labels], dtype=np.int32)
+
+    # Os lang_codes filtrados são simplesmente os selected_lang_codes, na ordem em que foram passados
+    filtered_lang_codes = selected_lang_codes
+
+    return filtered_texts, filtered_labels, filtered_lang_codes, filtered_raw_labels, filtered_medias_utf8

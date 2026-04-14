@@ -15,7 +15,7 @@ class ClusterModel:
 
     def __init__(self, n_clusters):
         self.n_clusters = n_clusters
-        self.kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
+        self.kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=10)
         self.scaler = StandardScaler()
         self.centers_ = None
         self.is_fitted = False

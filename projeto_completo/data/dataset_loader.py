@@ -5,7 +5,9 @@ import sqlite3
 from typing import List, Tuple
 from config import *
 
-def load_dataset_sqlite(db_path: Path):
+
+
+def load_dataset_sqlite(database):
     """
     Lê os textos e idiomas do banco SQLite.
     Retorna:
@@ -14,8 +16,10 @@ def load_dataset_sqlite(db_path: Path):
         lang_codes : list[str] — código de idioma por índice
     """
     print("Carregando dataset a partir do banco de dados...")
+    #database = '../' + DATABASE
+    #database = DATABASE
 
-    conn   = sqlite3.connect(str(db_path))
+    conn   = sqlite3.connect(str(database))
     cursor = conn.cursor()
 
     # Descobre tabelas disponíveis
@@ -35,7 +39,7 @@ def load_dataset_sqlite(db_path: Path):
         COL_MEAN = "media_utf8"
     # ────────────────────────────────────────────────────────────
 
-    cursor.execute(f"SELECT {COL_TEXT}, {COL_LANG}, {COL_MEAN} FROM {TABLE}")
+    cursor.execute(f"SELECT {COL_TEXT}, {COL_LANG}, {COL_MEAN} FROM {TABLE} ORDER BY idioma")
     rows = cursor.fetchall()
     conn.close()
 
