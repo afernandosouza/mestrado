@@ -118,7 +118,7 @@ class ExperimentGUI:
         self._original_tau = self.tau_var.get()
 
         # Radio button: 'bp', 'fs' (Histograma removido)
-        self.plot_type = tk.StringVar(value="bp")
+        self.plot_type = tk.StringVar(value="bp") 
 
         # NOVO: Variável para o tipo de sinal (Original ou Wavelet)
         self.signal_type_var = tk.StringVar(value="original") # Padrão: original
@@ -137,20 +137,8 @@ class ExperimentGUI:
         self.current_data_points_multi = {} # Dict para armazenar dados de múltiplos idiomas (usando CÓDIGO do idioma como chave)
 
         # Ciclo de cores para os gráficos
-        # ATUALIZAÇÃO: Usar um mapa de cores que possa gerar um número suficiente de cores distintas
-        # 'tab20' tem 20 cores, 'tab20b' e 'tab20c' adicionam mais. Para 29 idiomas, 'tab20' + 'tab20b' ou 'tab20c' seria ideal.
-        # Uma alternativa mais robusta é usar um mapa de cores sequencial ou divergente com um número grande de cores.
-        # 'gist_rainbow' ou 'hsv' podem gerar muitas cores, mas podem não ser tão distintas visualmente.
-        # Para garantir 29 cores distintas, vamos usar um cmap que pode ser amostrado.
-        # Por exemplo, 'viridis' ou 'plasma' são bons para isso.
-        num_languages = len(self.all_lang_codes)
-        # Garante que o número de cores seja pelo menos o número de idiomas, com um mínimo de 1.
-        # Usamos 'tab20' que tem 20 cores, e se precisar de mais, podemos usar 'tab20b' ou 'tab20c'
-        # ou um mapa de cores como 'hsv' que pode gerar muitas cores.
-        # Para garantir cores distintas para até 29 idiomas, vamos usar 'hsv' e amostrar.
-        self.colors = plt.cm.get_cmap('hsv', max(num_languages, 1))
-        self.color_map = {code: self.colors(i / max(num_languages - 1, 1)) for i, code in enumerate(self.all_lang_codes)}
-
+        self.colors = plt.cm.get_cmap('tab10', max(1, len(self.all_lang_codes))) # Garante pelo menos 1 cor
+        self.color_map = {code: self.colors(i) for i, code in enumerate(self.all_lang_codes)}
 
     def _on_hover(self, event):
         if event.inaxes == self.ax:
@@ -472,6 +460,7 @@ class ExperimentGUI:
         canvas_lang.pack(side="left", fill="both", expand=True)
         scrollbar_lang.pack(side="right", fill="y")
 
+
         # Frame para parâmetros (Dimensão e Atraso)
         params_frame = ttk.LabelFrame(top_frame, text="Parâmetros")
         params_frame.pack(side=tk.LEFT, padx=10, pady=5, fill=tk.Y)
@@ -504,6 +493,7 @@ class ExperimentGUI:
         self.wavelet_level_label.config(state=tk.DISABLED)
         self.wavelet_level_entry.config(state=tk.DISABLED)
 
+
         # Radio buttons para seleção do tipo de gráfico (Histograma removido)
         radio_frame = ttk.LabelFrame(top_frame, text="Tipo de Gráfico")
         radio_frame.pack(side=tk.LEFT, padx=10, pady=5, fill=tk.Y)
@@ -529,6 +519,7 @@ class ExperimentGUI:
         self.view_calculations_button = ttk.Button(generate_control_frame, text="Ver cálculos", command=self.show_calculations)
         self.view_calculations_button.pack(pady=5)
 
+
         # Canvas matplotlib
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
@@ -549,6 +540,7 @@ class ExperimentGUI:
             command=self.evaluate_current_space
         )
         self.evaluate_button.pack(side=tk.LEFT, padx=5)
+
 
         # Área de comparação (texto novo) — só para BP e FS
         bottom_frame = ttk.LabelFrame(self.master, text="Comparar texto com idioma de referência")
@@ -715,7 +707,7 @@ class ExperimentGUI:
 
     def _get_ncols(self, lang_codes_length) -> int:
         return int(lang_codes_length/8) + 1
-
+        
     def _plot_bp_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level, normalize_data: bool):
 
         suffix_norm = ''
@@ -785,10 +777,10 @@ class ExperimentGUI:
 
             # Plotar os pontos e o centroide para cada idioma
             color = self.color_map[lang_code] # Usa o código para pegar a cor
-            scatter_points = self.ax.scatter(hs, C, c=[color], s=15, alpha=0.6, label=f"{lang_code} (n={len(hs)})", zorder=3) # Zorder para pontos
+            scatter_points = self.ax.scatter(hs, C, c=color, s=15, alpha=0.6, label=f"{lang_code} (n={len(hs)})", zorder=3) # Zorder para pontos
             all_handles.append(scatter_points)
             all_labels.append(f"{lang_code} (n={len(hs)})")
-            scatter_centroid = self.ax.scatter(centroid[0], centroid[1], c=[color], s=100, marker="X", edgecolors='black', linewidths=0.8, label=f"Centroide {lang_code}", zorder=4) # Zorder para centroide
+            scatter_centroid = self.ax.scatter(centroid[0], centroid[1], c=color, s=100, marker="X", edgecolors='black', linewidths=0.8, label=f"Centroide {lang_code}", zorder=4) # Zorder para centroide
             all_handles.append(scatter_centroid)
             all_labels.append(f"Centroide {lang_code}")
             self.current_data_points_multi[lang_code]["centroid_scatter"] = scatter_centroid
@@ -859,7 +851,7 @@ class ExperimentGUI:
             self.ax.set_ylabel("Complexidade estatística $C$")
 
         self.ax.set_title(f"Plano Complexidade–Entropia (Bandt-Pompe) — {', '.join(selected_lang_codes)}\nDimensão (m)={dim}, Atraso (τ)={tau}. {title_suffix}")
-        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0., ncols=n_cols)
+        self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0., ncol=n_cols)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
     def _plot_fs_space(self, all_texts_data, selected_lang_codes, dim, tau, signal_type, wavelet_level, normalize_data: bool):
@@ -923,10 +915,10 @@ class ExperimentGUI:
 
             # Plotar os pontos e o centroide para cada idioma
             color = self.color_map[lang_code] # Usa o código para pegar a cor
-            scatter_points = self.ax.scatter(hs, F, c=[color], s=15, alpha=0.6, label=f"{lang_code} (n={len(hs)})", zorder=3) # Zorder para pontos
+            scatter_points = self.ax.scatter(hs, F, c=color, s=15, alpha=0.6, label=f"{lang_code} (n={len(hs)})", zorder=3) # Zorder para pontos
             all_handles.append(scatter_points)
             all_labels.append(f"{lang_code} (n={len(hs)})")
-            scatter_centroid = self.ax.scatter(centroid[0], centroid[1], c=[color], s=100, marker="X", edgecolors='black', linewidths=0.8, label=f"Centroide {lang_code}", zorder=4) # Zorder para centroide
+            scatter_centroid = self.ax.scatter(centroid[0], centroid[1], c=color, s=100, marker="X", edgecolors='black', linewidths=0.8, label=f"Centroide {lang_code}", zorder=4) # Zorder para centroide
             all_handles.append(scatter_centroid)
             all_labels.append(f"Centroide {lang_code}")
 
@@ -999,6 +991,7 @@ class ExperimentGUI:
         self.ax.legend(handles=all_handles, labels=all_labels, fontsize=8, bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0., ncols=n_cols)
         self.ax.grid(True, linestyle="--", alpha=0.4, zorder=1) # Zorder para grid
 
+
     # ------------------------------------------------------------------
     # Comparação de texto novo
     # ------------------------------------------------------------------
@@ -1034,7 +1027,6 @@ class ExperimentGUI:
         ref_tau = ref_stats["tau"] # Atraso usado para gerar o cluster do idioma
         ref_signal_type = ref_stats["signal_type"] # NOVO: Tipo de sinal do cluster
         ref_wavelet_level = ref_stats["wavelet_level"] # NOVO: Nível wavelet do cluster
-        ref_normalize_data = self.normalize_var.get() # Pega o estado atual da normalização
         centroid = ref_stats["centroid"]
         std_hs = ref_stats["std_hs"]
         std_y  = ref_stats["std_y"]
@@ -1339,7 +1331,7 @@ class ExperimentGUI:
                 data_type = self.current_space
                 all_dfs = []
                 all_stats_comments = []
-
+                
                 for lang_code in selected_lang_codes:
                     if lang_code not in self.current_data_points_multi:
                         continue # Pula idiomas que não geraram dados válidos
@@ -1464,10 +1456,12 @@ class ExperimentGUI:
         scrollbar_text.pack(side="right", fill="y")
         text_area.config(yscrollcommand=scrollbar_text.set)
 
+
 def main():
     root = tk.Tk()
     app = ExperimentGUI(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()
