@@ -22,6 +22,7 @@ from sklearn.model_selection import train_test_split
 
 from config import *
 from data.dataset_loader import load_dataset_sqlite
+from data.ti_features_loader import load_ti_features_from_db
 from lid_pipeline import LIDPipeline
 from spacing_experiment import apply_spacing
 
@@ -34,6 +35,23 @@ from evaluation.statistics import compute_statistics
 from utils.system_info import print_and_log_system_info, SystemMonitor, print_and_log_monitor_results
 
 DATABASE_REF = '..\\' + DATABASE
+DATABASE_TI_REF = '..\\' + DATABASE_TI
+
+# Função auxiliar para dividir os dados, incluindo raw_labels
+def custom_train_test_split(X_spaced, y, raw_labels, test_size, stratify, random_state):
+    # train_test_split retorna os índices se X for um range
+    indices = np.arange(len(X_spaced))
+    train_idx, test_idx = train_test_split(indices, test_size=test_size, stratify=stratify, random_state=random_state)
+
+    X_train_spaced = [X_spaced[i] for i in train_idx]
+    X_test_spaced = [X_spaced[i] for i in test_idx]
+    y_train = [y[i] for i in train_idx]
+    y_test = [y[i] for i in test_idx]
+    raw_train_labels = [raw_labels[i] for i in train_idx]
+    raw_test_labels = [raw_labels[i] for i in test_idx]
+
+    return X_train_spaced, X_test_spaced, y_train, y_test, raw_train_labels, raw_test_labels
+
 
 def run_experiment():
 
@@ -65,7 +83,8 @@ def run_experiment():
 
     print("Carregando dataset do banco SQLite...")
 
-    texts, labels, unique_langs = load_dataset_sqlite(DATABASE_REF)
+    # load_dataset_sqlite agora retorna texts, labels, unique_langs, raw_labels
+    texts, labels, unique_langs, raw_labels = load_dataset_sqlite(DATABASE_REF)
 
     print("Total de textos carregados:", len(texts))
     print("Total de idiomas:", len(set(labels)))
@@ -82,12 +101,31 @@ def run_experiment():
     print(f"Execuções por experimento: {N_RUNS}")
     print(f"Treino: {train_percent:.0f}%")
     print(f"Teste: {test_percent:.0f}%")
+    if USE_TI_FEATURES:
+        print(f"Features de TI ativadas. Usando 'space' = '{TI_FEATURE_SPACE_VALUE}'")
+    else:
+        print("Features de TI desativadas.")
     print()
 
     results = {}
 
     last_y_test = None
     last_preds = None
+
+    # Lógica para carregar features de TI uma única vez no início do experimento
+    ti_features_data = None
+    use_ti_features_current_run = USE_TI_FEATURES # Variável local para controle
+    if use_ti_features_current_run:
+        print(f"Carregando features de Teoria da Informação para 'space' = '{TI_FEATURE_SPACE_VALUE}'...")
+        ti_features_data = load_ti_features_from_db(DATABASE_TI_REF)
+        if not ti_features_data:
+            print("Aviso: Não foi possível carregar features de TI. Desativando o uso de TI para esta execução.")
+            logger.info("Aviso: Nao foi possivel carregar features de TI. Desativando o uso de TI para esta execucao.")
+            use_ti_features_current_run = False
+        else:
+            print(f"Features de TI carregadas para {len(ti_features_data)} idiomas.")
+            logger.info(f"Features de TI carregadas para {len(ti_features_data)} idiomas.")
+
 
     for spacing in SPACING_LEVELS:
 
@@ -113,9 +151,11 @@ def run_experiment():
 
             logger.info(f"Execução {run+1}/{N_RUNS}")
 
-            X_train, X_test, y_train, y_test = train_test_split(
+            # Dividir os textos espaçados, labels e raw_labels
+            X_train_spaced, X_test_spaced, y_train, y_test, raw_train_labels, raw_test_labels = custom_train_test_split(
                 spaced_texts,
                 labels,
+                raw_labels, # Passa os raw_labels
                 test_size=TEST_SPLIT,
                 stratify=labels,
                 random_state=None
@@ -123,11 +163,13 @@ def run_experiment():
 
             print("Treinando pipeline...")
 
-            pipeline = LIDPipeline(N_CLUSTERS)
+            # Passar ti_features_data para o pipeline
+            pipeline = LIDPipeline(N_CLUSTERS, ti_features_data if use_ti_features_current_run else None)
 
             train_start = time.time()
 
-            pipeline.fit(X_train, y_train)
+            # O fit do pipeline precisa dos raw_labels para o idioma.
+            pipeline.fit(X_train_spaced, y_train, raw_train_labels if use_ti_features_current_run else None)
 
             train_time = time.time() - train_start
 
@@ -137,9 +179,9 @@ def run_experiment():
 
             preds = []
 
-            for text in tqdm(X_test, desc="Classificando textos"):
-
-                preds.append(pipeline.predict(text))
+            for i, text_spaced in enumerate(tqdm(X_test_spaced, desc="Classificando textos")):
+                # O predict do pipeline precisa do raw_test_labels[i] para o idioma.
+                preds.append(pipeline.predict(text_spaced, raw_test_labels[i] if use_ti_features_current_run else None))
 
             acc = np.mean(np.array(preds) == np.array(y_test))
 
@@ -216,7 +258,6 @@ def run_experiment():
     print(f"Tempo total de execução: {total_time/60:.2f} minutos")
 
     logger.info("Fim da execução")
-
 
 if __name__ == "__main__":
     run_experiment()

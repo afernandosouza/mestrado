@@ -3,13 +3,14 @@
 from pathlib import Path
 
 DATABASE = "banco_texto.db"
+DATABASE_TI = f"cache\\experiment_cache.db"
 
 # --------------------------------------------------------------------
 # Configuração de conteúdo utilizado nos experimentos
 # True  → usa 'conteudo_uma_quebra' (quebras múltiplas → 1 quebra)
 # False → usa 'conteudo' (texto original, sem tratamento)
 # --------------------------------------------------------------------
-USAR_CONTEUDO_TRATADO = True
+USAR_CONTEUDO_TRATADO = False
 
 # Caracteres removidos antes do cálculo da média UTF-8
 # Conforme artigo de Hassanpour et al. (2021):
@@ -25,7 +26,7 @@ N_SPACES   = 7
 
 RANDOM_STATE = 42
 
-N_RUNS = 10
+N_RUNS = 1
 
 SPACING_LEVELS = [1, 5, 7, 12]
 
@@ -66,3 +67,7 @@ RESULTS_DIR = Path("results")
 # Valor padrão recomendado: 6 (Bandt & Pompe, 2002; Rosso et al., 2007)
 # Requisito mínimo de comprimento do sinal: n >> dim! = 720
 EMBEDDING_DIM = 6
+
+# NOVA CONSTANTE: Controla se as features de Teoria da Informação serão usadas
+USE_TI_FEATURES = False # Defina como True para usar, False para não usar
+TI_FEATURE_SPACE_VALUE = 'BP' # Ou 'FS'

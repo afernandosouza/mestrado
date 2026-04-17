@@ -5,15 +5,14 @@ import sqlite3
 from typing import List, Tuple
 from config import *
 
-
-
-def load_dataset_sqlite(database):
+def load_dataset_sqlite(database) -> Tuple[List[str], np.ndarray, List[str], List[str]]:
     """
     Lê os textos e idiomas do banco SQLite.
     Retorna:
         texts      : list[str]
         labels     : np.ndarray de int (índice 0..28)
-        lang_codes : list[str] — código de idioma por índice
+        unique_langs : list[str] — código de idioma por índice
+        raw_labels : list[str] — códigos de idioma originais para cada texto
     """
     print("Carregando dataset a partir do banco de dados...")
     #database = '../' + DATABASE
@@ -44,19 +43,19 @@ def load_dataset_sqlite(database):
     conn.close()
 
     texts      = []
-    raw_labels = []
+    raw_labels_list = [] # Lista para armazenar os códigos de idioma originais
 
     for text, lang, mean in rows:
         if text and lang:
             texts.append(text)          # lista de strings — sem np.asarray!
-            raw_labels.append(lang)
+            raw_labels_list.append(lang) # Armazena o código de idioma original
 
     # Converte códigos de idioma em índices inteiros
-    unique_langs = sorted(set(raw_labels))
+    unique_langs = sorted(list(set(raw_labels_list))) # Garante que unique_langs seja uma lista
     lang2idx     = {lang: idx for idx, lang in enumerate(unique_langs)}
-    labels       = np.array([lang2idx[l] for l in raw_labels], dtype=np.int32)
+    labels       = np.array([lang2idx[l] for l in raw_labels_list], dtype=np.int32)
 
     print(f"Textos carregados : {len(texts)}")
     print(f"Idiomas ({len(unique_langs)}): {unique_langs}")
 
-    return texts, labels, unique_langs
+    return texts, labels, unique_langs, raw_labels_list # Retorna raw_labels_list

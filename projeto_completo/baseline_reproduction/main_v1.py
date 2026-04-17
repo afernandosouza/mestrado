@@ -1,12 +1,16 @@
-# projeto_completo/main_it_fs.py
-
 import warnings
 warnings.filterwarnings('ignore')
 
 import sys
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+# --------------------------------------------------------------------
+# Ajuste do sys.path
+# Sobe dois níveis a partir de baseline_reproduction/:
+#   baseline_reproduction/ -> projeto_completo/
+# Assim todos os módulos do projeto ficam acessíveis diretamente
+# --------------------------------------------------------------------
+ROOT_DIR = Path(__file__).resolve().parents[1]  # projeto_completo/
 sys.path.insert(0, str(ROOT_DIR))
 
 import time
@@ -18,7 +22,7 @@ from sklearn.model_selection import train_test_split
 
 from config import *
 from data.dataset_loader import load_dataset_sqlite
-from lid_pipeline_fs import LIDPipelineFS # Importa a nova pipeline
+from lid_pipeline import LIDPipeline
 from spacing_experiment import apply_spacing
 
 from utils.logger import setup_logger, log_final_results
@@ -29,14 +33,15 @@ from evaluation.statistics import compute_statistics
 
 from utils.system_info import print_and_log_system_info, SystemMonitor, print_and_log_monitor_results
 
-DATABASE_REF = os.path.join(ROOT_DIR, DATABASE) # Caminho absoluto para o DB principal
+DATABASE_REF = '..\\' + DATABASE
 
-def run_experiment_fs():
+def run_experiment():
 
-    logger = setup_logger(log_file_prefix="main_it_fs") # Log separado
+    logger = setup_logger()
 
     print("\n====================================================")
-    print("REPRODUÇÃO DO EXPERIMENTO COM FEATURES WAVELET + FISHER-SHANNON")
+    print("REPRODUÇÃO DO EXPERIMENTO DO ARTIGO")
+    print("A Signal Processing Method for Text Language Identification")
     print("====================================================\n")
 
     start_datetime = datetime.now()
@@ -48,7 +53,7 @@ def run_experiment_fs():
     monitor.start()
 
     logger.info("====================================================")
-    logger.info("INÍCIO DA EXECUÇÃO DA PIPELINE (WAVELET + FS)")
+    logger.info("INÍCIO DA EXECUÇÃO DA PIPELINE")
     logger.info("====================================================")
     logger.info(f"Início: {start_datetime.strftime('%d/%m/%Y %H:%M:%S')}")
     logger.info("")
@@ -87,10 +92,10 @@ def run_experiment_fs():
     for spacing in SPACING_LEVELS:
 
         print("\n----------------------------------------------------")
-        print(f"Experimento com {spacing} espaço(s) entre palavras (WAVELET + FS)")
+        print(f"Experimento com {spacing} espaço(s) entre palavras")
         print("----------------------------------------------------")
 
-        logger.info(f"Experimento {spacing} espaços (WAVELET + FS)")
+        logger.info(f"Experimento {spacing} espaços")
 
         spacing_start = time.time()
 
@@ -116,9 +121,9 @@ def run_experiment_fs():
                 random_state=None
             )
 
-            print("Treinando pipeline (WAVELET + FS)...")
+            print("Treinando pipeline...")
 
-            pipeline = LIDPipelineFS(N_CLUSTERS) # Instancia a nova pipeline
+            pipeline = LIDPipeline(N_CLUSTERS)
 
             train_start = time.time()
 
@@ -132,9 +137,9 @@ def run_experiment_fs():
 
             preds = []
 
-            for i, text in enumerate(tqdm(X_test, desc="Classificando textos")):
-                # Passa o rótulo verdadeiro para o predict para buscar as features de TI
-                preds.append(pipeline.predict(text, language=y_test[i])) 
+            for text in tqdm(X_test, desc="Classificando textos"):
+
+                preds.append(pipeline.predict(text))
 
             acc = np.mean(np.array(preds) == np.array(y_test))
 
@@ -153,14 +158,14 @@ def run_experiment_fs():
 
         results[spacing] = stats
 
-        print("\nResultado médio para", spacing, "espaço(s) (WAVELET + FS):")
+        print("\nResultado médio para", spacing, "espaço(s):")
         print("Acurácia média:", "{:.4f}".format(results[spacing]["mean"]))
         print(f"Tempo do experimento: {spacing_time/60:.2f} minutos")
 
         logger.info(f"Acuracia media {spacing}: {results[spacing]["mean"]:.4f}")
 
     print("\n====================================================")
-    print("RESULTADOS FINAIS (WAVELET + FS)")
+    print("RESULTADOS FINAIS")
     print("====================================================\n")
 
     total_mean = 0
@@ -181,7 +186,7 @@ def run_experiment_fs():
     total_time = end_time - start_datetime
 
     logger.info("====================================================")
-    logger.info("TEMPO TOTAL DE EXECUÇÃO (WAVELET + FS)")
+    logger.info("TEMPO TOTAL DE EXECUÇÃO")
     logger.info("====================================================")
 
     logger.info(f"Fim: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -192,21 +197,26 @@ def run_experiment_fs():
     stats = monitor.get_stats()
     print_and_log_monitor_results(stats, logger)
 
-    save_results(results, filename_prefix="results_fs") # Salva com prefixo
-    plot_results(results, filename_prefix="plot_fs") # Plota com prefixo
+    save_results(results)
+    plot_results(results)
 
     if last_y_test is not None:
-        save_confusion(last_y_test, last_preds, filename_prefix="confusion_fs") # Confusão com prefixo
+        save_confusion(last_y_test, last_preds)
 
     end_datetime = datetime.now()
     total_time = time.time() - start_time
 
+    print("\n====================================================")
+    print("EXECUÇÃO FINALIZADA")
+    print("====================================================")
+
     print("Data/Hora início:", start_datetime.strftime("%d/%m/%Y %H:%M:%S"))
-    print("Data/Hora término:", end_datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    print("Data/Hora término:", end_datetime.strftime("%d/%m/%Y %H:%M:%S"))
 
     print(f"Tempo total de execução: {total_time/60:.2f} minutos")
 
     logger.info("Fim da execução")
 
+
 if __name__ == "__main__":
-    run_experiment_fs()
+    run_experiment()
