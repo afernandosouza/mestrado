@@ -5,6 +5,7 @@ from collections import defaultdict
 
 import sys
 import os
+import string
 from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[1]  # projeto_completo/
 sys.path.insert(0, str(ROOT_DIR))
@@ -15,9 +16,10 @@ DATABASE_REF = str(ROOT_DIR / DATABASE) # Ajuste o caminho do banco de dados par
 
 # Importa a função de carregamento do dataset
 from data.dataset_loader import load_dataset_sqlite
+from sanitize_texts import sanitize_text
 
 # Importa a função de conversão de texto para sinal
-from text_signal import text_to_signal
+from text_signal import text_to_signal, text_to_char_histogram
 
 def cluster_languages_by_utf8_mean(texts_data, n_clusters=N_CLUSTERS):
     """
@@ -50,8 +52,12 @@ def cluster_languages_by_utf8_mean(texts_data, n_clusters=N_CLUSTERS):
             for char in CHARS_TO_REMOVE:
                 cleaned_text = cleaned_text.replace(char, '')
 
+            # Remove os caractres que não fazem parte do idioma
+            #sanitized_text = sanitize_text(cleaned_text, lang)
+
             # Converter para sinal usando text_to_signal (que usa CODE_UTF8_TYPE do config)
             signal = text_to_signal(cleaned_text)
+            #signal = text_to_signal(sanitized_text)
 
             # Calcular a média dos códigos UTF-8
             if len(signal) > 0:
@@ -76,7 +82,7 @@ def cluster_languages_by_utf8_mean(texts_data, n_clusters=N_CLUSTERS):
     X = np.array(processed_texts_for_clustering)
 
     # 2. Clusterização usando K-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=10)
     kmeans.fit(X)
     cluster_assignments = kmeans.labels_ # Atribuição de cluster para cada texto
 
@@ -105,6 +111,74 @@ def cluster_languages_by_utf8_mean(texts_data, n_clusters=N_CLUSTERS):
 
     # Retorna também as atribuições de cluster para cada texto original e seus rótulos
     return clustered_languages, cluster_centers, final_language_utf8_means, cluster_assignments, language_labels_for_each_text
+
+def cluster_languages_by_char_histogram(texts_data, n_clusters=N_CLUSTERS):
+    """
+    Clusteriza idiomas usando vetores de frequência de caracteres (histograma),
+    em vez de apenas a média UTF-8.
+
+    Args:
+        texts_data (dict): {lang_code: [lista_de_textos]}
+        n_clusters (int): número de clusters (default: N_CLUSTERS)
+
+    Returns:
+        clustered_languages: {cluster_id: [langs]}
+        cluster_centers: np.ndarray de shape (n_clusters, N_CHAR_FEATS)
+        language_char_means: {lang: vetor_médio_de_frequências}
+        cluster_assignments: np.ndarray com cluster de cada texto
+        language_labels_for_each_text: [lang_de_cada_texto]
+    """
+    processed_feats_for_clustering = []
+    language_labels_for_each_text = []
+
+    for lang, texts in texts_data.items():
+        for text in texts:
+            # Remoção de caracteres comuns como no método original
+            cleaned_text = text
+            for char in CHARS_TO_REMOVE:
+                cleaned_text = cleaned_text.replace(char, '')
+
+            # Opcional: sanitizar por idioma se você já estiver usando sanitize_text
+            # cleaned_text = sanitize_text(cleaned_text, lang)
+
+            # Extrai histograma de caracteres
+            hist = text_to_char_histogram(cleaned_text)
+
+            processed_feats_for_clustering.append(hist)
+            language_labels_for_each_text.append(lang)
+
+    X = np.vstack(processed_feats_for_clustering)
+
+    # K-Means em espaço de histogramas
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
+    kmeans.fit(X)
+    cluster_assignments = kmeans.labels_
+
+    # Conta quantos textos de cada idioma caíram em cada cluster
+    lang_cluster_counts = defaultdict(lambda: defaultdict(int))
+    for i, cluster_id in enumerate(cluster_assignments):
+        lang = language_labels_for_each_text[i]
+        lang_cluster_counts[lang][cluster_id] += 1
+
+    # Atribui cada idioma ao cluster onde ele é mais predominante
+    clustered_languages = {i: [] for i in range(n_clusters)}
+    for lang, counts_by_cluster in lang_cluster_counts.items():
+        predominant_cluster_id = max(counts_by_cluster, key=counts_by_cluster.get)
+        clustered_languages[predominant_cluster_id].append(lang)
+
+    cluster_centers = kmeans.cluster_centers_
+
+    # Média de histogramas por idioma (para referência)
+    temp_lang_hists = defaultdict(list)
+    for i, lang in enumerate(language_labels_for_each_text):
+        temp_lang_hists[lang].append(processed_feats_for_clustering[i])
+
+    language_char_means = {
+        lang: np.mean(np.vstack(hists), axis=0)
+        for lang, hists in temp_lang_hists.items()
+    }
+
+    return clustered_languages, cluster_centers, language_char_means, cluster_assignments, language_labels_for_each_text
 
 # --- Função para calcular a acurácia de clusterização (pureza) ---
 def calculate_cluster_purity(cluster_assignments, true_labels, n_clusters):
@@ -143,7 +217,7 @@ def main():
 
     # 1. Carregar os dados usando load_dataset_sqlite e a constante DATABASE do config
     print(f"Carregando dados do banco de dados: {database_path}")
-    texts, labels_idx, unique_langs = load_dataset_sqlite(database_path)
+    texts, labels_idx, unique_langs, _ = load_dataset_sqlite(database_path)
 
     # 2. Reformatar os dados para a função de clusterização
     # A função cluster_languages_by_utf8_mean espera um dicionário {idioma: [lista de textos]}
@@ -193,5 +267,63 @@ def main():
 
         print(f"{members_str:<40} {center_val:<18.2f} {accuracy_val:<15.2f}")
 
+def main_hist():
+    """
+    Executa a clusterização usando histograma de caracteres
+    e imprime uma tabela de pureza análoga à tabela atual.
+    """
+    database_path = str(ROOT_DIR / DATABASE)
+    print(f"Carregando dados do banco de dados: {database_path}")
+    texts, labels_idx, unique_langs, _ = load_dataset_sqlite(database_path)
+
+    # Organiza textos por idioma
+    texts_by_language = defaultdict(list)
+    language_labels_for_each_text_ordered = []
+    for i, text in enumerate(texts):
+        lang_code = unique_langs[labels_idx[i]]
+        texts_by_language[lang_code].append(text)
+        language_labels_for_each_text_ordered.append(lang_code)
+
+    # Clusterização por histograma
+    clustered_langs, centers, char_means, cluster_assignments, _ = \
+        cluster_languages_by_char_histogram(texts_by_language)
+
+    # Pureza
+    cluster_purity_scores = calculate_cluster_purity(
+        cluster_assignments,
+        language_labels_for_each_text_ordered,
+        N_CLUSTERS
+    )
+
+    print("\n--- Resultados da Clusterização (Histograma de Caracteres) ---")
+    print("Idiomas agrupados por cluster (cada idioma aparece em apenas um cluster):")
+    for cluster_id, langs in clustered_langs.items():
+        print(f"Cluster {cluster_id}: {', '.join(sorted(langs))}")
+
+    # Como o centro agora é um vetor, podemos mostrar só a entropia do centro ou a soma,
+    # mas para não complicar, vamos mostrar a norma L2 como um resumo numérico.
+    centers_norm = np.linalg.norm(centers, axis=1)
+
+    print("\nResumo dos centros dos clusters (norma L2 dos histogramas):")
+    for i, norm_val in enumerate(centers_norm):
+        print(f"Cluster {i} Center norm: {norm_val:.4f}")
+
+    print("\n--- Tabela de Acurácia de Clusterização (Pureza) - Histograma ---")
+    print(f"{'Cluster members':<40} {'Center norm':<18} {'Accuracy (%)':<15}")
+    print("-" * 73)
+
+    sorted_clusters = sorted(clustered_langs.items())
+    for cluster_id, langs in sorted_clusters:
+        members_str = ', '.join(sorted(langs))
+        center_norm_val = centers_norm[cluster_id]
+        accuracy_val = cluster_purity_scores.get(cluster_id, 0.0)
+        print(f"{members_str:<40} {center_norm_val:<18.4f} {accuracy_val:<15.2f}")
+
 if __name__ == "__main__":
-    main()
+    opcao = input("Escola a opção de feature:\n1. Média uft8\n2. Histograma dos caracteres\n")
+    print()
+    if opcao == '1':
+        main()
+    elif opcao == '2':
+        main_hist()
+    else: print('Opção inválida')

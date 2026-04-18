@@ -27,6 +27,3 @@ Romeno - ro
 Tâmil - ta
 Turco - tr
 Sorani central kurdish - ckb
-Japonês - ja
-Chinês - zh
-Coreano - ko

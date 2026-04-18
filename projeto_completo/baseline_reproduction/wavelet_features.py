@@ -26,6 +26,7 @@ def extract_features(text):
         energy = np.log(
             abs(np.median(coeffs**2)) + 1e-12
         )
+        #energy = np.log(np.sum(coeffs**2) + 1e-12)
 
         features.append(energy)
 

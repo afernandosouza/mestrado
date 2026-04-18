@@ -30,3 +30,21 @@ def apply_spacing(text, n_spaces):
         # A condição (i % 2 == 1) já cuida disso.
 
     return " ".join(processed_text_parts)
+
+def apply_spacing_between_two_words(text, n_spaces):
+    """
+    Aplica n_spaces caracteres de espaço entre DUAS palavras consecutivas no texto.
+    Ex: "palavra1 palavra2 palavra3 palavra4" com n_spaces=5
+    se torna "palavra1     palavra2     palavra3     palavra4"
+    """
+    words = text.split()
+    if not words:
+        return ""
+
+    if len(words) == 1:
+        return words[0]
+
+    separator = " " * n_spaces
+    words = text.split()
+    
+    return separator.join(words)

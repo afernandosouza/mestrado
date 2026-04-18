@@ -24,7 +24,7 @@ from config import *
 from data.dataset_loader import load_dataset_sqlite
 from data.ti_features_loader import load_ti_features_from_db
 from lid_pipeline import LIDPipeline
-from spacing_experiment import apply_spacing
+from spacing_experiment import apply_spacing, apply_spacing_between_two_words
 
 from utils.logger import setup_logger, log_final_results
 from evaluation.save_results import save_results
@@ -140,6 +140,7 @@ def run_experiment():
         print("Aplicando espaçamento nos textos...")
 
         spaced_texts = [
+            #apply_spacing(t, spacing) for t in texts
             apply_spacing(t, spacing) for t in texts
         ]
 
@@ -158,7 +159,7 @@ def run_experiment():
                 raw_labels, # Passa os raw_labels
                 test_size=TEST_SPLIT,
                 stratify=labels,
-                random_state=None
+                random_state=RANDOM_STATE
             )
 
             print("Treinando pipeline...")

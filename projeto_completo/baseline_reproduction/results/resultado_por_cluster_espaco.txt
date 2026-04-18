@@ -1,0 +1,203 @@
+====================================================
+REPRODUÇÃO DA TABELA 3 DO ARTIGO DE HASSANPOUR ET AL.
+A Signal Processing Method for Text Language Identification
+====================================================
+
+
+====================================================
+INFORMAÇÕES DO SISTEMA
+====================================================
+Sistema operacional: Windows 11
+CPU: Intel64 Family 6 Model 165 Stepping 2, GenuineIntel
+Núcleos físicos: 4
+Núcleos lógicos: 8
+Frequência CPU: 2496.0 MHz
+Memória RAM: 7.84 GB
+GPU: não detectada
+
+Data/Hora início: 16/04/2026 23:21:41
+
+Carregando dataset do banco SQLite...
+Carregando dataset a partir do banco de dados...
+Tabelas encontradas: ['textos', 'sqlite_sequence', 'idioma']
+Textos carregados : 29000
+Idiomas (29): ['ar', 'arz', 'az', 'be', 'bg', 'ca', 'ckb', 'cs', 'de', 'en', 'eo', 'es', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'id', 'it', 'nl', 'pl', 'ps', 'pt', 'ro', 'ru', 'ta', 'tr']
+Total de textos carregados: 29000
+Total de idiomas: 29
+
+Configuração experimental:
+Clusters: 6
+Execuções por experimento: 1
+Treino: 80%
+Teste: 20%
+
+Preparando dados para clusterização (cálculo da média UTF-8)...
+Realizando clusterização dos idiomas com base na média UTF-8...
+
+--- Resultados da Clusterização Inicial ---
+Idiomas agrupados por cluster (cada idioma aparece em apenas um cluster):
+Cluster 0: az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr
+Cluster 1: ar, arz, he, ps
+Cluster 2: ckb, fa
+Cluster 3: ta
+Cluster 4: be, bg, ru
+Cluster 5: hi
+
+Centros dos clusters (escala original):
+Cluster 0 Center: 115.01
+Cluster 1 Center: 1195.26
+Cluster 2 Center: 1347.51
+Cluster 3 Center: 2449.39
+Cluster 4 Center: 847.74
+Cluster 5 Center: 1825.88
+
+Médias UTF-8 por idioma (usadas para clusterização):
+ar: 1222.02
+arz: 1207.22
+az: 169.54
+be: 855.72
+bg: 835.40
+ca: 98.98
+ckb: 1356.20
+cs: 129.48
+de: 113.62
+en: 108.54
+eo: 107.47
+es: 120.18
+fa: 1317.03
+fi: 117.90
+fr: 113.20
+gl: 100.54
+he: 1139.83
+hi: 1791.70
+hr: 108.10
+id: 110.40
+it: 105.00
+nl: 97.22
+pl: 139.85
+ps: 1231.60
+pt: 104.48
+ro: 122.42
+ru: 848.48
+ta: 2393.03
+tr: 118.95
+
+--- Tabela de Acurácia de Clusterização (Pureza) ---
+Cluster members                          Cluster centre     Accuracy (%)
+-------------------------------------------------------------------------
+az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr 115.01             5.56
+ar, arz, he, ps                          1195.26            26.12
+ckb, fa                                  1347.51            43.35
+ta                                       2449.39            100.00
+be, bg, ru                               847.74             32.43
+hi                                       1825.88            92.09
+-------------------------------------------------------------------------
+
+----------------------------------------------------
+Executando experimento para 1 espaço(s) entre palavras
+----------------------------------------------------
+Aplicando espaçamento nos textos...
+
+Execução 1/1 para 1 espaço(s)
+  Classificando Cluster 0: 100%|██████████████████████████████████████████████████| 3596/3596 [00:13<00:00, 268.06it/s]
+  Classificando Cluster 1: 100%|████████████████████████████████████████████████████| 757/757 [00:03<00:00, 234.70it/s]
+  Classificando Cluster 2: 100%|████████████████████████████████████████████████████| 439/439 [00:01<00:00, 229.52it/s]
+  Classificando Cluster 3: 100%|████████████████████████████████████████████████████| 180/180 [00:00<00:00, 243.80it/s]
+  Classificando Cluster 4: 100%|████████████████████████████████████████████████████| 617/617 [00:02<00:00, 226.73it/s]
+  Classificando Cluster 5: 100%|████████████████████████████████████████████████████| 211/211 [00:00<00:00, 216.56it/s]
+
+Tempo total para 1 espaço(s): 3.25 minutos
+
+----------------------------------------------------
+Executando experimento para 5 espaço(s) entre palavras
+----------------------------------------------------
+Aplicando espaçamento nos textos...
+
+Execução 1/1 para 5 espaço(s)
+  Classificando Cluster 0: 100%|██████████████████████████████████████████████████| 3600/3600 [00:18<00:00, 190.75it/s]
+  Classificando Cluster 1: 100%|████████████████████████████████████████████████████████████████████████████████████████| 778/778 [00:04<00:00, 185.05it/s]
+  Classificando Cluster 2: 100%|████████████████████████████████████████████████████████████████████████████████████████| 414/414 [00:02<00:00, 177.38it/s]
+  Classificando Cluster 3: 100%|████████████████████████████████████████████████████████████████████████████████████████| 180/180 [00:00<00:00, 202.26it/s]
+  Classificando Cluster 4: 100%|████████████████████████████████████████████████████████████████████████████████████████| 612/612 [00:03<00:00, 176.15it/s]
+  Classificando Cluster 5: 100%|████████████████████████████████████████████████████████████████████████████████████████| 216/216 [00:01<00:00, 151.90it/s]
+
+Tempo total para 5 espaço(s): 5.41 minutos
+
+----------------------------------------------------
+Executando experimento para 7 espaço(s) entre palavras
+----------------------------------------------------
+Aplicando espaçamento nos textos...
+
+Execução 1/1 para 7 espaço(s)
+  Classificando Cluster 0: 100%|██████████████████████████████████████████████████████████████████████████████████████| 3595/3595 [00:22<00:00, 156.69it/s]
+  Classificando Cluster 1: 100%|████████████████████████████████████████████████████████████████████████████████████████| 753/753 [00:05<00:00, 142.16it/s]
+  Classificando Cluster 2: 100%|████████████████████████████████████████████████████████████████████████████████████████| 449/449 [00:02<00:00, 155.32it/s]
+  Classificando Cluster 3: 100%|████████████████████████████████████████████████████████████████████████████████████████| 186/186 [00:01<00:00, 154.52it/s]
+  Classificando Cluster 4: 100%|████████████████████████████████████████████████████████████████████████████████████████| 611/611 [00:03<00:00, 159.84it/s]
+  Classificando Cluster 5: 100%|████████████████████████████████████████████████████████████████████████████████████████| 206/206 [00:01<00:00, 135.62it/s]
+
+Tempo total para 7 espaço(s): 6.92 minutos
+
+----------------------------------------------------
+Executando experimento para 12 espaço(s) entre palavras
+----------------------------------------------------
+Aplicando espaçamento nos textos...
+
+Execução 1/1 para 12 espaço(s)
+  Classificando Cluster 0: 100%|██████████████████████████████████████████████████████████████████████████████████████| 3597/3597 [00:26<00:00, 134.03it/s]
+  Classificando Cluster 1: 100%|████████████████████████████████████████████████████████████████████████████████████████| 748/748 [00:06<00:00, 118.85it/s]
+  Classificando Cluster 2: 100%|████████████████████████████████████████████████████████████████████████████████████████| 448/448 [00:04<00:00, 111.96it/s]
+  Classificando Cluster 3: 100%|████████████████████████████████████████████████████████████████████████████████████████| 180/180 [00:01<00:00, 148.77it/s]
+  Classificando Cluster 4: 100%|████████████████████████████████████████████████████████████████████████████████████████| 616/616 [00:05<00:00, 123.10it/s]
+  Classificando Cluster 5: 100%|█████████████████████████████████████████████████████████████████████████████████████████| 211/211 [00:02<00:00, 89.83it/s]
+
+Tempo total para 12 espaço(s): 8.08 minutos
+
+====================================================
+RESULTADOS FINAIS POR CLUSTER E ESPAÇAMENTO (TABELA 3)
+====================================================
+
+Espaçamento  Cluster    Idiomas                                  Acurácia Média     Desvio Padrão
+----------------------------------------------------------------------------------------------------
+1            0          az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr 0.1630             0.0000
+1            1          ar, arz, he, ps                          0.8811             0.0000
+1            2          ckb, fa                                  0.9522             0.0000
+1            3          ta                                       1.0000             0.0000
+1            4          be, bg, ru                               0.6548             0.0000
+1            5          hi                                       0.9953             0.0000
+5            0          az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr 0.6714             0.0000
+5            1          ar, arz, he, ps                          0.9075             0.0000
+5            2          ckb, fa                                  0.9662             0.0000
+5            3          ta                                       1.0000             0.0000
+5            4          be, bg, ru                               0.7500             0.0000
+5            5          hi                                       0.9907             0.0000
+7            0          az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr 0.8281             0.0000
+7            1          ar, arz, he, ps                          0.9097             0.0000
+7            2          ckb, fa                                  0.9644             0.0000
+7            3          ta                                       1.0000             0.0000
+7            4          be, bg, ru                               0.7463             0.0000
+7            5          hi                                       0.9951             0.0000
+12           0          az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl, pl, pt, ro, tr 0.7857             0.0000
+12           1          ar, arz, he, ps                          0.8864             0.0000
+12           2          ckb, fa                                  0.9442             0.0000
+12           3          ta                                       1.0000             0.0000
+12           4          be, bg, ru                               0.7500             0.0000
+12           5          hi                                       0.9953             0.0000
+----------------------------------------------------------------------------------------------------
+
+====================================================
+USO DE RECURSOS DURANTE O EXPERIMENTO
+====================================================
+CPU média: 21.60%
+CPU máxima: 50.80%
+RAM média: 6.34 GB
+RAM máxima: 7.16 GB
+
+
+====================================================
+EXECUÇÃO CLUSTERIZADA FINALIZADA
+====================================================
+
+Data/Hora início: 16/04/2026 23:21:41
+Data/Hora término: 16/04/2026 23:45:56
+Tempo total de execução: 24.23 minutos

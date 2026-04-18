@@ -71,3 +71,7 @@ EMBEDDING_DIM = 6
 # NOVA CONSTANTE: Controla se as features de Teoria da Informação serão usadas
 USE_TI_FEATURES = False # Defina como True para usar, False para não usar
 TI_FEATURE_SPACE_VALUE = 'BP' # Ou 'FS'
+
+CHARSET = list("abcdefghijklmnopqrstuvwxyzáàâãéèêíïóôõúüç")  # ajuste conforme desejar
+CHAR2IDX = {ch: i for i, ch in enumerate(CHARSET)}
+N_CHAR_FEATS = len(CHARSET)
