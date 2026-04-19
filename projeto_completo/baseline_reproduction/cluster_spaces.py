@@ -124,7 +124,7 @@ def cluster_languages_by_utf8_mean(
     X_scaled = scaler.fit_transform(processed_mean_features)
 
     # 2. Clusterização usando K-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_INIT_KMEANS)
     kmeans.fit(X_scaled)
     cluster_assignments = kmeans.labels_ # Atribuição de cluster para cada texto
 

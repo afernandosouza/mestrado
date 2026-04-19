@@ -82,7 +82,7 @@ def cluster_languages_by_utf8_mean(texts_data, n_clusters=N_CLUSTERS):
     X = np.array(processed_texts_for_clustering)
 
     # 2. Clusterização usando K-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=10)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_INIT_KMEANS)
     kmeans.fit(X)
     cluster_assignments = kmeans.labels_ # Atribuição de cluster para cada texto
 
@@ -150,7 +150,7 @@ def cluster_languages_by_char_histogram(texts_data, n_clusters=N_CLUSTERS):
     X = np.vstack(processed_feats_for_clustering)
 
     # K-Means em espaço de histogramas
-    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_RUNS)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=N_INIT_KMEANS)
     kmeans.fit(X)
     cluster_assignments = kmeans.labels_
 

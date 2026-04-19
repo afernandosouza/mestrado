@@ -49,7 +49,6 @@ DATABASE_PATH = ROOT_DIR / DATABASE
 # Configurações do experimento (fiel ao artigo)
 # ------------------------------------------------------------------
 TEST_SIZE    = 0.20   # 20 % para teste, 80 % para treino do K-means
-N_INIT_KMEANS = 10   # número de inicializações do K-means
 
 
 # ------------------------------------------------------------------

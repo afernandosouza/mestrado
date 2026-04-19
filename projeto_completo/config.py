@@ -26,7 +26,9 @@ N_SPACES   = 7
 
 RANDOM_STATE = 42
 
-N_RUNS = 1
+N_RUNS = 10
+
+N_INIT_KMEANS = 10 # K-means
 
 SPACING_LEVELS = [1, 5, 7, 12]
 
@@ -69,8 +71,8 @@ RESULTS_DIR = Path("results")
 EMBEDDING_DIM = 6
 
 # NOVA CONSTANTE: Controla se as features de Teoria da Informação serão usadas
-USE_TI_FEATURES = False # Defina como True para usar, False para não usar
-TI_FEATURE_SPACE_VALUE = 'BP' # Ou 'FS'
+USE_TI_FEATURES = True # Defina como True para usar, False para não usar
+TI_FEATURE_SPACE_VALUE = 'FS' # 'BP' Ou 'FS'
 
 CHARSET = list("abcdefghijklmnopqrstuvwxyzáàâãéèêíïóôõúüç")  # ajuste conforme desejar
 CHAR2IDX = {ch: i for i, ch in enumerate(CHARSET)}

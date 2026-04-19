@@ -1,0 +1,830 @@
+======================================================================================
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+PURITY PER LANGUAGE — RESULTADOS COMPLETOS
+Gerado em : 18/04/2026 21:32:30
+Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+Split     : 80% treino / 20% teste  (random_state=42)
+K-means   : k=6  n_init=10
+Remoção   : apenas @  -  +  #  (conforme artigo)
+=
+
+======================================================================
+PUREZA POR IDIOMA — ANÁLISE COMPLEMENTAR AO ARTIGO
+Banco: D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
+======================================================================
+
+Carregando textos...
+Carregando dataset a partir do banco de dados...
+Tabelas encontradas: ['textos', 'sqlite_sequence', 'idioma']
+Textos carregados : 29000
+Idiomas (29): ['ar', 'arz', 'az', 'be', 'bg', 'ca', 'ckb', 'cs', 'de', 'en', 'eo', 'es', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'id', 'it', 'nl', 'pl', 'ps', 'pt', 'ro', 'ru', 'ta', 'tr']
+Textos: 29000  |  Idiomas: 29
+
+Split estratificado 80/20 (random_state=42)...
+Treino: 23200  |  Teste: 5800
+
+Calculando features de treino...
+Treinando K-means (k=6)...
+Centros: [ 115.14  843.91 1190.19 1340.49 1828.02 2445.67]
+Aplicando centros nos 5800 textos de teste...
+
+=====================================================================================
+PUREZA POR CLUSTER  (método do artigo — referência)
+=====================================================================================
+Cluster members                                             Centro   Pureza (%)
+-------------------------------------------------------------------------------------
+az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl      115.14        5.55
+pl, pt, ro, tr                                         
+be, bg, ru                                                  843.91       32.51
+ar, arz, he, ps                                            1190.19       27.36
+ckb, fa                                                    1340.49       42.03
+hi                                                         1828.02       93.36
+ta                                                         2445.67      100.00
+-------------------------------------------------------------------------------------
+Média ponderada:                                                         20.24
+Média simples:                                                           50.13
+
+─────────────────────────────────────────────────────────────────────────────────────
+REFERÊNCIA — Tabela 1 original do artigo
+─────────────────────────────────────────────────────────────────────────────────────
+Cluster members                                             Centro   Pureza (%)
+-------------------------------------------------------------------------------------
+ar, arz, ps                                                1246.56       87.00
+ru, be, bg                                                  878.73       94.83
+fa, ckb                                                    1370.18       77.50
+ta                                                         2820.96       90.50
+hi                                                         1874.38       95.50
+en, fr, it, az, ca, cs, de, eo, es, fi, gl, he, hr, id      107.67       98.55
+nl, pl, pt, ro, tr                                     
+-------------------------------------------------------------------------------------
+Média geral reportada no artigo:                                          95.14
+
+=====================================================================================
+PUREZA POR IDIOMA  (métrica alternativa)
+Pergunta: 'Qual % dos textos deste idioma foi parar no cluster correto para ele?'
+=====================================================================================
+
+  Idioma    Total  Cluster pred.  N no pred.  Pureza (%)  Distribuição pelos clusters
+  --------------------------------------------------------------------------------
+  es          200              0         200     100.00%  C0:200(100%)
+  en          200              0         200     100.00%  C0:200(100%)
+  tr          200              0         200     100.00%  C0:200(100%)
+  gl          200              0         200     100.00%  C0:200(100%)
+  nl          200              0         200     100.00%  C0:200(100%)
+  pt          200              0         200     100.00%  C0:200(100%)
+  ro          200              0         200     100.00%  C0:200(100%)
+  it          200              0         200     100.00%  C0:200(100%)
+  hr          200              0         200     100.00%  C0:200(100%)
+  cs          200              0         200     100.00%  C0:200(100%)
+  de          200              0         200     100.00%  C0:200(100%)
+  pl          200              0         200     100.00%  C0:200(100%)
+  ca          200              0         200     100.00%  C0:200(100%)
+  arz         200              5         200     100.00%  C5:200(100%)
+  he          200              5         200     100.00%  C5:200(100%)
+  fi          200              0         199      99.50%  C0:199(100%)  C3:1(0%)
+  id          200              0         199      99.50%  C0:199(100%)  C3:1(0%)
+  eo          200              0         199      99.50%  C0:199(100%)  C3:1(0%)
+  az          200              0         199      99.50%  C0:199(100%)  C3:1(0%)
+  fr          200              0         198      99.00%  C0:198(99%)  C3:2(1%)
+  be          200              3         197      98.50%  C3:197(98%)  C0:3(2%)
+  hi          200              4         197      98.50%  C4:197(98%)  C1:3(2%)
+  ru          200              3         197      98.50%  C3:197(98%)  C0:3(2%)
+  ckb         200              1         195      97.50%  C1:195(98%)  C5:4(2%)  C4:1(0%)
+  bg          200              3         195      97.50%  C3:195(98%)  C0:3(2%)  C5:2(1%)
+  ta          200              2         185      92.50%  C2:185(92%)  C4:12(6%)  C1:2(1%)  C3:1(0%)
+  fa          200              1         165      82.50%  C1:165(82%)  C5:31(16%)  C3:3(2%)  C4:1(0%)
+  ps          200              5         161      80.50%  C5:161(80%)  C1:35(18%)  C3:4(2%)
+  ar          200              5         133      66.50%  C5:133(66%)  C1:64(32%)  C3:3(2%)
+
+  ────────────────────────────────────────────────────────────────────────────────
+  Média simples   de pureza por idioma : 96.88%
+  Média ponderada de pureza por idioma : 96.88%
+
+=====================================================================================
+ANÁLISE POR FAIXA DE PUREZA
+=====================================================================================
+
+  Excelente  (>= 90%):
+    es(100.0%), en(100.0%), tr(100.0%), gl(100.0%), nl(100.0%), pt(100.0%), ro(100.0%), it(100.0%), hr(100.0%), cs(100.0%), de(100.0%), pl(100.0%), ca(100.0%), arz(100.0%), he(100.0%), fi(99.5%), id(99.5%), eo(99.5%), az(99.5%), fr(99.0%), be(98.5%), hi(98.5%), ru(98.5%), ckb(97.5%), bg(97.5%), ta(92.5%)
+
+  Bom        (70–89%):
+    fa(82.5%), ps(80.5%)
+
+  Regular    (50–69%):
+    ar(66.5%)
+
+=====================================================================================
+IDIOMAS MAIS ESPALHADOS PELOS CLUSTERS (pureza < 60%)
+→ São os candidatos a intervenção no corpus
+=====================================================================================
+  Todos os idiomas têm pureza >= 60%.
+
+=====================================================================================
+COMPARAÇÃO: pureza por cluster  ×  pureza por idioma
+=====================================================================================
+  Idioma   Cluster     Pureza cluster (%)    Pureza idioma (%)
+  ------------------------------------------------------------
+  az       C0 (115)                 5.55                99.50
+  ca       C0 (115)                 5.55               100.00
+  cs       C0 (115)                 5.55               100.00
+  de       C0 (115)                 5.55               100.00
+  en       C0 (115)                 5.55               100.00
+  eo       C0 (115)                 5.55                99.50
+  es       C0 (115)                 5.55               100.00
+  fi       C0 (115)                 5.55                99.50
+  fr       C0 (115)                 5.55                99.00
+  gl       C0 (115)                 5.55               100.00
+  hr       C0 (115)                 5.55               100.00
+  id       C0 (115)                 5.55                99.50
+  it       C0 (115)                 5.55               100.00
+  nl       C0 (115)                 5.55               100.00
+  pl       C0 (115)                 5.55               100.00
+  pt       C0 (115)                 5.55               100.00
+  ro       C0 (115)                 5.55               100.00
+  tr       C0 (115)                 5.55               100.00
+  ------------------------------------------------------------
+  be       C3 (844)                32.51                98.50
+  bg       C3 (844)                32.51                97.50
+  ru       C3 (844)                32.51                98.50
+  ------------------------------------------------------------
+  ar       C5 (1190)                27.36                66.50
+  arz      C5 (1190)                27.36               100.00
+  he       C5 (1190)                27.36               100.00
+  ps       C5 (1190)                27.36                80.50
+  ------------------------------------------------------------
+  ckb      C1 (1340)                42.03                97.50
+  fa       C1 (1340)                42.03                82.50
+  ------------------------------------------------------------
+  hi       C4 (1828)                93.36                98.50
+  ------------------------------------------------------------
+  ta       C2 (2446)               100.00                92.50
+  ------------------------------------------------------------
+
+======================================================================================
+TABELA — Pureza por idioma, agrupada por cluster
+Pureza (%) = média da pureza individual de cada idioma no cluster
+======================================================================================
+Cluster members                                                   Centro    Pureza (%)
+--------------------------------------------------------------------------------------
+az, ca, cs, de, en, eo, es, fi, fr, gl, hr, id, it, nl            115.14         99.83
+pl, pt, ro, tr                                            
+be, bg, ru                                                        843.91         98.17
+ar, arz, he, ps                                                  1190.19         86.75
+ckb, fa                                                          1340.49         90.00
+hi                                                               1828.02         98.50
+ta                                                               2445.67         92.50
+--------------------------------------------------------------------------------------
+Média simples por cluster (pureza por idioma):                                   94.29
+Média ponderada por nº de idiomas:                                               96.88
+======================================================================================
+
+──────────────────────────────────────────────────────────────────────────────────────
+REFERÊNCIA — Tabela 1 original do artigo
+──────────────────────────────────────────────────────────────────────────────────────
+Cluster members                                                   Centro    Pureza (%)
+--------------------------------------------------------------------------------------
+ar, arz, ps                                                      1246.56         87.00
+ru, be, bg                                                        878.73         94.83
+fa, ckb                                                          1370.18         77.50
+ta                                                               2820.96         90.50
+hi                                                               1874.38         95.50
+en, fr, it, az, ca, cs, de, eo, es, fi, gl, he, hr, id            107.67         98.55
+nl, pl, pt, ro, tr                                        
+--------------------------------------------------------------------------------------
+Média geral reportada no artigo:                                                 95.14
+======================================================================================
+
+======================================================================================
+DETALHE — Pureza por idioma individual
+======================================================================================
+  Idioma  Cluster         Centro   Total  No pred.  Pureza (%)
+  ------------------------------------------------------------------------------------
+  az      C0 (115)      115.14     200       199      99.50%
+  ca      C0 (115)      115.14     200       200     100.00%
+  cs      C0 (115)      115.14     200       200     100.00%
+  de      C0 (115)      115.14     200       200     100.00%
+  en      C0 (115)      115.14     200       200     100.00%
+  eo      C0 (115)      115.14     200       199      99.50%
+  es      C0 (115)      115.14     200       200     100.00%
+  fi      C0 (115)      115.14     200       199      99.50%
+  fr      C0 (115)      115.14     200       198      99.00%
+  gl      C0 (115)      115.14     200       200     100.00%
+  hr      C0 (115)      115.14     200       200     100.00%
+  id      C0 (115)      115.14     200       199      99.50%
+  it      C0 (115)      115.14     200       200     100.00%
+  nl      C0 (115)      115.14     200       200     100.00%
+  pl      C0 (115)      115.14     200       200     100.00%
+  pt      C0 (115)      115.14     200       200     100.00%
+  ro      C0 (115)      115.14     200       200     100.00%
+  tr      C0 (115)      115.14     200       200     100.00%
+  ------------------------------------------------------------------------------------
+  be      C3 (844)      843.91     200       197      98.50%
+  bg      C3 (844)      843.91     200       195      97.50%
+  ru      C3 (844)      843.91     200       197      98.50%
+  ------------------------------------------------------------------------------------
+  ar      C5 (1190)     1190.19     200       133      66.50%
+  arz     C5 (1190)     1190.19     200       200     100.00%
+  he      C5 (1190)     1190.19     200       200     100.00%
+  ps      C5 (1190)     1190.19     200       161      80.50%
+  ------------------------------------------------------------------------------------
+  ckb     C1 (1340)     1340.49     200       195      97.50%
+  fa      C1 (1340)     1340.49     200       165      82.50%
+  ------------------------------------------------------------------------------------
+  hi      C4 (1828)     1828.02     200       197      98.50%
+  ------------------------------------------------------------------------------------
+  ta      C2 (2446)     2445.67     200       185      92.50%
+  ------------------------------------------------------------------------------------
