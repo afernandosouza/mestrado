@@ -37,7 +37,7 @@ Para seguir a proposta de Hassanpour et al., o código aplica espaçamentos arti
 
 - Função utilizada: `spacing_experiment.apply_spacing`
 - Níveis de espaçamento controlados por `SPACING_LEVELS` (em `config.py`).
-- Para cada valor de espaçamento (1, 2, 3, ...), é gerado um novo conjunto de textos `spaced_texts`, que é então utilizado na etapa de treinamento/teste.
+- Utiliza os espaçamentos 1, 5, 7 e 12, é gerado um novo conjunto de textos `spaced_texts`, que é então utilizado na etapa de treinamento/teste.
 
 ### 1.4. Divisão Treino/Teste
 
