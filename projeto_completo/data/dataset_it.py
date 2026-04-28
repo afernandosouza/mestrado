@@ -102,7 +102,7 @@ def load_dataset_it(database) -> tuple[list[str], np.ndarray, list[str], list[st
     # ------------------------------------------------------------------
     # 1. Carrega via função original (3 retornos)
     # ------------------------------------------------------------------
-    texts, labels, lang_codes = load_dataset_sqlite(database)
+    texts, labels, lang_codes, _ = load_dataset_sqlite(database)
 
     # ------------------------------------------------------------------
     # 2. Carrega raw_labels e medias_utf8 com leitura auxiliar

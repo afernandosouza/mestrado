@@ -1,601 +1,601 @@
 ======================================================================================
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10
 Remoção   : apenas @  -  +  #  (conforme artigo)
 =
 PURITY PER LANGUAGE — RESULTADOS COMPLETOS
-Gerado em : 18/04/2026 21:32:30
+Gerado em : 20/04/2026 22:12:01
 Banco     : D:\FERNANDO\MESTRADO\CÓDIGO\mestrado\projeto_completo\banco_texto.db
 Split     : 80% treino / 20% teste  (random_state=42)
 K-means   : k=6  n_init=10

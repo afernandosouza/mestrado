@@ -1,0 +1,339 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{sbpo-template}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage[square]{natbib}
+\usepackage{graphicx} % Pacote adicionado para inserção de imagens
+\usepackage{subcaption}
+\usepackage{float}
+
+\title{Avaliação do uso de Processamento de Sinais e Teoria da Informação na identificação de idiomas em textos}
+
+\begin{document}
+\maketitle
+
+\author{
+\name{Antonio Fernando Souza}
+\institute{Instituto de Computação, Universidade Federal de Alagoas}
+\iaddress{Maceió, AL, Brasil}
+\email{afs3@ic.ufal.br}
+}
+
+\author{
+\name{André Luiz Lins de Aquino}
+\institute{Instituto de Computação, Universidade Federal de Alagoas}
+\iaddress{Maceió, AL, Brasil}
+\email{(orientador)}
+}
+
+\vspace{8mm}
+\begin{resumo}
+A identificação automática de idiomas (LID) é uma etapa fundamental no processamento de linguagem natural. O objetivo deste artigo é avaliar o uso de conceitos da Teoria da Informação, através das métricas plano de complexidade-entropia de Bandt-Pompe e o plano Ficher-Shannon, para verificar a eficácia da utilização dessas métricas na identificação de textos em diferentes idiomas, sem a utilização de modelos pré-treinados. o artigo de [Hassanpour et al., 2021] foi reproduzido e utilizado como baseline para a pesquisa, em seguida, propomos uma extensão que integra métricas de teoria da informação – especificamente o plano complexidade-entropia (CH) e o plano Fisher-Shannon (FS) – com o objetivo de melhorar a acurácia alcançada no experimento do artigo, que foi de 72,20\%. Os resultados demonstraram que essas métricas não são suficientes para determinar o idioma de um texto, no entanto, seu uso apresentou grande potencial de melhoria para modelos de treinamento.
+\end{resumo}
+
+\bigskip
+\begin{palchaves}
+Identificação de idioma; Séries temporais; Transformada wavelet; Teoria da informação; Complexidade-entropia; Fisher-Shannon; Processamento de sinais.
+\bigskip
+\noindent{\textbf{Tópicos}}\ LID, Teoria da Informação, Processamento de sinais.
+\end{palchaves}
+
+\vspace{8mm}
+\begin{abstract}
+Automatic language identification (LID) is a fundamental step in natural language processing. The aim of this article is to evaluate the use of concepts from Information Theory, through the Bandt–Pompe complexity–entropy plane and the Fisher–Shannon plane, in order to assess the effectiveness of these metrics for identifying texts in different languages without relying on pre-trained models. The work by [Hassanpour et al., 2021] was reproduced and used as a baseline for the study; subsequently, we propose an extension that integrates information-theoretic metrics—specifically the complexity–entropy (CH) plane and the Fisher–Shannon (FS) plane—with the goal of improving the accuracy achieved in the original experiment, which was 72.20\%. The results showed that these metrics alone are not sufficient to determine the language of a text; however, their use demonstrated strong potential for improving training-based models.
+\end{abstract}
+
+\bigskip
+\begin{keywords}
+Language identification. Time series. Wavelet transform. Information theory. Complexity-Shannon. Fisher-Shannon. Signal processing.
+\bigskip
+\noindent{\textbf{Paper topics}}\ LID, Information theory, Signal processing.
+\end{keywords}
+
+\newpage
+
+\section{Introdução}
+A identificação automática de idiomas em textos (LID) constitui o primeiro passo em \textit{pipelines} de processamento de linguagem natural (PLN), com aplicações críticas em tradução automática, indexação de documentos, filtragem de conteúdo e recuperação de informação multilíngue \citep{burchell2023open}. Métodos tradicionais baseados em \textit{n-gramas}, dicionários ou abordagens estatísticas simples enfrentam limitações significativas quando aplicados a idiomas estruturalmente similares (como persa e árabe) ou em cenários de código-misturado (\textit{code-mixing}), devido à sobreposição de padrões lexicais e alta complexidade computacional \cite{gupta2020}.
+
+\cite{hassanpour2021} propuseram uma abordagem inovadora que trata textos como sinais temporais, convertendo-os em séries temporais via codificação UTF-8, aplicando clusterização por similaridade e classificando com características espectrais extraídas pela Transformada de Pacote de Wavelet (WPT). Este método representa uma mudança de paradigma ao abordar o problema de LID através das lentes do processamento de sinais, capturando padrões rítmicos e melódicos intrínsecos a cada idioma.
+
+Este trabalho realiza uma reprodução independente e crítica do método de Hassanpour et al., identificando fatores de variabilidade e fontes de divergência potencial. Adicionalmente, propomos e implementamos uma extensão que integra conceitos de teoria da informação -- especificamente o plano complexidade-entropia (CH) \cite{bandt2002,rosso2007} e o plano Fisher-Shannon (FS) \cite{olivares2012} -- com o objetivo de demonstrar a separabilidade espacial e classificar os idiomas sem nenhuma utilização de modelos de aprendizado de máquina supervisionados, como MLP ou Transformers, os quais são computacionalmente custosos.
+
+Os objetivos específicos deste trabalho são reproduzir de forma fiel o método \textit{baseline} de Hassanpour et al., analisar de maneira sistemática as possíveis divergências entre os resultados reportados e aqueles obtidos na reprodução, investigar em que medida as métricas de Teoria da Informação são capazes de separar idiomas em grupos bem definidos, comparar o custo computacional do classificador neural com a eficiência das abordagens baseadas em visualização e separação espacial das séries e, por fim, oferecer \textit{insights} mais aprofundados sobre as propriedades informacionais dos sinais textuais e seu potencial para tarefas de identificação automática de idiomas.
+
+A estrutura do artigo é a seguinte: a Seção~\ref{sec:relacionados} revisa trabalhos relacionados em LID; a Seção~\ref{sec:metodologia} detalha a metodologia de reprodução e a nova extensão; a Seção~\ref{sec:resultados} exibe os resultados experimentais atualizados; a Seção~\ref{sec:discussoes} discute as observações extraídas das métricas; e a Seção~\ref{sec:conclusao} conclui o trabalho.
+
+\section{Trabalhos relacionados} \label{sec:relacionados}
+A identificação automática de idiomas tem sido amplamente estudada na literatura, com abordagens que evoluíram de métodos baseados em regras e dicionários para técnicas estatísticas e, mais recentemente, modelos baseados em aprendizado profundo.  apresentam uma revisão abrangente do estado da arte, destacando a predominância de métodos baseados em \textit{n-gramas} e sua transição para arquiteturas neurais como LSTMs e Transformers. Embora esses métodos alcancem acurácias superiores a 99\% para idiomas bem representados, enfrentam dificuldades com variedades linguísticas próximas e demandam \textit{corpora} extensos.
+
+Abordagens recentes têm explorado representações densas via \textit{embeddings} pré-treinados. \cite{duvenaud2022} propõem LID para textos curtos usando XLM-RoBERTa, alcançando 95,2\% de acurácia em 200 idiomas. No entanto, o custo computacional é proibitivo, e a abordagem requer \textit{fine-tuning} específico por idioma, limitando sua aplicabilidade em cenários de baixo recurso.
+
+No domínio do processamento de sinais aplicado a textos, \cite{hassanpour2021} -- \textit{baseline} deste trabalho -- convertem textos em séries temporais UTF-8, clusterizam via K-means e extraem características wavelet para classificação com MLP. Apesar da inovação, o método ainda depende de aprendizado supervisionado, exigindo treinamentos demorados. Nossa proposta visa justamente preencher essa lacuna, demonstrando que as propriedades distributivas das séries (extraídas pelos planos Bandt-Pompe e Fisher-Shannon) permitem agrupar idiomas naturalmente, sem exigir modelos preditivos complexos.
+
+\section{Metodologia} \label{sec:metodologia}
+\subsection{Reprodução do método baseline}
+A reprodução de \cite{hassanpour2021} foi executada em um ambiente utilizando o sistema operacional Windows 11, processador Intel (4 núcleos físicos, 8 threads, 2496.0 MHz) e 8 GB de memória RAM, sem uso de GPU. Utilizamos o \textit{dataset} com 29.000 textos de 29 idiomas da Wikipedia. O \textit{pipeline} converte textos em séries UTF-8, aplica WPT, extrai a mediana das energias e treina um MLP repetidamente por agrupamento. Como protocolo de teste, foram avaliados 1, 5, 7 e 12 espaços inseridos artificialmente nas palavras.
+
+O trabalho utlizado como baseline não disponibilizou nenhuma estrutura utilziada para os experimentos, o que dificultou a reprodução fiel do artigo. Houve divergências nos resultados da reprodução que podem ter sido causados por alguns motivos: a quantidade de idiomas citada no artigo foi 31, mas só foram descritos 29 idiomas; o corpus de textos utilizado não foi disponibilizado; detalhes da codificação UTF-8 utilizada (codepoints ou bytes) não foi definida; variações nas configurações de clusterização K‑means (implementação, inicialização aleatória e possível uso de seeds distintos); diferenças na implementação da WPT (biblioteca usada, parâmetros de borda, nível e alinhamento das sub‑bandas); escolhas específicas na MLP (número de neurônios, função de ativação, algoritmo e hiperparâmetros de treinamento, normalização das features, estratégia de divisão treino/teste e número de execuções) e, por fim, ambiguidades na forma de inserir espaços artificiais entre palavras nos textos de teste.
+
+\subsection{Análise Informacional sem Aprendizado de Máquina}
+O grande diferencial da extensão proposta é investigar se métricas de Teoria da Informação organizam visualmente os textos em grupos coesos sem a utilização de MLP, Transformers ou aprendizado supervisionado. Extraímos o vetor informacional de cada texto baseando-se nos cálculos de Bandt-Pompe (com $D=6$ e atraso $\tau=1$) para obter Entropia Normalizada ($H_S$), Complexidade ($C_{JS}$) e Informação de Fisher ($F$). A etapa de classificação supervisionada é completamente substituída pelo mapeamento dos textos diretamente nos planos Complexidade-Entropia (CH) e Fisher-Shannon (FS) e pela análise de seus respectivos centroides.
+
+Os experimentos realizados foram concebidos para investigar a capacidade de idiomas diferentes conseguirem produzir \textit{assinaturas} distintas tanto no planos de Complexidade--Entropia (Bandt--Pompe) quanto no plano Fisher--Shannon. No dois casos, os textos são organizados por idioma, e então convertidos em séries temporais numéricas a partir dos \textit{codepoints} Unicode de cada caractere, obtendo-se uma sequência $x[n]$.
+
+Para a construção do Plano Complexidade--Entropia, foi utilizada a abordagem de Bandt--Pompe. na qual dada uma série temporal $s[n]$, definem-se dois parâmetros: a dimensão de imersão $m$ (\textit{embedding dimension}) e o atraso $\tau$ (\textit{lag}), que determinam janelas vetoriais da forma $(s[n],\, s[n+\tau],\, \ldots,\, s[n+(m-1)\tau])$. Para cada janela, considerou-se a permutação ordinal associada, isto é, a ordenação relativa dos valores dentro da janela. Como existem $m!$ permutações possíveis, varre-se toda a série e computa-se a frequência relativa de cada padrão ordinal, obtendo-se uma distribuição de probabilidade discreta $P = \{p_{\pi}\}$, com $\sum_{\pi} p_{\pi} = 1$. A partir dessa distribuição, calcula-se a entropia de permutação normalizada $H_s$, dada por
+
+\begin{equation}
+    H_s = -\frac{1}{\log(m!)} \sum_{\pi} p_{\pi} \log(p_{\pi}),
+    \label{eq:entropia_permutacao}
+\end{equation}
+
+\noindent onde a soma se estende sobre todas as permutações $\pi$ de ordem $m$. Esse índice varia de $0$, quando apenas um padrão ordinal ocorre (série completamente ordenada), até $1$, quando todos os padrões ocorrem com igual probabilidade (série maximamente desordenada do ponto de vista ordinal). Em seguida, calcula-se a complexidade estatística $C$, que combina entropia com uma medida de distância entre $P$ e a distribuição uniforme $P_{\text{eq}}$, na qual todos os padrões são igualmente prováveis. Define-se uma divergência de Jensen $J(P,\, P_{\text{eq}})$ pela expressão
+
+\begin{equation}
+    J(P,\, P_{\text{eq}}) = H\!\left(\frac{P + P_{\text{eq}}}{2}\right) - \frac{1}{2}H(P) - \frac{1}{2}H(P_{\text{eq}}),
+    \label{eq:divergencia_jensen}
+\end{equation}
+
+\noindent em que $H(\cdot)$ denota a entropia de Shannon não normalizada. Essa divergência é então normalizada pelo seu valor máximo possível $J_{\max}$, produzindo um fator $Q_J = J(P,\, P_{\text{eq}}) / J_{\max}$. A complexidade estatística é definida como
+
+\begin{equation}
+    C = Q_J \cdot H_s.
+    \label{eq:complexidade_estatistica}
+\end{equation}
+
+\noindent Dessa forma, $C$ assume valores baixos tanto para sistemas totalmente ordenados quanto para ruído puro, atingindo valores intermediários elevados para processos com estrutura organizada e correlações não triviais.
+
+Para o Plano Fisher--Shannon é definida uma metodologia semelhante, mas substituindo a complexidade estatística pela informação de Fisher, mantendo $H_s$ como coordenada de entropia. A entropia utilizada continua sendo a entropia de Shannon normalizada associada à distribuição de padrões ordinais, conforme a Equação~\eqref{eq:entropia_permutacao}. Já a informação de Fisher discreta $F$ é calculada levando em conta a sensibilidade da distribuição a variações locais entre probabilidades adjacentes, sendo definida como
+
+\begin{equation}
+    F = \frac{1}{F_{\max}} \sum_{i} \left( \sqrt{p_{i+1}} - \sqrt{p_i} \right)^2,
+    \label{eq:informacao_fisher}
+\end{equation}
+
+\noindent onde $F_{\max}$ é um fator de normalização que garante que $F$ varie entre $0$ e $1$. Valores altos de $F$ indicam distribuições mais concentradas e sensíveis a pequenas perturbações, enquanto valores baixos correspondem a distribuições mais suaves e difusas.
+
+\section{Resultados} \label{sec:resultados}
+
+\subsection{Reprodução do método baseline de Hassanpour et al.}
+
+A reprodução do método de \cite{hassanpour2021} foi executada no mesmo ambiente descrito na Seção~\ref{sec:metodologia}, utilizando 29.000 textos em 29 idiomas da Wikipedia, com divisão de 80\% para treino/validação e 20\% para teste. A \textit{pipeline} completa (pré-processamento, clusterização, extração de \textit{features} via WPT e classificação com MLP) demandou um tempo total de 3h51min20s, com CPU média de 22{,}45\%, pico de 100\% e uso máximo de 7{,}57\,GB de RAM.
+
+\subsubsection{Clusterização: comparação com o artigo original}
+
+Na primeira etapa, o algoritmo K-means foi aplicado à média dos \textit{codepoints} UTF-8 de cada texto (após remoção de caracteres comuns), produzindo seis \textit{clusters} linguísticos. A Tabela~\ref{tab:cluster_original} reproduz a Tabela~1 de \cite{hassanpour2021}, enquanto a Tabela~\ref{tab:cluster_reproducao} apresenta os resultados obtidos na reprodução, calculando a pureza média por idioma em cada \textit{cluster}.
+
+\begin{table}[htbp]
+\centering
+\caption{Clusterização K-means no artigo original \citep{hassanpour2021}.}
+\label{tab:cluster_original}
+\begin{tabular}{p{8.3cm} r r}
+\hline
+\textbf{Membros do cluster} & \textbf{Centro} & \textbf{Acurária (\%)} \\
+\hline
+ar, arz, ps                                                          & 1246{,}56 & 87{,}00 \\
+ru, be, bg                                                           &  878{,}73 & 94{,}83 \\
+fa, ckb                                                              & 1370{,}18 & 77{,}50 \\
+ta                                                                   & 2820{,}96 & 90{,}50 \\
+hi                                                                   & 1874{,}38 & 95{,}50 \\
+en, fr, it, az, ca, cs, de, eo, es, fi, gl, he, hr, id, nl, pl, pt, ro, tr & 107{,}67 & 98{,}55 \\
+\hline
+\multicolumn{2}{r}{\textbf{Média geral reportada}} & \textbf{95{,}14} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Clusterização K-means na reprodução deste trabalho (pureza média por idioma em cada cluster).}
+\label{tab:cluster_reproducao}
+\begin{tabular}{p{8.3cm} r r}
+\hline
+\textbf{Membros do cluster} & \textbf{Centro} & \textbf{Acurácia (\%)} \\
+\hline
+ar, arz, ps, he                                                          & 1190{,}19 & 86{,}75 \\
+ru, be, bg                                                               & 843{,}91 & 98{,}17 \\
+fa, ckb                                                                  & 1340{,}49 & 90{,}00 \\
+hi                                                                       & 1828{,}02 & 98{,}50 \\
+ta                                                                       & 2445{,}67 & 92{,}50 \\
+en, fr, it, az, ca, cs, de, eo, es, fi, gl, hr, id, nl, pl, pt, ro, tr & 115{,}14 & 99{,}83 \\
+\hline
+\multicolumn{2}{r}{\textbf{Média simples por cluster}}          & \textbf{94{,}29} \\
+\multicolumn{2}{r}{\textbf{Média ponderada por nº de idiomas}} & \textbf{96{,}88} \\
+\hline
+\end{tabular}
+\end{table}
+
+A comparação revela diferenças importantes tanto na composição dos grupos quanto na qualidade da clusterização. Em termos de membros, a alteração mais relevante ocorre com o Hebraico (\texttt{he}). No artigo original, ele aparece agregado ao grande \textit{cluster} de idiomas com alfabeto latino (centro $107{,}67$), acompanhado de en, fr, it, az, ca, cs, de, eo, es, fi, gl, hr, id, nl, pl, pt, ro e tr. Na reprodução, o Hebraico migra para o \textit{cluster} formado por ar, arz e ps, deslocando o centro do grupo para $1190{,}19$. Esse comportamento é mais consistente com a natureza dos \textit{codepoints} Unicode: o Hebraico utiliza um alfabeto semítico cujos códigos são numericamente mais próximos aos da escrita árabe do que aos caracteres latinos.
+
+Outra diferença estrutural é que, na tabela original, o Italiano (\texttt{it}) aparece listado duas vezes no mesmo \textit{cluster}, indicando um provável erro de digitação, enquanto na reprodução os 29 idiomas são distribuídos sem redundância. Além disso, os centros dos \textit{clusters} de Hindi e Tamil (hi e ta) são menores na reprodução (1828{,}02 e 2445{,}67) do que no artigo original (1874{,}38 e 2820{,}96), sugerindo pequenas variações no corpus ou no pré-processamento empregado.
+
+No que diz respeito à qualidade da clusterização, o artigo original reporta uma pureza média de 95{,}14\%. Na reprodução, a média simples das purezas por \textit{cluster} é de 94{,}29\%, valor semelhante, mas quando ponderamos pelo número de idiomas em cada grupo a pureza média sobe para 96{,}88\%. Isso indica que os \textit{clusters} com mais idiomas (especialmente o grupo latino) ficaram ainda mais “limpos” na reprodução, enquanto grupos pequenos foram ligeiramente mais heterogêneos. Em particular, o \textit{cluster} árabe/egípcio/pashto/hebraico apresenta pureza média de 86{,}75\%, ligeiramente inferior aos 87{,}00\% do grupo ar/arz/ps original, refletindo a maior dificuldade em separar textos de línguas semíticas próximas quando se utiliza apenas a média dos \textit{codepoints}.
+
+\subsubsection{Desempenho global da MLP no baseline}
+
+Após a clusterização, cada \textit{cluster} é decomposto em 32 sub-bandas por WPT, e a mediana da energia em cada sub-banda é usada como \textit{feature} para uma MLP específica por grupo. A Figura~\ref{fig:acc_baseline} mostra as acurácias médias de LID obtidas pela reprodução do método original, para diferentes números de espaços artificiais inseridos entre palavras (1, 5, 7 e 12), em comparação com os valores reportados por \cite{hassanpour2021}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/3. comparacao_acuracia_reproducao_baseline_20260407_234101.png}
+    \caption{Comparação de acurácia entre o método original de \cite{hassanpour2021} e a reprodução (baseline puro) para diferentes números de espaços artificiais.}
+    \label{fig:acc_baseline}
+\end{figure}
+
+Os resultados da reprodução (média de 10 execuções por configuração) foram:
+\begin{itemize}
+    \item 1 espaço: 71{,}72\% (desvio-padrão 0{,}0745, IC 95\% [66{,}39\%; 77{,}04\%]);
+    \item 5 espaços: 72{,}34\% (desvio-padrão 0{,}0585, IC 95\% [68{,}16\%; 76{,}53\%]);
+    \item 7 espaços: 71{,}52\% (desvio-padrão 0{,}1008, IC 95\% [64{,}31\%; 78{,}73\%]);
+    \item 12 espaços: 75{,}26\% (desvio-padrão 0{,}0580, IC 95\% [71{,}11\%; 79{,}41\%]).
+\end{itemize}
+
+Em todos os cenários, as acurácias obtidas foram iguais ou superiores às do artigo original (66{,}88\%, 70{,}70\%, 72{,}20\% e 72{,}02\% para 1, 5, 7 e 12 espaços, respectivamente). O melhor desempenho na reprodução ocorre com 12 espaços, atingindo 75{,}26\% de acurácia média, superando em mais de 3 pontos percentuais a melhor configuração reportada por \cite{hassanpour2021}. Esse resultado valida a implementação do \textit{baseline} e evidencia que a abordagem de processamento de sinais é competitiva para LID em conjuntos com muitos idiomas, apesar do custo de treinamento da MLP (cerca de 4 horas em hardware modesto).
+
+\subsection{Extensão com Teoria da Informação: plano Complexidade--Entropia (Bandt--Pompe)}
+
+Na segunda série de experimentos, foram integradas \textit{features} de Teoria da Informação à \textit{pipeline} original, incorporando, para cada idioma, os centroides no plano Complexidade--Entropia (CH) de Bandt--Pompe, isto é, os pares $(H_s, C)$ médios por língua. A estrutura geral da \textit{pipeline} foi mantida (clusterização via K-means, WPT, MLP por \textit{cluster}), mas o vetor de entrada da rede foi enriquecido com essas duas métricas informacionais.
+
+O experimento completo com Bandt--Pompe levou 3h51min25s, com CPU média de 22{,}20\%, pico de 94{,}5\% e RAM máxima de 7{,}52\,GB. As acurácias médias, desvio-padrão e intervalos de confiança estão sumarizadas na Tabela~\ref{tab:comparacao_geral}, na linha “Baseline + CH”. As acurácias por número de espaços foram:
+\begin{itemize}
+    \item 1 espaço: 69{,}01\% (desvio-padrão 0{,}1095, IC 95\% [61{,}18\%; 76{,}85\%]);
+    \item 5 espaços: 76{,}65\% (desvio-padrão 0{,}0323, IC 95\% [74{,}34\%; 78{,}96\%]);
+    \item 7 espaços: 77{,}39\% (desvio-padrão 0{,}0527, IC 95\% [73{,}62\%; 81{,}16\%]);
+    \item 12 espaços: 75{,}00\% (desvio-padrão 0{,}0556, IC 95\% [71{,}03\%; 78{,}98\%]).
+\end{itemize}
+
+Dois efeitos chamam atenção: (i) o melhor desempenho desloca-se de 12 espaços (baseline) para 7 espaços (baseline+CH), com ganho de cerca de 2 pontos percentuais (de 75{,}26\% para 77{,}39\%); (ii) o cenário de 5 espaços, que era intermediário no baseline, passa a apresentar acurácia bastante elevada (76{,}65\%), ligeiramente acima do baseline com 12 espaços. Em média, a acurácia global sobe de 72{,}71\% (baseline) para 74{,}51\% com Bandt--Pompe.
+
+Analisando os planos CH, observa-se que idiomas com escritas densas e forte estrutura ordinal (como Hindi e Tamil) ocupam regiões de baixa entropia ($H_s \approx 0{,}88$–0{,}90) e alta complexidade ($C \approx 0{,}20$–0{,}25), bem separados de idiomas latinos com distribuições mais homogêneas. Em contraste, Hebraico e Indonésio situam-se em áreas de entropia alta e complexidade baixa, refletindo padrões mais próximos de ruído ordinal. Ao incorporar essas \textit{assinaturas} informacionais ao vetor de \textit{features}, a MLP passa a operar em um espaço mais discriminativo: idiomas de famílias diferentes estão mais afastados, e famílias semelhantes formam sub-regiões mais coesas, o que reduz confusões recorrentes observadas no baseline (por exemplo, entre línguas semíticas e indo-iranianas).
+
+\subsection{Extensão com Teoria da Informação: plano Fisher--Shannon}
+
+Na terceira etapa, utilizou-se o plano Fisher--Shannon (FS), combinando a entropia de Shannon normalizada $H_s$ com a informação de Fisher discreta $F$ da distribuição de padrões ordinais. Assim como no caso CH, foram calculados centroides $(H_s, F)$ por idioma, incorporados às \textit{features} fornecidas à MLP.
+
+O experimento com Fisher--Shannon teve duração total de 3h42min19s, com CPU média de 21{,}71\%, pico de 81\% e RAM máxima de 7{,}83\,GB. As acurácias médias foram:
+\begin{itemize}
+    \item 1 espaço: 73{,}93\% (desvio-padrão 0{,}0340, IC 95\% [71{,}49\%; 76{,}36\%]);
+    \item 5 espaços: 74{,}63\% (desvio-padrão 0{,}0521, IC 95\% [70{,}90\%; 78{,}35\%]);
+    \item 7 espaços: 77{,}30\% (desvio-padrão 0{,}0477, IC 95\% [73{,}88\%; 80{,}71\%]);
+    \item 12 espaços: 78{,}18\% (desvio-padrão 0{,}0349, IC 95\% [75{,}68\%; 80{,}68\%]).
+\end{itemize}
+
+Comparado ao baseline, os ganhos são consistentes em todas as configurações de espaçamento, com destaque para 12 espaços, em que a acurácia passa de 75{,}26\% para 78{,}18\% (incremento de quase 3 pontos percentuais). A acurácia global média sobe de 72{,}71\% (baseline) para 76{,}01\% com FS, representando o melhor desempenho entre todos os cenários testados.
+
+Do ponto de vista geométrico, os planos FS mostram que a informação de Fisher é particularmente sensível a variações locais da distribuição de probabilidades: sequências com padrões mais rígidos e redundantes geram valores de $F$ elevados. Hindi e Tamil, por exemplo, apresentam $H_s \approx 0{,}88$–0{,}90, $C \approx 0{,}20$–0{,}25 e $F \approx 0{,}24$–0{,}29, formando aglomerados bem delimitados. Hebraico e Indonésio, por outro lado, localizam-se em regiões de alta entropia e baixa informação de Fisher, indicando comportamento mais estocástico. A combinação de WPT com $(H_s, F)$ faz com que idiomas estruturalmente distintos fiquem mais afastados e que subfamílias semelhantes ocupem regiões mais compactas, o que reduz confusões entre pares historicamente difíceis (como ar/arz/ps e fa/ckb) e melhora a separação entre românicos, germânicos e outras famílias dentro do grande \textit{cluster} latino.
+
+\subsection{Comparação integrada dos três cenários}
+
+A Tabela~\ref{tab:comparacao_geral} resume a acurácia média, por número de espaços e global, dos três cenários avaliados: baseline puro, baseline com \textit{features} de Bandt--Pompe (CH) e baseline com \textit{features} do plano Fisher--Shannon (FS).
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparação de acurácia média (\%) entre os três métodos.
+         Desvio-padrão entre parênteses (em p.p.).}
+\label{tab:comparacao_geral}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.8cm}cccc}
+\hline
+\textbf{Método} & \textbf{1 esp.} & \textbf{5 esp.} & \textbf{7 esp.} & \textbf{12 esp.} \\
+\hline
+Baseline \newline (WPT+MLP)
+    & 71{,}72 & 72{,}34 & 71{,}52 & 75{,}26 \\
+    & (7{,}45) & (5{,}85) & (10{,}08) & (5{,}80) \|$0.3em]
+Baseline + CH \newline (Bandt--Pompe)
+    & 69{,}01 & 76{,}65 & 77{,}39 & 75{,}00 \\
+    & (10{,}95) & (3{,}23) & (5{,}27) & (5{,}56) \|$0.3em]
+Baseline + FS \newline (Fisher--Shannon)
+    & 73{,}93 & 74{,}63 & 77{,}30 & 78{,}18 \\
+    & (3{,}40) & (5{,}21) & (4{,}77) & (3{,}49) \\
+\hline
+\end{tabular}
+\end{table}
+
+Podemos verificar nos resultados que a inclusão de centroides no plano CH eleva essa média para 74{,}51\%, com ganhos mais expressivos nos cenários de 5 e 7 espaços. Já a inclusão de centroides no plano FS produz o melhor resultado global, com média de 76{,}01\%, chegando a 78{,}18\% de acurácia na configuração de 12 espaços.
+
+Com a realização dos experimentos tivemos a oportunidade de observar três pontos: \textbf{Assinaturas informacionais discriminam famílias linguísticas}: nos planos CH e FS, idiomas com alfabetos não latinos (árabe, hebraico, hindi, tâmil, curdo sorani) se organizam em regiões bem separadas de idiomas românicos, germânicos e eslavos, mesmo em situações em que abordagens baseadas em \textit{n-gramas} enfrentam alta sobreposição; \textbf{Teoria da Informação complementa as \textit{features} espectrais}: as métricas $(H_s, C, F)$ capturam estrutura ordinal e grau de organização interna das séries, enquanto a WPT captura distribuição de energia em frequências associadas ao “ritmo” do texto. A combinação das duas perspectivas fornece um espaço de \textit{features} mais rico para a MLP, reduzindo ambiguidades e estabilizando o treinamento; \textbf{Ganho significativo com custo semelhante}: os experimentos com CH e FS mantiveram tempos de execução e consumo de recursos muito próximos ao baseline (diferenças de menos de 10 minutos no tempo total e variações marginais de CPU/RAM), mas entregaram ganhos de até 3 pontos percentuais em acurácia média — uma relação custo–benefício bastante favorável.
+
+Por outro lado, a inspeção visual dos planos CH e FS mostra que, embora as métricas de Teoria da Informação organizem os idiomas em regiões coerentes, ainda existem sobreposições entre idiomas que compartilham alfabeto latino e estatísticas de frequência semelhantes. Assim, essas métricas se mostram especialmente eficazes como \textit{features} auxiliares em modelos supervisionados (como MLP ou Transformers) ou como ferramentas de análise exploratória e pré-filtragem, e não como substitutos completos de classificadores em problemas de LID com muitos idiomas e forte similaridade estrutural.
+
+Em síntese, a integração de conceitos de Teoria da Informação ao método de \cite{hassanpour2021} não apenas permitiu superar a acurácia do \textit{baseline} original, como também ofereceu uma interpretação mais rica das propriedades informacionais dos sinais textuais e do porquê certas línguas são mais facilmente separáveis no espaço de \textit{features}. Esses achados apontam para arquiteturas híbridas promissoras em LID, que combinem processamento de sinais, métricas informacionais e modelos de aprendizado profundo de forma complementar.
+
+\section{Discussões} \label{sec:discussoes}
+\subsection{Reprodução do método baseline}
+
+A reprodução do método de \cite{hassanpour2021} confirmou a viabilidade da abordagem de processamento de sinais para LID em larga escala, mas também evidenciou seu custo computacional. A \textit{pipeline} completa demandou cerca de 3h51min, com uso médio de CPU em torno de 22{,}45\% e pico de 7{,}57\,GB de RAM, o que é significativo para um ambiente sem GPU.
+
+Na etapa de clusterização com K-means, utilizando como única \textit{feature} a média dos \textit{codepoints} UTF-8 após remoção de caracteres comuns, os idiomas foram novamente organizados em seis grupos. Embora haja pequenas diferenças na composição e nos centros dos \textit{clusters} em relação ao artigo original (por exemplo, o Hebraico migrando do grande grupo latino para o grupo de línguas semíticas), a qualidade da clusterização permaneceu alta, com purezas médias comparáveis ou superiores às reportadas por \cite{hassanpour2021}. Isso sugere que a estrutura geral da solução foi preservada, mesmo diante de divergências inevitáveis de corpus e implementação.
+
+No estágio supervisionado, as acurácias obtidas com a MLP foram superiores ao \textit{baseline} original em todos os cenários de inserção artificial de espaços. As acurácias médias alcançadas foram de 71{,}72\%, 72{,}34\%, 71{,}52\% e 75{,}26\% para 1, 5, 7 e 12 espaços, respectivamente, superando o melhor resultado de 72{,}20\% do artigo original. A matriz de confusão apresenta uma diagonal bem definida, indicando boa capacidade de distinção global entre os 29 idiomas, mas também revela confusões recorrentes entre línguas de mesma família ou com alfabetos semelhantes. Em síntese, a reprodução não apenas valida o método como \textit{baseline} robusto, como mostra que ganhos adicionais são possíveis mesmo sem alterar a arquitetura básica da MLP; por outro lado, deixa claro que esse desempenho vem acompanhado de um custo de treinamento elevado.
+
+\subsection{Integração de Teoria da Informação na pipeline baseline}
+
+A segunda parte do estudo avaliou o impacto de métricas de Teoria da Informação sobre o desempenho do \textit{baseline}, mantendo a mesma \textit{pipeline} (clusterização, WPT e MLP) e adicionando, como \textit{features} de alto nível, os centroides informacionais por idioma. Foram considerados dois conjuntos de descritores: o plano complexidade–entropia (CH) de Bandt–Pompe, com pares $(H_s, C)$, e o plano Fisher–Shannon (FS), com pares $(H_s, F)$.
+
+Em ambos os casos, o custo computacional permaneceu semelhante ao do \textit{baseline}, com tempos totais de aproximadamente 3h51min (CH) e 3h42min (FS), e uso de CPU e RAM praticamente inalterados. Em contrapartida, os ganhos de acurácia foram consistentes. Com Bandt–Pompe, as acurácias médias passaram para 69{,}01\%, 76{,}65\%, 77{,}39\% e 75{,}00\% (1, 5, 7 e 12 espaços), elevando a média global para 74{,}51\%. Com Fisher–Shannon, os valores foram ainda superiores: 73{,}93\%, 74{,}63\%, 77{,}30\% e 78{,}18\%, com média global de 76{,}01\%. Ou seja, a inclusão de \textit{features} informacionais agregou até cerca de 3 pontos percentuais à acurácia sem introduzir custo computacional relevante, indicando uma relação custo–benefício bastante favorável.
+
+Do ponto de vista interpretativo, as métricas de Teoria da Informação ajudam a explicar por que esses ganhos ocorrem. Nos planos CH e FS, os idiomas se organizam em regiões coerentes com suas famílias linguísticas e sistemas de escrita. Línguas com escritas densas e altamente estruturadas, como Hindi e Tâmil, exibem baixa entropia ordinal e alta complexidade/informação de Fisher, formando aglomerados afastados de idiomas com alfabetos latinos e distribuições mais homogêneas. Já idiomas como Hebraico e Indonésio situam-se em regiões de alta entropia e baixa complexidade, refletindo um comportamento mais próximo de ruído no espaço de padrões ordinais. Ao incorporar essas assinaturas informacionais ao vetor de \textit{features}, a MLP passa a operar em um espaço onde idiomas estruturalmente distintos estão mais afastados e famílias semelhantes ocupam sub-regiões mais compactas, o que se traduz em menor confusão entre classes e maior estabilidade do treinamento.
+
+\subsection{Estrutura informacional dos 29 idiomas}
+
+Para compreender de forma global o comportamento dos 29 idiomas, foram analisados os planos Complexidade–Entropia e Fisher–Shannon considerando todos os textos. As Figuras~\ref{fig:bp_todos_bruto}–\ref{fig:fs_todos_norm} sintetizam essa organização, tanto para valores brutos quanto normalizados das métricas.
+
+\begin{figure}[H]
+\centering
+
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/bp_ar_arz_az_be_bg_ca_ckb_cs_de_en_eo_es_fa_fi_fr_gl_he_hi_hr_id_it_nl_pl_ps_pt_ro_ru_ta_tr_m6_t1_.png}
+    \caption{Bandt--Pompe (bruto)}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/bp_ar_arz_az_be_bg_ca_ckb_cs_de_en_eo_es_fa_fi_fr_gl_he_hi_hr_id_it_nl_pl_ps_pt_ro_ru_ta_tr_m6_t1_norm.png}
+    \caption{Bandt--Pompe (normalizado)}
+\end{subfigure}
+
+\vspace{0.4cm}
+
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/fs_ar_arz_az_be_bg_ca_ckb_cs_de_en_eo_es_fa_fi_fr_gl_he_hi_hr_id_it_nl_pl_ps_pt_ro_ru_ta_tr_m6_t1_.png}
+    \caption{Fisher--Shannon (bruto)}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/fs_ar_arz_az_be_bg_ca_ckb_cs_de_en_eo_es_fa_fi_fr_gl_he_hi_hr_id_it_nl_pl_ps_pt_ro_ru_ta_tr_m6_t1_norm.png}
+    \caption{Fisher--Shannon (normalizado)}
+\end{subfigure}
+
+\caption{Planos Complexidade--Entropia e Fisher--Shannon para os 29 idiomas.}
+\label{fig:todos_planos}
+\end{figure}
+
+Essas representações revelam que certos idiomas ocupam posições extremas no espaço informacional. Hindi e Tâmil, por exemplo, combinam entropia relativamente baixa com alta complexidade e alta informação de Fisher, indicando padrões determinísticos fortes nas séries UTF-8. O Curdo Sorani apresenta valores intermediários, formando um \textit{cluster} bem separado do restante, enquanto Hebraico e Indonésio aparecem em regiões de alta entropia e baixa complexidade/informação de Fisher, associadas a distribuições mais difusas de padrões ordinais. Essas diferenças ajudam a entender por que a inclusão de $(H_s, C, F)$ favorece a separação de idiomas com sistemas de escrita distintos e por que a sobreposição persiste sobretudo entre línguas com alfabeto latino e estatísticas de frequência semelhantes.
+
+\subsection{Principais observações dos experimentos}
+
+Em conjunto, os resultados dos três experimentos permitem destacar alguns pontos centrais: \textbf{Robustez e custo do baseline}: o método de ~\citet{hassanpour2021}. foi reproduzido com sucesso e até superou o desempenho original, confirmando a robustez da abordagem de processamento de sinais. Ao mesmo tempo, o tempo de execução de quase quatro horas por rodada de treinamento evidencia uma limitação prática importante para aplicações que exigem re-treinamento frequente ou escalabilidade para mais idiomas; \textbf{Ganho informacional sem aumento de custo}: a integração de \textit{features} informacionais (Bandt–Pompe e Fisher–Shannon) trouxe ganhos sistemáticos de acurácia, especialmente nos cenários com maior espaçamento entre palavras, sem impacto relevante em tempo de processamento ou uso de recursos. Isso indica que tais métricas são um complemento eficiente às \textit{features} espectrais da WPT; \textbf{Interpretabilidade e estrutura}: os planos CH e FS fornecem uma visão geométrica dos idiomas no espaço de entropia, complexidade e informação de Fisher, permitindo interpretar por que certas línguas são mais facilmente separáveis que outras. Essa interpretabilidade é um diferencial importante em relação a abordagens puramente neurais, que tendem a operar como “caixas-pretas”; \textbf{Limitações e potencial de integração}: embora úteis, as métricas de Teoria da Informação, isoladamente, ainda não resolvem completamente o problema de LID em conjuntos com muitos idiomas e forte similaridade estrutural. Os experimentos mostram que seu papel mais promissor é como \textit{feature} auxiliar em modelos supervisionados e como ferramenta de análise exploratória e pré-filtragem.
+
+De forma geral, a combinação entre processamento de sinais, Teoria da Informação e aprendizado supervisionado mostrou-se mais eficaz do que qualquer um desses componentes isoladamente, sugerindo um caminho promissor para arquiteturas híbridas em identificação automática de idiomas.
+
+
+\section{Conclusão} \label{sec:conclusao}
+Este trabalho apresentou a reprodução do método proposto por Hassanpour et al. para identificação de idiomas em textos tratados como séries temporais, utilizando codificação UTF-8, Transformada de Pacote de Wavelet e uma rede MLP. A reprodução foi conduzida com a mesma base de 29.000 textos em 29 idiomas da Wikipedia e, sob o mesmo protocolo de inserção de espaços artificiais, obteve acurácia máxima de 75,26\% com 12 espaços entre palavras, valor superior aos 72,02\% reportados no estudo original. Essa etapa permitiu validar a viabilidade do \textit{pipeline} baseado em processamento de sinais e evidenciar o custo computacional associado ao treinamento supervisionado.
+
+Em seguida, foram exploradas métricas de Teoria da Informação, em particular os planos complexidade-entropia e Fisher-Shannon, a partir de séries de codepoints Unicode. A análise mostrou que essas métricas capturam diferenças estruturais relevantes entre os idiomas e produzem agrupamentos coerentes em dois planos bidimensionais, especialmente para idiomas com escritas mais densas ou com padrões ordinais bem definidos. Ao mesmo tempo, observou-se que ainda há sobreposição entre alguns grupos, o que limita o uso exclusivo dessas métricas como mecanismo de classificação automática. 
+
+Embora as métricas de Teoria da Informação não sejam suficientes como uma técnica finalística para a identificação de idiomas em todos os cenários, elas podem enriquecer \textit{pipelines} de LID existentes, oferecendo \textit{features} adicionais para modelos de aprendizado de máquina ou servindo como um estágio inicial de pré-filtragem e análise exploratória, especialmente em contextos onde existe a necessidade de interpretabilidade e eficiência computacional. Este estudo abre caminhos para a integração dessas abordagens informacionais em sistemas de identificação linguística mais robustos e eficientes.
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}

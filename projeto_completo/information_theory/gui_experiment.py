@@ -1465,9 +1465,12 @@ class ExperimentGUI:
         text_area.config(yscrollcommand=scrollbar_text.set)
 
 def main():
-    root = tk.Tk()
-    app = ExperimentGUI(root)
-    root.mainloop()
+    try:
+        root = tk.Tk()
+        app = ExperimentGUI(root)
+        root.mainloop()
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     main()

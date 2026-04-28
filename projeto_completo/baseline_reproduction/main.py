@@ -140,7 +140,6 @@ def run_experiment():
         print("Aplicando espaçamento nos textos...")
 
         spaced_texts = [
-            #apply_spacing(t, spacing) for t in texts
             apply_spacing(t, spacing) for t in texts
         ]
 
